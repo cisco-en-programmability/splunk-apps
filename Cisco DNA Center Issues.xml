@@ -364,10 +364,10 @@
   </row>
   <row>
     <panel>
-      <title>Top 5 Issues</title>
+      <title>Top 5 Issues - table</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | dedup IssueID keepevents=false | sort limit=5 -num(IssueCount), +str(IssueSpecificName) | table IssueSpecificName,  "IssueName", IssueSpecificPriority, IssueSpecificSeverity, IssueSpecificSource, IssueSpecificSummary, IssueSpecificTimestamp, IssueStatus, DeviceName,  DeviceIpAddress,  DeviceMACAddress,  DeviceFamily,  DeviceRole</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$"  | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountSpecific, list("IssueName ") as IssueNames, list(IssueSpecificTimestamp) as IssueSpecificTimestamps, list(IssueStatus) as IssueStatuses, list(DeviceName) as DeviceNames, list(DeviceIpAddress) as DeviceIpAddresses, list(DeviceMACAddress) as DeviceMACAddresses, list(DeviceFamily) as DeviceFamilies, list(DeviceRole) as DeviceRoles by IssueSpecificName | dedup IssueSpecificName keepevents=false | sort limit=5 -num(IssueCountSpecific), +str(IssueSpecificName) | table IssueSpecificName, IssueCountSpecific, IssueSpecificPriority, IssueSpecificSeverity, IssueSpecificSummary, IssueNames, IssueSpecificTimestamps, IssueStatuses, DeviceNames, DeviceIpAddresses, DeviceMACAddresses, DeviceFamilies, DeviceRoles</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -379,10 +379,10 @@
   </row>
   <row>
     <panel>
-      <title>Top 5 devices impacted</title>
+      <title>Top 5 devices impacted - table</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice, dc(IssueID) as IssueIDAmount, list(IssueSpecificName) as IssueSpecificNames, list(IssueSpecificPriority) as IssueSpecificPriorities, list(IssueSpecificSeverity) as IssueSpecificSeverities by DeviceID | dedup DeviceID keepevents=false | table DeviceID, DeviceName, DeviceIpAddress, DeviceMACAddress, DeviceFamily, DeviceRole, IssueIDAmount, IssueCountDevice, IssueSpecificNames, IssueSpecificPriorities, IssueSpecificSeverities | sort limit=5 -num(IssueCountDevice), +str(DeviceName)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice, dc(IssueID) as IssueIDAmount, list(IssueSpecificName) as IssueSpecificNames, list(IssueSpecificPriority) as IssueSpecificPriorities, list(IssueSpecificSeverity) as IssueSpecificSeverities by DeviceID | dedup DeviceID keepevents=false | sort limit=5 -num(IssueCountDevice), +str(DeviceName) | table DeviceName, IssueCountDevice, DeviceIpAddress, DeviceMACAddress, DeviceFamily, DeviceRole, IssueIDAmount, IssueCountDevice, IssueSpecificNames, IssueSpecificPriorities, IssueSpecificSeverities</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -459,10 +459,53 @@
   </row>
   <row>
     <panel>
-      <title>Top 5 devices with issue count</title>
+      <title>Top 5 issues</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice | sort limit=5 -num(IssueCountDevice), +str(DeviceName) | chart sum(IssueCountDevice) as amount cont=false by DeviceName</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountSpecific by IssueSpecificName | dedup IssueSpecificName keepevents=false | sort limit=5 -num(IssueCountSpecific), +str(IssueSpecificName) | chart sum(IssueCountSpecific) as issue_count cont=false by IssueSpecificName</query>
+          <earliest>$timeRangePicker9.earliest$</earliest>
+          <latest>$timeRangePicker9.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Top 5 devices with issues</title>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice | sort limit=5 -num(IssueCountDevice), +str(DeviceName) | chart sum(IssueCountDevice) as issue_count cont=false by DeviceName</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
