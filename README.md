@@ -37,11 +37,11 @@ The repo includes:
 - Python scripts:
     - [client_health.py](./client_health.py): script that will run on Splunk Enterprise to collect the overall client health data
     - [compliance.py](./compliance.py): script that will run on Splunk Enterprise to collect the compliance details and devices data
-    - `#` [device_health.py](./device_health.py): script that will run on Splunk Enterprise to collect the overall device health and devices data
-    - `#` [fabric_device.py](./fabric_device.py): script that will run on Splunk Enterprise to collect the devices (health) and fabric sites associated with them
+    - [device_health.py](./device_health.py): script that will run on Splunk Enterprise to collect the overall device health and devices data. **Review note below**.
+    - [fabric_device.py](./fabric_device.py): script that will run on Splunk Enterprise to collect the devices (health) and fabric sites associated with them. **Review note below**.
     - [fabric_site.py](./fabric_site.py): script that will run on Splunk Enterprise to collect the sites and fabric sites associated with them
     - [image_health.py](./image_health.py): script that will run on Splunk Enterprise to collect the image health and their associated devices
-    - `#` [issues.py](./issues.py): script that will run on Splunk Enterprise to collect the issue details and devices&site data as necessary
+    - [issues.py](./issues.py): script that will run on Splunk Enterprise to collect the issue details and devices&site data as necessary. **Review note below**.
     - [network_health.py](./network_health.py): script that will run on Splunk Enterprise to collect the overall network health
     - [security_advisories.py](./security_advisories.py): script that will run on Splunk Enterprise to collect the security advisories details and devices data as necessary
     - [security_advisories.py](./security_advisories.py): script that will run on Splunk Enterprise to collect the security advisories details and devices data as necessary
