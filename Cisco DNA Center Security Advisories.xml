@@ -1,0 +1,336 @@
+<form>
+  <label>Cisco DNA Center Security Advisories</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="timeRangePicker7" searchWhenChanged="true">
+      <label></label>
+      <default>
+        <earliest>-4h@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Critical count</title>
+      <single>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True"  SubCategory="Total" Category="CRITICAL" | timechart sum(Amount) cont=false</query>
+          <earliest>$timeRangePicker7.earliest$</earliest>
+          <latest>$timeRangePicker7.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>High count</title>
+      <single>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory="Total" Category="HIGH" | timechart sum(Amount) cont=false</query>
+          <earliest>$timeRangePicker7.earliest$</earliest>
+          <latest>$timeRangePicker7.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Medium count</title>
+      <single>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory="Total" Category="MEDIUM" | timechart sum(Amount) cont=false</query>
+          <earliest>$timeRangePicker7.earliest$</earliest>
+          <latest>$timeRangePicker7.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Security Advisories count by category</title>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True"  SubCategory="Total" | dedup Category keepevents=false | chart sum(Amount) as amount by Category</query>
+          <earliest>$timeRangePicker7.earliest$</earliest>
+          <latest>$timeRangePicker7.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Security Advisories history by category</title>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True"  SubCategory="Total" | timechart sum(Amount) as amount by Category cont=false</query>
+          <earliest>$timeRangePicker7.earliest$</earliest>
+          <latest>$timeRangePicker7.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Security Advisories count by subcategory</title>
+      <input type="dropdown" token="categoryDropdown" searchWhenChanged="true">
+        <label>Category</label>
+        <fieldForLabel>Category</fieldForLabel>
+        <fieldForValue>Category</fieldForValue>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory!="Total" | dedup Category keepevents=false | table Category</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory!="Total" Category="$categoryDropdown$" | dedup SubCategory keepevents=false  | chart sum(Amount) as amount by SubCategory</query>
+          <earliest>$timeRangePicker7.earliest$</earliest>
+          <latest>$timeRangePicker7.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Security Advisories history by subcategory</title>
+      <input type="dropdown" token="categoryDropdown2" searchWhenChanged="true">
+        <label>Category</label>
+        <fieldForLabel>Category</fieldForLabel>
+        <fieldForValue>Category</fieldForValue>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory!="Total" | dedup Category keepevents=false | table Category</query>
+        </search>
+      </input>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory!="Total" Category="$categoryDropdown2$" | timechart sum(Amount) as amount by SubCategory cont=false</query>
+          <earliest>$timeRangePicker7.earliest$</earliest>
+          <latest>$timeRangePicker7.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Security Advisories with devices</title>
+      <input type="dropdown" token="ipAddressDropdown" searchWhenChanged="true">
+        <label>IP Address</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>IpAddress</fieldForLabel>
+        <fieldForValue>IpAddress</fieldForValue>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="False" | dedup IpAddress keepevents=false | table IpAddress</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <input type="dropdown" token="advisoryIDDropdown" searchWhenChanged="true">
+        <label>Advisory ID</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>AdvisoryID</fieldForLabel>
+        <fieldForValue>AdvisoryID</fieldForValue>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="False" | dedup AdvisoryID keepevents=false | table AdvisoryID</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <table>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="False" IpAddress="$ipAddressDropdown$" AdvisoryID="$advisoryIDDropdown$" | dedup AdvisoryID keepevents=false | table AdvisoryID, AdvisoryCvesStr, AdvisoryDefaultDetectionType, AdvisoryDetectionType, AdvisoryPublicationUrl, AdvisorySir, IpAddress, DeviceName,  DeviceMACAddress, DeviceSerialNumber, DeviceFamily,  DevicePlatform,  DeviceSeries,  DeviceUptimeSeconds</query>
+          <earliest>$timeRangePicker7.earliest$</earliest>
+          <latest>$timeRangePicker7.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</form>

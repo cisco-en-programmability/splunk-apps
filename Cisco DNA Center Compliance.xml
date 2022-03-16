@@ -1,0 +1,168 @@
+<form>
+  <label>Cisco DNA Center Compliance</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="timeRangePicker6" searchWhenChanged="true">
+      <label></label>
+      <default>
+        <earliest>-4h@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Compliance devices by compliance type</title>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup  ComplianceDeviceID, ComplianceComplianceType keepevents=false | stats count(ComplianceDeviceID) by ComplianceComplianceType</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Compliance devices over time</title>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json"  | timechart dc(ComplianceDeviceID) by ComplianceComplianceType cont=false</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisEnd</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Compliance table</title>
+      <input type="dropdown" token="deviceIpAddressDropdown" searchWhenChanged="true">
+        <label>Device IP Address</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>IpAddress</fieldForLabel>
+        <fieldForValue>IpAddress</fieldForValue>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup IpAddress keepevents=false | table IpAddress</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <input type="dropdown" token="complianceTypeDropdown" searchWhenChanged="true">
+        <label>Compliance Type</label>
+        <choice value="*">All</choice>
+        <choice value="NETWORK_PROFILE">NETWORK_PROFILE</choice>
+        <choice value="IMAGE">IMAGE</choice>
+        <choice value="APPLICATION_VISIBILITY">APPLICATION_VISIBILITY</choice>
+        <choice value="FABRIC">FABRIC</choice>
+        <choice value="PSIRT">PSIRT</choice>
+        <choice value="RUNNING_CONFIG">RUNNING_CONFIG</choice>
+        <choice value="WORKFLOW">WORKFLOW</choice>
+        <initialValue>*</initialValue>
+        <search>
+          <query/>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="complianceStatusDropdown" searchWhenChanged="true">
+        <label>Compliance Status</label>
+        <choice value="*">All</choice>
+        <choice value="COMPLIANT">COMPLIANT</choice>
+        <choice value="NON_COMPLIANT">NON_COMPLIANT</choice>
+        <choice value="IN_PROGRESS">IN_PROGRESS</choice>
+        <choice value="NOT_AVAILABLE">NOT_AVAILABLE</choice>
+        <choice value="NOT_APPLICABLE">NOT_APPLICABLE</choice>
+        <choice value="ERROR">ERROR</choice>
+        <search>
+          <query/>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <initialValue>*</initialValue>
+        <default>*</default>
+      </input>
+      <table>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IpAddress="$deviceIpAddressDropdown$" ComplianceComplianceType="$complianceTypeDropdown$" ComplianceStatus="$complianceStatusDropdown$" | dedup ComplianceDeviceID, ComplianceComplianceType keepevents=false | table DeviceName, DeviceRole, IpAddress, MACAddress,  Manageability, Reachability, ComplianceComplianceType, ComplianceState, ComplianceStatus, ComplianceLastSyncTime,  ComplianceLastUpdateTime</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</form>
