@@ -58,7 +58,6 @@ def get_sensors(dnac):
     """
     This function will retrieve the sensor details
     :param dnac: Cisco DNAC SDK api
-    :param interval_seconds: interval in seconds
     :return: sensor details
     """
     responses = []

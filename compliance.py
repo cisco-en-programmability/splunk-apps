@@ -167,7 +167,7 @@ def main():
     # it uses DNA Center URL, username and password, with the DNA Center API version specified
     dnac = connection()
 
-    # get the the compliance details and devices data as necessary
+    # get the compliance details and devices data as necessary
     overall_compliance_details = get_compliance_and_device_details(dnac)
     print(json.dumps(overall_compliance_details))  # save the data to Splunk App index
 
