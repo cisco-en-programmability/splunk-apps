@@ -11,10 +11,164 @@
   </fieldset>
   <row>
     <panel>
-      <title>Compliance devices by compliance type</title>
+      <title>Number of compliance devices</title>
+      <single>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart dc(ComplianceDeviceID) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">276</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Compliance devices % with status: $complianceStatusDropdown4$</title>
+      <input type="dropdown" token="complianceStatusDropdown4" searchWhenChanged="true">
+        <label>Compliance Status</label>
+        <choice value="COMPLIANT">COMPLIANT</choice>
+        <choice value="NON_COMPLIANT">NON_COMPLIANT</choice>
+        <choice value="IN_PROGRESS">IN_PROGRESS</choice>
+        <choice value="NOT_AVAILABLE">NOT_AVAILABLE</choice>
+        <choice value="NOT_APPLICABLE">NOT_APPLICABLE</choice>
+        <choice value="ERROR">ERROR</choice>
+        <search>
+          <query/>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <initialValue>COMPLIANT</initialValue>
+        <default>COMPLIANT</default>
+      </input>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup  ComplianceDeviceID, ComplianceComplianceType keepevents=false | stats count(ComplianceDeviceID) by ComplianceComplianceType</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus | dedup ComplianceStatus keepevents=false | eval percentage=((subtotal/total)*100) | where ComplianceStatus="$complianceStatusDropdown4$" | appendpipe [stats count | where count=0 | rename count as "percentage"] | table percentage</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">radialGauge</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.rangeValues">[0,30,70,100]</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">minimal</option>
+        <option name="charting.gaugeColors">["0xdc4e41","0xf8be34","0x53a051"]</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="height">195</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Compliance devices by status over time</title>
+      <input type="dropdown" token="complianceTypeDropdown2" searchWhenChanged="true">
+        <label>Compliance Type</label>
+        <choice value="*">All</choice>
+        <choice value="NETWORK_PROFILE">NETWORK_PROFILE</choice>
+        <choice value="IMAGE">IMAGE</choice>
+        <choice value="APPLICATION_VISIBILITY">APPLICATION_VISIBILITY</choice>
+        <choice value="FABRIC">FABRIC</choice>
+        <choice value="PSIRT">PSIRT</choice>
+        <choice value="RUNNING_CONFIG">RUNNING_CONFIG</choice>
+        <choice value="WORKFLOW">WORKFLOW</choice>
+        <search>
+          <query/>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+        <initialValue>*</initialValue>
+      </input>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ComplianceComplianceType="$complianceTypeDropdown2$"  | timechart dc(ComplianceDeviceID) as amount by ComplianceStatus cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.text">Compliance Status</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked100</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Compliance devices % by status and with type: $complianceTypeDropdown2$</title>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | search ComplianceComplianceType="$complianceTypeDropdown2$" | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus | dedup ComplianceStatus keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceStatus, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -39,6 +193,69 @@
         <option name="charting.chart.showDataLabels">none</option>
         <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
         <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">minimal</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="height">329</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Compliance devices by type over time</title>
+      <input type="multiselect" token="complianceStatusDropdown2" searchWhenChanged="true">
+        <label>Compliance Status</label>
+        <choice value="COMPLIANT">COMPLIANT</choice>
+        <choice value="NON_COMPLIANT">NON_COMPLIANT</choice>
+        <choice value="IN_PROGRESS">IN_PROGRESS</choice>
+        <choice value="NOT_AVAILABLE">NOT_AVAILABLE</choice>
+        <choice value="NOT_APPLICABLE">NOT_APPLICABLE</choice>
+        <choice value="ERROR">ERROR</choice>
+        <search>
+          <query/>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <initialValue>COMPLIANT</initialValue>
+        <default>COMPLIANT</default>
+      </input>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ComplianceStatus IN ($complianceStatusDropdown2$) | timechart dc(ComplianceDeviceID) by ComplianceComplianceType cont=false</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.text">Compliance Type</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked100</option>
         <option name="charting.chart.style">shiny</option>
         <option name="charting.drilldown">none</option>
         <option name="charting.layout.splitSeries">0</option>
@@ -47,6 +264,7 @@
         <option name="charting.legend.mode">standard</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
+        <option name="height">251</option>
         <option name="refresh.display">progressbar</option>
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
@@ -54,16 +272,142 @@
       </chart>
     </panel>
     <panel>
-      <title>Compliance devices over time</title>
+      <title>Compliance devices % by type and with status: $complianceStatusDropdown2$</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json"  | timechart dc(ComplianceDeviceID) by ComplianceComplianceType cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | search ComplianceStatus IN ($complianceStatusDropdown2$) | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType | dedup ComplianceComplianceType keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceComplianceType, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">minimal</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="height">334</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Compliance devices % by status with type $complianceTypeDropdown1$</title>
+      <input type="dropdown" token="complianceTypeDropdown1" searchWhenChanged="true">
+        <label>Compliance Type</label>
+        <choice value="*">All</choice>
+        <choice value="NETWORK_PROFILE">NETWORK_PROFILE</choice>
+        <choice value="IMAGE">IMAGE</choice>
+        <choice value="APPLICATION_VISIBILITY">APPLICATION_VISIBILITY</choice>
+        <choice value="FABRIC">FABRIC</choice>
+        <choice value="PSIRT">PSIRT</choice>
+        <choice value="RUNNING_CONFIG">RUNNING_CONFIG</choice>
+        <choice value="WORKFLOW">WORKFLOW</choice>
+        <initialValue>*</initialValue>
+        <search>
+          <query/>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | search ComplianceComplianceType="$complianceTypeDropdown1$" | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus | dedup ComplianceStatus keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceStatus, percentage</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.text">Compliance Status</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked100</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">none</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Compliance devices % by type with status $complianceStatusDropdown1$</title>
+      <input type="dropdown" token="complianceStatusDropdown1" searchWhenChanged="true">
+        <label>Compliance Status</label>
+        <choice value="*">All</choice>
+        <choice value="COMPLIANT">COMPLIANT</choice>
+        <choice value="NON_COMPLIANT">NON_COMPLIANT</choice>
+        <choice value="IN_PROGRESS">IN_PROGRESS</choice>
+        <choice value="NOT_AVAILABLE">NOT_AVAILABLE</choice>
+        <choice value="NOT_APPLICABLE">NOT_APPLICABLE</choice>
+        <choice value="ERROR">ERROR</choice>
+        <search>
+          <query/>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <initialValue>COMPLIANT</initialValue>
+        <default>COMPLIANT</default>
+      </input>
+      <chart>
+        <search>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | search ComplianceStatus="$complianceStatusDropdown1$" | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType | dedup ComplianceComplianceType keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceComplianceType, percentage</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.text">Compliance Type</option>
         <option name="charting.axisTitleX.visibility">visible</option>
         <option name="charting.axisTitleY.visibility">visible</option>
         <option name="charting.axisTitleY2.visibility">visible</option>
@@ -86,9 +430,9 @@
         <option name="charting.drilldown">none</option>
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisEnd</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">none</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
         <option name="trellis.enabled">0</option>
@@ -111,6 +455,7 @@
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
+        <default>*</default>
       </input>
       <input type="dropdown" token="complianceTypeDropdown" searchWhenChanged="true">
         <label>Compliance Type</label>
@@ -144,8 +489,8 @@
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
-        <initialValue>*</initialValue>
-        <default>*</default>
+        <initialValue>COMPLIANT</initialValue>
+        <default>COMPLIANT</default>
       </input>
       <table>
         <search>
