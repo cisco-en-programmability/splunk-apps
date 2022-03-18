@@ -14,7 +14,7 @@
       <title>Number of fabric sites</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/fabric_site.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where HasFabric="True" | timechart dc(SiteNameHierarchy) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/fabric_site.py" index="cisco_dnac_index" | where HasFabric="True" | timechart dc(SiteNameHierarchy) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -42,7 +42,7 @@
       <title>Number of sites that are not fabric</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/fabric_site.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where HasFabric="False" | timechart dc(SiteNameHierarchy) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/fabric_site.py" index="cisco_dnac_index" | where HasFabric="False" | timechart dc(SiteNameHierarchy) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -71,7 +71,7 @@
       <title>Sites with fabric</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/fabric_site.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eval WithFabric=if(HasFabric="True", "Yes", "No") | stats dc(SiteNameHierarchy) as amount by WithFabric</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/fabric_site.py" index="cisco_dnac_index" | eval WithFabric=if(HasFabric="True", "Yes", "No") | stats dc(SiteNameHierarchy) as amount by WithFabric</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -123,7 +123,7 @@
       </input>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/fabric_site.py" host="splunk" index="cisco_dnac_index" sourcetype="_json"  HasFabric="$hasFabricDropdown$" | dedup SiteNameHierarchy keepevents=false | table SiteName, SiteNameHierarchy, SiteType, HasFabric, FabricName, FabricSiteNameHierarchy, FabricType, FabricDomainType</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/fabric_site.py" index="cisco_dnac_index"  HasFabric="$hasFabricDropdown$" | dedup SiteNameHierarchy keepevents=false | table SiteName, SiteNameHierarchy, SiteType, HasFabric, FabricName, FabricSiteNameHierarchy, FabricType, FabricDomainType</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>

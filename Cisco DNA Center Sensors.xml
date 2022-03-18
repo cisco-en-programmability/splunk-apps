@@ -14,7 +14,7 @@
       <title>Sensor devices tables</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup name, ipAddress, serialNumber, location keepevents=false | table name, ipAddress, serialNumber, location, type, status, version, backhaulType, ethernetMacAddress, radioMacAddress, lastSeen</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" index="cisco_dnac_index" | dedup name, ipAddress, serialNumber, location keepevents=false | table name, ipAddress, serialNumber, location, type, status, version, backhaulType, ethernetMacAddress, radioMacAddress, lastSeen</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -35,7 +35,7 @@
       <title>Sensor devices by status</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup ipAddress keepevents=false | chart dc(ipAddress) as amount by status</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" index="cisco_dnac_index" | dedup ipAddress keepevents=false | chart dc(ipAddress) as amount by status</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -77,7 +77,7 @@
       <title>Sensor devices by type</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup ipAddress keepevents=false | chart dc(ipAddress) as amount by type</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" index="cisco_dnac_index" | dedup ipAddress keepevents=false | chart dc(ipAddress) as amount by type</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -120,7 +120,7 @@
       <title>Sensor devices by location</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup ipAddress keepevents=false | eval site=if(location="", "N/A", location) | chart dc(ipAddress) as amount by site cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" index="cisco_dnac_index" | dedup ipAddress keepevents=false | eval site=if(location="", "N/A", location) | chart dc(ipAddress) as amount by site cont=false</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -163,7 +163,7 @@
       <title>Sensor devices by backhaul type</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup ipAddress keepevents=false | chart dc(ipAddress) as amount by backhaulType cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" index="cisco_dnac_index" | dedup ipAddress keepevents=false | chart dc(ipAddress) as amount by backhaulType cont=false</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -208,7 +208,7 @@
       <title>Sensor devices' backhaul type history</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" |  timechart dc(ipAddress) as amount by backhaulType cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" index="cisco_dnac_index" |  timechart dc(ipAddress) as amount by backhaulType cont=false</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -254,7 +254,7 @@
       <title>Sensor devices' type history</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" |  timechart dc(ipAddress) as amount by type cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" index="cisco_dnac_index" |  timechart dc(ipAddress) as amount by type cont=false</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -298,7 +298,7 @@
       <title>Sensor devices' status history</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" |  timechart dc(ipAddress) as amount by status cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" index="cisco_dnac_index" |  timechart dc(ipAddress) as amount by status cont=false</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>

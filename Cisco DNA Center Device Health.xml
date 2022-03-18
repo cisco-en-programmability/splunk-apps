@@ -14,7 +14,7 @@
       <title>Manageability types</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | stats dc(IpAddress) as amount by Manageability</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | stats dc(IpAddress) as amount by Manageability</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -57,7 +57,7 @@
       <title>Reachability types</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | stats dc(IpAddress) as amount by Reachability</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | stats dc(IpAddress) as amount by Reachability</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -100,7 +100,7 @@
       <title>Device families</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | stats dc(IpAddress) as amount by DeviceFamily</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | stats dc(IpAddress) as amount by DeviceFamily</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -143,7 +143,7 @@
       <title>Device roles</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | stats dc(IpAddress) as amount by DeviceRole</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | stats dc(IpAddress) as amount by DeviceRole</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -186,7 +186,7 @@
       <title>Device Series count</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | chart dc(IpAddress) as amount by DeviceSeries</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | chart dc(IpAddress) as amount by DeviceSeries</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -231,7 +231,7 @@
       <title>Managed devices</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where Manageability="Managed" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where Manageability="Managed" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -259,7 +259,7 @@
       <title>Unmanaged devices</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where Manageability="Unmanaged" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where Manageability="Unmanaged" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -287,7 +287,7 @@
       <title>Managed (With Errors) devices</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where Manageability="Managed (With Errors)" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where Manageability="Managed (With Errors)" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -317,7 +317,7 @@
       <title>Switches and Hubs count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where DeviceFamily="Switches and Hubs" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where DeviceFamily="Switches and Hubs" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -345,7 +345,7 @@
       <title>Wireless Controller count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where DeviceFamily="Wireless Controller" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where DeviceFamily="Wireless Controller" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -373,7 +373,7 @@
       <title>Routers count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where DeviceFamily="Routers" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where DeviceFamily="Routers" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -401,7 +401,7 @@
       <title>APs count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where DeviceFamily="APs" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where DeviceFamily="APs" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -431,7 +431,7 @@
       <title>Access count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where DeviceRole="ACCESS" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where DeviceRole="ACCESS" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -459,7 +459,7 @@
       <title>Distribution count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where DeviceRole="DISTRIBUTION" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where DeviceRole="DISTRIBUTION" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -489,7 +489,7 @@
       <title>Reachable count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where Reachability="Reachable" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where Reachability="Reachable" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -508,7 +508,7 @@
       <title>Ping Reachable count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where Reachability="Ping Reachable" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where Reachability="Ping Reachable" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -536,7 +536,7 @@
       <title>Unreachable count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | where Reachability="Unreachable" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | where Reachability="Unreachable" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -566,7 +566,7 @@
       <title>Device health table</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup IpAddress keepevents=false | table IpAddress, DeviceName, DeviceFamily, Reachability, ReachabilityFailureReason, ManageErrors, Manageability, ManageErrors, MACAddress, DeviceRole, ImageVersion, Uptime, UptimeSeconds, LastUpdated, LastUpdateTime, SerialNumber, DeviceSeries, Platform, SupportType, AssociatedWLCIP, HealthScore, IssueCount, Site, CPUUtilization, CPUHealth, MemoryUtilization, MemoryUtilizationHealth, InterfaceLinkErrHealth, InterDeviceLinkAvailHealth</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | dedup IpAddress keepevents=false | table IpAddress, DeviceName, DeviceFamily, Reachability, ReachabilityFailureReason, ManageErrors, Manageability, ManageErrors, MACAddress, DeviceRole, ImageVersion, Uptime, UptimeSeconds, LastUpdated, LastUpdateTime, SerialNumber, DeviceSeries, Platform, SupportType, AssociatedWLCIP, HealthScore, IssueCount, Site, CPUUtilization, CPUHealth, MemoryUtilization, MemoryUtilizationHealth, InterfaceLinkErrHealth, InterDeviceLinkAvailHealth</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -587,7 +587,7 @@
       <title>Average of health score by IP over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(HealthScore) by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | timechart avg(HealthScore) by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -630,7 +630,7 @@
       <title>Average of UptimeSeconds - log scaled over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(UptimeSeconds) as avgLnUptimeSeconds by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | timechart avg(UptimeSeconds) as avgLnUptimeSeconds by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -675,7 +675,7 @@
       <title>Issue count by IP</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup IpAddress keepevents=false | table IpAddress, IssueCount</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | dedup IpAddress keepevents=false | table IpAddress, IssueCount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -718,7 +718,7 @@
       <title>Average of Issue Count by IP over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(IssueCount) by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | timechart avg(IssueCount) by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -763,7 +763,7 @@
       <title>Average of CPU Health by IP over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(CPUHealth) by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | timechart avg(CPUHealth) by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -805,7 +805,7 @@
       <title>Average of CPU Utilization by IP over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(CPUUtilization) by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | timechart avg(CPUUtilization) by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -850,7 +850,7 @@
       <title>Average of Memory Utilization Health by IP over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(MemoryUtilizationHealth) by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | timechart avg(MemoryUtilizationHealth) by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -893,7 +893,7 @@
       <title>Average of Memory Utilization by IP over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(MemoryUtilization) by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | timechart avg(MemoryUtilization) by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -938,7 +938,7 @@
       <title>Average of InterDeviceLinkAvailHealth by IP over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(InterDeviceLinkAvailHealth) by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | timechart avg(InterDeviceLinkAvailHealth) by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -981,7 +981,7 @@
       <title>Average of InterfaceLinkErrHealth by IP over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(InterfaceLinkErrHealth) by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" | timechart avg(InterfaceLinkErrHealth) by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -1038,7 +1038,7 @@
       </input>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" DeviceFamily="$familyDropdown$" | timechart avg(CPUHealth) by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" index="cisco_dnac_index" DeviceFamily="$familyDropdown$" | timechart avg(CPUHealth) by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>

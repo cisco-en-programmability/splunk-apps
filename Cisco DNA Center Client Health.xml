@@ -14,7 +14,7 @@
       <title>All score</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(scoreValue) as scoreValue cont=false | where isnotnull(scoreValue)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(scoreValue) as scoreValue cont=false | where isnotnull(scoreValue)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -42,7 +42,7 @@
       <title>Wired score</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(scoreValue) as scoreValue cont=false  | where isnotnull(scoreValue)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(scoreValue) as scoreValue cont=false  | where isnotnull(scoreValue)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -70,7 +70,7 @@
       <title>Wireless score</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRELESS" scoreType="ALL" | timechart avg(scoreValue) as scoreValue  cont=false | where isnotnull(scoreValue)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRELESS" scoreType="ALL" | timechart avg(scoreValue) as scoreValue  cont=false | where isnotnull(scoreValue)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -100,7 +100,7 @@
       <title>All count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -128,7 +128,7 @@
       <title>Wireless count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRELESS" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRELESS" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -157,7 +157,7 @@
       <title>Wired count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -186,7 +186,7 @@
       <title>Wired scores by type</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRED" scoreType!="ALL" | dedup scoreType keepevents=false | table scoreType, scoreValue</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRED" scoreType!="ALL" | dedup scoreType keepevents=false | table scoreType, scoreValue</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -229,7 +229,7 @@
       <title>Wireless scores by type</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRELESS" scoreType!="ALL" | dedup scoreType keepevents=false | table scoreType, scoreValue</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRELESS" scoreType!="ALL" | dedup scoreType keepevents=false | table scoreType, scoreValue</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -274,7 +274,7 @@
       <title>Average of wired score over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRED" scoreType!="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(FAIR)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRED" scoreType!="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(FAIR)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -317,7 +317,7 @@
       <title>Average of wireless score over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRELESS" scoreType!="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(FAIR)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRELESS" scoreType!="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(FAIR)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -362,7 +362,7 @@
       <title>Average of final wired score over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -380,7 +380,7 @@
       <title>Average of final wireless score over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="WIRELESS" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="WIRELESS" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -396,7 +396,7 @@
       <title>Average of score over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/client_health.py" index="cisco_dnac_index" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>

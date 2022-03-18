@@ -14,7 +14,7 @@
       <title>Critical count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True"  SubCategory="Total" Category="CRITICAL" | timechart sum(Amount) cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="True"  SubCategory="Total" Category="CRITICAL" | timechart sum(Amount) cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -42,7 +42,7 @@
       <title>High count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory="Total" Category="HIGH" | timechart sum(Amount) cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="True" SubCategory="Total" Category="HIGH" | timechart sum(Amount) cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -69,7 +69,7 @@
       <title>Medium count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory="Total" Category="MEDIUM" | timechart sum(Amount) cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="True" SubCategory="Total" Category="MEDIUM" | timechart sum(Amount) cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -99,7 +99,7 @@
       <title>Security Advisories count by category</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True"  SubCategory="Total" | dedup Category keepevents=false | chart sum(Amount) as amount by Category</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="True"  SubCategory="Total" | dedup Category keepevents=false | chart sum(Amount) as amount by Category</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -142,7 +142,7 @@
       <title>Security Advisories by category over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True"  SubCategory="Total" | timechart sum(Amount) as amount by Category cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="True"  SubCategory="Total" | timechart sum(Amount) as amount by Category cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -190,14 +190,14 @@
         <fieldForLabel>Category</fieldForLabel>
         <fieldForValue>Category</fieldForValue>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory!="Total" | dedup Category keepevents=false | table Category</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="True" SubCategory!="Total" | dedup Category keepevents=false | table Category</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
       </input>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory!="Total" Category="$categoryDropdown$" | dedup SubCategory keepevents=false  | chart sum(Amount) as amount by SubCategory</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="True" SubCategory!="Total" Category="$categoryDropdown$" | dedup SubCategory keepevents=false  | chart sum(Amount) as amount by SubCategory</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -243,12 +243,12 @@
         <fieldForLabel>Category</fieldForLabel>
         <fieldForValue>Category</fieldForValue>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory!="Total" | dedup Category keepevents=false | table Category</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="True" SubCategory!="Total" | dedup Category keepevents=false | table Category</query>
         </search>
       </input>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True" SubCategory!="Total" Category="$categoryDropdown2$" | timechart sum(Amount) as amount by SubCategory cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="True" SubCategory!="Total" Category="$categoryDropdown2$" | timechart sum(Amount) as amount by SubCategory cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -297,7 +297,7 @@
         <fieldForLabel>IpAddress</fieldForLabel>
         <fieldForValue>IpAddress</fieldForValue>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="False" | dedup IpAddress keepevents=false | table IpAddress</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="False" | dedup IpAddress keepevents=false | table IpAddress</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
@@ -308,14 +308,14 @@
         <fieldForLabel>AdvisoryID</fieldForLabel>
         <fieldForValue>AdvisoryID</fieldForValue>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="False" | dedup AdvisoryID keepevents=false | table AdvisoryID</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="False" | dedup AdvisoryID keepevents=false | table AdvisoryID</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
       </input>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="False" IpAddress="$ipAddressDropdown$" AdvisoryID="$advisoryIDDropdown$" | dedup AdvisoryID keepevents=false | table AdvisoryID, AdvisoryCvesStr, AdvisoryDefaultDetectionType, AdvisoryDetectionType, AdvisoryPublicationUrl, AdvisorySir, IpAddress, DeviceName,  DeviceMACAddress, DeviceSerialNumber, DeviceFamily,  DevicePlatform,  DeviceSeries,  DeviceUptimeSeconds</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" index="cisco_dnac_index" Summary="False" IpAddress="$ipAddressDropdown$" AdvisoryID="$advisoryIDDropdown$" | dedup AdvisoryID keepevents=false | table AdvisoryID, AdvisoryCvesStr, AdvisoryDefaultDetectionType, AdvisoryDetectionType, AdvisoryPublicationUrl, AdvisorySir, IpAddress, DeviceName,  DeviceMACAddress, DeviceSerialNumber, DeviceFamily,  DevicePlatform,  DeviceSeries,  DeviceUptimeSeconds</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>

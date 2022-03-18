@@ -14,7 +14,7 @@
       <title>Total images</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="True" | timechart dc(ImageImageName) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="True" | timechart dc(ImageImageName) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -28,7 +28,7 @@
       <title>Total of actual images</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="True" | where ImageImageName!="N/A" | timechart dc(ImageImageName) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="True" | where ImageImageName!="N/A" | timechart dc(ImageImageName) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -56,7 +56,7 @@
       <title>Total of unknown images used by devices</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="True" | where ImageImageName="N/A" | timechart dc(ImageImageName) as amount cont=false  | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="True" | where ImageImageName="N/A" | timechart dc(ImageImageName) as amount cont=false  | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -84,7 +84,7 @@
       <title>Images of state Ready</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" StackSwitchInfoState="READY" | timechart dc(ImageImageName) as amount cont=false  | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="False" StackSwitchInfoState="READY" | timechart dc(ImageImageName) as amount cont=false  | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -112,7 +112,7 @@
       <title>Devices with image of state Ready</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" StackSwitchInfoState="READY" | timechart dc(ImageImageName) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="False" StackSwitchInfoState="READY" | timechart dc(ImageImageName) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -142,7 +142,7 @@
       <title>Image by state (StackSwitchInfoState)</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval State=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | chart dc(ImageImageName) as amount by State</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="False" | eval State=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | chart dc(ImageImageName) as amount by State</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -185,7 +185,7 @@
       <title>Number of images by name</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="True" | chart dc(ImageImageName) as amount by ImageImageName</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="True" | chart dc(ImageImageName) as amount by ImageImageName</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -230,7 +230,7 @@
       <title>Avg. of devices assigned to images</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="True" | timechart avg(ImageDevicesAmount) as amount by ImageImageName cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="True" | timechart avg(ImageDevicesAmount) as amount by ImageImageName cont=false</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -273,7 +273,7 @@
       <title>Number of images by state over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | timechart dc(ImageImageName) as amount by StackSwitchInfoState2 cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | timechart dc(ImageImageName) as amount by StackSwitchInfoState2 cont=false</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -319,7 +319,7 @@
       <title>Table with image and its devices</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | stats dc(DeviceIpAddress) as DeviceNumber, values(DeviceIpAddress) as DeviceIpAddresses BY ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2 | dedup ImageImageName keepevents=false | table ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2, DeviceNumber, DeviceIpAddresses</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | stats dc(DeviceIpAddress) as DeviceNumber, values(DeviceIpAddress) as DeviceIpAddresses BY ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2 | dedup ImageImageName keepevents=false | table ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2, DeviceNumber, DeviceIpAddresses</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -340,7 +340,7 @@
       <title>Table with device and its image</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | dedup DeviceName keepevents=false | table DeviceName,  DeviceImageVersion,  DeviceIpAddress,  DeviceMACAddress,  DevicePlatform,  DeviceRole,  DeviceSeries, ImageImageName, StackSwitchInfoState2, ImageDisplayVersion,  ImageFamily,  ImageSimpleName,  StackSwitchInfoRole</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" index="cisco_dnac_index" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | dedup DeviceName keepevents=false | table DeviceName,  DeviceImageVersion,  DeviceIpAddress,  DeviceMACAddress,  DevicePlatform,  DeviceRole,  DeviceSeries, ImageImageName, StackSwitchInfoState2, ImageDisplayVersion,  ImageFamily,  ImageSimpleName,  StackSwitchInfoRole</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>

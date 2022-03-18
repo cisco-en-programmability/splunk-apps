@@ -16,7 +16,7 @@
       <fieldForLabel>IssueStatus</fieldForLabel>
       <fieldForValue>IssueStatus</fieldForValue>
       <search>
-        <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup IssueStatus keepevents=false | table IssueStatus</query>
+        <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" | dedup IssueStatus keepevents=false | table IssueStatus</query>
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
@@ -36,7 +36,7 @@
       <title>Total number of issues</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | timechart dc(IssueID) cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" | timechart dc(IssueID) cont=false</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -65,7 +65,7 @@
       <title>Total sum of issue count</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" |  eventstats sum(IssueCount) as subtotal by _time | dedup _time keepevents=false | chart sum(subtotal) by _time cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" |  eventstats sum(IssueCount) as subtotal by _time | dedup _time keepevents=false | chart sum(subtotal) by _time cont=false</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -96,7 +96,7 @@
       <title>Number of issues by priority</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | chart dc(IssueID) as amount cont=false by IssueSpecificPriority</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" | chart dc(IssueID) as amount cont=false by IssueSpecificPriority</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -139,7 +139,7 @@
       <title>Number of issues by severity</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | chart dc(IssueID) as amount cont=false by IssueSpecificSeverity</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" | chart dc(IssueID) as amount cont=false by IssueSpecificSeverity</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -183,7 +183,7 @@
       <title>Number of issues by category</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | chart dc(IssueID) as amount cont=false by IssueSpecificCategory</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" | chart dc(IssueID) as amount cont=false by IssueSpecificCategory</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -227,7 +227,7 @@
       <title>Number of issues by entity</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | chart dc(IssueID) as amount cont=false by IssueSpecificEntity</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" | chart dc(IssueID) as amount cont=false by IssueSpecificEntity</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -270,7 +270,7 @@
       <title>Number of Issues by name</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | chart dc(IssueID)  as amount cont=false by IssueSpecificName</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" | chart dc(IssueID)  as amount cont=false by IssueSpecificName</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -316,7 +316,7 @@
       <title>Issue count by severity over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity | dedup _time, IssueSpecificSeverity keepevents=false | chart sum(subtotal) by _time, IssueSpecificSeverity cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity | dedup _time, IssueSpecificSeverity keepevents=false | chart sum(subtotal) by _time, IssueSpecificSeverity cont=false</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -361,7 +361,7 @@
       <title>Issue count by priority over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificPriority | dedup _time, IssueSpecificPriority keepevents=false | chart sum(subtotal) by _time, IssueSpecificPriority cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificPriority | dedup _time, IssueSpecificPriority keepevents=false | chart sum(subtotal) by _time, IssueSpecificPriority cont=false</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -406,7 +406,7 @@
       <title>Issue count by issue name over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificName | dedup _time, IssueSpecificName keepevents=false | chart sum(subtotal) by _time, IssueSpecificName cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificName | dedup _time, IssueSpecificName keepevents=false | chart sum(subtotal) by _time, IssueSpecificName cont=false</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -451,7 +451,7 @@
       <title>Top 5 Issues - table</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountSpecific, list(IssueName) as IssueNames, list(IssueSpecificTimestamp) as IssueSpecificTimestamps, list(IssueStatus) as IssueStatuses, list(DeviceName) as DeviceNames, list(DeviceIpAddress) as DeviceIpAddresses, list(DeviceMACAddress) as DeviceMACAddresses, list(DeviceFamily) as DeviceFamilies, list(DeviceRole) as DeviceRoles by IssueSpecificName | dedup IssueSpecificName keepevents=false | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountSpecific), +str(IssueSpecificName) | table IssueSpecificName, IssueSpecificPriority, IssueCountSpecific, , IssueSpecificSeverity, IssueSpecificSummary, IssueNames, IssueSpecificTimestamps, IssueStatuses, DeviceNames, DeviceIpAddresses, DeviceMACAddresses, DeviceFamilies, DeviceRoles</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountSpecific, list(IssueName) as IssueNames, list(IssueSpecificTimestamp) as IssueSpecificTimestamps, list(IssueStatus) as IssueStatuses, list(DeviceName) as DeviceNames, list(DeviceIpAddress) as DeviceIpAddresses, list(DeviceMACAddress) as DeviceMACAddresses, list(DeviceFamily) as DeviceFamilies, list(DeviceRole) as DeviceRoles by IssueSpecificName | dedup IssueSpecificName keepevents=false | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountSpecific), +str(IssueSpecificName) | table IssueSpecificName, IssueSpecificPriority, IssueCountSpecific, , IssueSpecificSeverity, IssueSpecificSummary, IssueNames, IssueSpecificTimestamps, IssueStatuses, DeviceNames, DeviceIpAddresses, DeviceMACAddresses, DeviceFamilies, DeviceRoles</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -466,7 +466,7 @@
       <title>Top 5 devices impacted - table</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice, dc(IssueID) as IssueIDAmount, list(IssueSpecificName) as IssueSpecificNames, list(IssueSpecificPriority) as IssueSpecificPriorities, list(IssueSpecificSeverity) as IssueSpecificSeverities by DeviceID | dedup DeviceID keepevents=false | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName) | table DeviceName, IssueCountDevice, DeviceIpAddress, DeviceMACAddress, DeviceFamily, DeviceRole, IssueIDAmount, IssueCountDevice, IssueSpecificNames, IssueSpecificPriorities, IssueSpecificSeverities</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice, dc(IssueID) as IssueIDAmount, list(IssueSpecificName) as IssueSpecificNames, list(IssueSpecificPriority) as IssueSpecificPriorities, list(IssueSpecificSeverity) as IssueSpecificSeverities by DeviceID | dedup DeviceID keepevents=false | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName) | table DeviceName, IssueCountDevice, DeviceIpAddress, DeviceMACAddress, DeviceFamily, DeviceRole, IssueIDAmount, IssueCountDevice, IssueSpecificNames, IssueSpecificPriorities, IssueSpecificSeverities</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -487,7 +487,7 @@
       <title>Top 5 - number of devices with issues by name</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName) | chart dc(DeviceID)  as amount cont=false by IssueSpecificName</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName) | chart dc(DeviceID)  as amount cont=false by IssueSpecificName</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -501,7 +501,7 @@
       <title>Top 5 - number of devices with issues by severity</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName) | chart dc(DeviceID) as amount cont=false by IssueSpecificSeverity</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName) | chart dc(DeviceID) as amount cont=false by IssueSpecificSeverity</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -546,7 +546,7 @@
       <title>Top 5 - issue count by issue name</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountSpecific by IssueSpecificName | dedup IssueSpecificName keepevents=false | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountSpecific), +str(IssueSpecificName) | chart sum(IssueCountSpecific) as issue_count cont=false by IssueSpecificName</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountSpecific by IssueSpecificName | dedup IssueSpecificName keepevents=false | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountSpecific), +str(IssueSpecificName) | chart sum(IssueCountSpecific) as issue_count cont=false by IssueSpecificName</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -589,7 +589,7 @@
       <title>Top 5 - sum issue count for each device name</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName) | chart sum(IssueCount) as issue_count cont=false by DeviceName</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/issues.py" index="cisco_dnac_index" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$) | dedup IssueID keepevents=false | eventstats sum(IssueCount) as IssueCountDevice | sort limit=5 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName) | chart sum(IssueCount) as issue_count cont=false by DeviceName</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>

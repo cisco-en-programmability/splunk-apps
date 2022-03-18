@@ -14,7 +14,7 @@
       <title>Number of compliance devices</title>
       <single>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart dc(ComplianceDeviceID) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" | timechart dc(ComplianceDeviceID) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -59,7 +59,7 @@
       </input>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus | dedup ComplianceStatus keepevents=false | eval percentage=((subtotal/total)*100) | where ComplianceStatus="$complianceStatusDropdown4$" | appendpipe [stats count | where count=0 | rename count as "percentage"] | table percentage</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" | eventstats dc(ComplianceDeviceID) as total | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus | dedup ComplianceStatus keepevents=false | eval percentage=((subtotal/total)*100) | where ComplianceStatus="$complianceStatusDropdown4$" | appendpipe [stats count | where count=0 | rename count as "percentage"] | table percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -124,7 +124,7 @@
       </input>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ComplianceComplianceType="$complianceTypeDropdown2$"  | timechart dc(ComplianceDeviceID) as amount by ComplianceStatus cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" ComplianceComplianceType="$complianceTypeDropdown2$"  | timechart dc(ComplianceDeviceID) as amount by ComplianceStatus cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -168,7 +168,7 @@
       <title>Compliance devices % by status and with type: $complianceTypeDropdown2$</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | search ComplianceComplianceType="$complianceTypeDropdown2$" | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus | dedup ComplianceStatus keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceStatus, percentage</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" | eventstats dc(ComplianceDeviceID) as total | search ComplianceComplianceType="$complianceTypeDropdown2$" | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus | dedup ComplianceStatus keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceStatus, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -230,7 +230,7 @@
       </input>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ComplianceStatus IN ($complianceStatusDropdown2$) | timechart dc(ComplianceDeviceID) by ComplianceComplianceType cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" ComplianceStatus IN ($complianceStatusDropdown2$) | timechart dc(ComplianceDeviceID) by ComplianceComplianceType cont=false</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -275,7 +275,7 @@
       <title>Compliance devices % by type and with status: $complianceStatusDropdown2$</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | search ComplianceStatus IN ($complianceStatusDropdown2$) | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType | dedup ComplianceComplianceType keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceComplianceType, percentage</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" | eventstats dc(ComplianceDeviceID) as total | search ComplianceStatus IN ($complianceStatusDropdown2$) | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType | dedup ComplianceComplianceType keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceComplianceType, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -339,7 +339,7 @@
       </input>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | search ComplianceComplianceType="$complianceTypeDropdown1$" | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus | dedup ComplianceStatus keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceStatus, percentage</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" | eventstats dc(ComplianceDeviceID) as total | search ComplianceComplianceType="$complianceTypeDropdown1$" | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus | dedup ComplianceStatus keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceStatus, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -400,7 +400,7 @@
       </input>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eventstats dc(ComplianceDeviceID) as total | search ComplianceStatus="$complianceStatusDropdown1$" | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType | dedup ComplianceComplianceType keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceComplianceType, percentage</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" | eventstats dc(ComplianceDeviceID) as total | search ComplianceStatus="$complianceStatusDropdown1$" | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType | dedup ComplianceComplianceType keepevents=false | eval percentage=((subtotal/total)*100) | table ComplianceComplianceType, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -451,7 +451,7 @@
         <fieldForLabel>IpAddress</fieldForLabel>
         <fieldForValue>IpAddress</fieldForValue>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup IpAddress keepevents=false | table IpAddress</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" | dedup IpAddress keepevents=false | table IpAddress</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
@@ -494,7 +494,7 @@
       </input>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" IpAddress="$deviceIpAddressDropdown$" ComplianceComplianceType="$complianceTypeDropdown$" ComplianceStatus="$complianceStatusDropdown$" | dedup ComplianceDeviceID, ComplianceComplianceType keepevents=false | table DeviceName, DeviceRole, IpAddress, MACAddress,  Manageability, Reachability, ComplianceComplianceType, ComplianceState, ComplianceStatus, ComplianceLastSyncTime,  ComplianceLastUpdateTime</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" index="cisco_dnac_index" IpAddress="$deviceIpAddressDropdown$" ComplianceComplianceType="$complianceTypeDropdown$" ComplianceStatus="$complianceStatusDropdown$" | dedup ComplianceDeviceID, ComplianceComplianceType keepevents=false | table DeviceName, DeviceRole, IpAddress, MACAddress,  Manageability, Reachability, ComplianceComplianceType, ComplianceState, ComplianceStatus, ComplianceLastSyncTime,  ComplianceLastUpdateTime</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
