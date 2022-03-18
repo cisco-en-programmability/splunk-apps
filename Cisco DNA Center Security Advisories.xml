@@ -139,7 +139,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Security Advisories history by category</title>
+      <title>Security Advisories by category over time</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/security_advisories.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" Summary="True"  SubCategory="Total" | timechart sum(Amount) as amount by Category cont=false</query>
@@ -172,7 +172,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -237,7 +237,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Security Advisories history by subcategory</title>
+      <title>Security Advisories by subcategory over time</title>
       <input type="dropdown" token="categoryDropdown2" searchWhenChanged="true">
         <label>Category</label>
         <fieldForLabel>Category</fieldForLabel>
@@ -278,7 +278,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -294,7 +294,6 @@
       <input type="dropdown" token="ipAddressDropdown" searchWhenChanged="true">
         <label>IP Address</label>
         <choice value="*">All</choice>
-        <initialValue>*</initialValue>
         <fieldForLabel>IpAddress</fieldForLabel>
         <fieldForValue>IpAddress</fieldForValue>
         <search>
@@ -306,7 +305,6 @@
       <input type="dropdown" token="advisoryIDDropdown" searchWhenChanged="true">
         <label>Advisory ID</label>
         <choice value="*">All</choice>
-        <initialValue>*</initialValue>
         <fieldForLabel>AdvisoryID</fieldForLabel>
         <fieldForValue>AdvisoryID</fieldForValue>
         <search>
