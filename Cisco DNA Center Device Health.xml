@@ -186,7 +186,7 @@
       <title>Device Series count</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | chart dc(IpAddress) over DeviceSeries</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | chart dc(IpAddress) as amount by DeviceSeries</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -236,7 +236,7 @@
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
-        <option name="colorBy">value</option>
+        <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
@@ -251,7 +251,7 @@
         <option name="trendColorInterpretation">standard</option>
         <option name="trendDisplayMode">absolute</option>
         <option name="unitPosition">after</option>
-        <option name="useColors">0</option>
+        <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
@@ -264,7 +264,7 @@
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
-        <option name="colorBy">value</option>
+        <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
@@ -276,10 +276,10 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
-        <option name="trendColorInterpretation">standard</option>
+        <option name="trendColorInterpretation">inverse</option>
         <option name="trendDisplayMode">absolute</option>
         <option name="unitPosition">after</option>
-        <option name="useColors">0</option>
+        <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
@@ -292,7 +292,7 @@
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
-        <option name="colorBy">value</option>
+        <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
@@ -304,10 +304,10 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
-        <option name="trendColorInterpretation">standard</option>
+        <option name="trendColorInterpretation">inverse</option>
         <option name="trendDisplayMode">absolute</option>
         <option name="unitPosition">after</option>
-        <option name="useColors">0</option>
+        <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
@@ -322,11 +322,11 @@
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
-        <option name="colorBy">value</option>
+        <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
         <option name="rangeValues">[0,30,70,100]</option>
         <option name="refresh.display">progressbar</option>
         <option name="showSparkline">1</option>
@@ -494,11 +494,14 @@
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
+        <option name="colorBy">trend</option>
         <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
         <option name="refresh.display">progressbar</option>
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+        <option name="useColors">1</option>
       </single>
     </panel>
     <panel>
@@ -510,7 +513,7 @@
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
-        <option name="colorBy">value</option>
+        <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
@@ -525,7 +528,7 @@
         <option name="trendColorInterpretation">standard</option>
         <option name="trendDisplayMode">absolute</option>
         <option name="unitPosition">after</option>
-        <option name="useColors">0</option>
+        <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
@@ -538,7 +541,7 @@
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
-        <option name="colorBy">value</option>
+        <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
@@ -550,17 +553,17 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
-        <option name="trendColorInterpretation">standard</option>
+        <option name="trendColorInterpretation">inverse</option>
         <option name="trendDisplayMode">absolute</option>
         <option name="unitPosition">after</option>
-        <option name="useColors">0</option>
+        <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
   </row>
   <row>
     <panel>
-      <title>Device health</title>
+      <title>Device health table</title>
       <table>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup IpAddress keepevents=false | table IpAddress, DeviceName, DeviceFamily, Reachability, ReachabilityFailureReason, ManageErrors, Manageability, ManageErrors, MACAddress, DeviceRole, ImageVersion, Uptime, UptimeSeconds, LastUpdated, LastUpdateTime, SerialNumber, DeviceSeries, Platform, SupportType, AssociatedWLCIP, HealthScore, IssueCount, Site, CPUUtilization, CPUHealth, MemoryUtilization, MemoryUtilizationHealth, InterfaceLinkErrHealth, InterDeviceLinkAvailHealth</query>
@@ -581,7 +584,7 @@
   </row>
   <row>
     <panel>
-      <title>Health score by IP</title>
+      <title>Average of health score by IP over time</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(HealthScore) by IpAddress cont=false</query>
@@ -606,7 +609,7 @@
         <option name="charting.chart.bubbleMinimumSize">10</option>
         <option name="charting.chart.bubbleSizeBy">area</option>
         <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.showDataLabels">minmax</option>
         <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
         <option name="charting.chart.stackMode">default</option>
         <option name="charting.chart.style">shiny</option>
@@ -614,7 +617,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -624,10 +627,10 @@
       </chart>
     </panel>
     <panel>
-      <title>Average of ln(UptimeSeconds)</title>
+      <title>Average of UptimeSeconds - log scaled over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | eval lnUp=ln(UptimeSeconds) | timechart avg(lnUp) as avgLnUptimeSeconds by IpAddress cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(UptimeSeconds) as avgLnUptimeSeconds by IpAddress cont=false</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -640,7 +643,7 @@
         <option name="charting.axisX.abbreviation">none</option>
         <option name="charting.axisX.scale">linear</option>
         <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY.scale">log</option>
         <option name="charting.axisY2.abbreviation">none</option>
         <option name="charting.axisY2.enabled">0</option>
         <option name="charting.axisY2.scale">inherit</option>
@@ -669,7 +672,7 @@
   </row>
   <row>
     <panel>
-      <title>Issue count</title>
+      <title>Issue count by IP</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup IpAddress keepevents=false | table IpAddress, IssueCount</query>
@@ -712,7 +715,7 @@
       </chart>
     </panel>
     <panel>
-      <title>IssueCount by IP</title>
+      <title>Average of Issue Count by IP over time</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(IssueCount) by IpAddress cont=false</query>
@@ -757,7 +760,7 @@
   </row>
   <row>
     <panel>
-      <title>CPUHealth by IP</title>
+      <title>Average of CPU Health by IP over time</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(CPUHealth) by IpAddress cont=false</query>
@@ -790,7 +793,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="trellis.enabled">0</option>
@@ -799,7 +802,7 @@
       </chart>
     </panel>
     <panel>
-      <title>CPUUtilization by IP</title>
+      <title>Average of CPU Utilization by IP over time</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(CPUUtilization) by IpAddress cont=false</query>
@@ -832,7 +835,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -844,7 +847,7 @@
   </row>
   <row>
     <panel>
-      <title>MemoryUtilizationHealth by IP</title>
+      <title>Average of Memory Utilization Health by IP over time</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(MemoryUtilizationHealth) by IpAddress cont=false</query>
@@ -877,7 +880,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -887,7 +890,7 @@
       </chart>
     </panel>
     <panel>
-      <title>MemoryUtilization by IP</title>
+      <title>Average of Memory Utilization by IP over time</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(MemoryUtilization) by IpAddress cont=false</query>
@@ -920,7 +923,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -932,7 +935,7 @@
   </row>
   <row>
     <panel>
-      <title>InterDeviceLinkAvailHealth by IP</title>
+      <title>Average of InterDeviceLinkAvailHealth by IP over time</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(InterDeviceLinkAvailHealth) by IpAddress cont=false</query>
@@ -965,7 +968,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -975,7 +978,7 @@
       </chart>
     </panel>
     <panel>
-      <title>InterfaceLinkErrHealth by IP</title>
+      <title>Average of InterfaceLinkErrHealth by IP over time</title>
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/device_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | timechart avg(InterfaceLinkErrHealth) by IpAddress cont=false</query>
@@ -1008,7 +1011,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -1020,7 +1023,7 @@
   </row>
   <row>
     <panel>
-      <title>CPUHealth by IP and filtered</title>
+      <title>Average of CPUHealth by IP with family:  "$familyDropdown$" - over time</title>
       <input type="dropdown" token="familyDropdown" searchWhenChanged="true">
         <label>Device family filter</label>
         <choice value="*">All</choice>
