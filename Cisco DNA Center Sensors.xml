@@ -35,7 +35,7 @@
       <title>Sensor devices by status</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup ipAddress keepevents=false | chart dc(ipAddress) by status</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup ipAddress keepevents=false | chart dc(ipAddress) as amount by status</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -77,7 +77,7 @@
       <title>Sensor devices by type</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup ipAddress keepevents=false | chart dc(ipAddress) by type</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/sensors.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" | dedup ipAddress keepevents=false | chart dc(ipAddress) as amount by type</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -217,7 +217,7 @@
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
         <option name="charting.axisTitleX.visibility">visible</option>
         <option name="charting.axisTitleY.text"># of devices</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
         <option name="charting.axisTitleY2.visibility">visible</option>
         <option name="charting.axisX.abbreviation">none</option>
         <option name="charting.axisX.scale">linear</option>
@@ -239,7 +239,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -285,7 +285,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -329,7 +329,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
