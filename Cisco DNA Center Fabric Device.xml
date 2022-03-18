@@ -1,6 +1,6 @@
 <form>
   <label>Cisco DNA Center Fabric Device</label>
-  <fieldset submitButton="false" autoRun="false">
+  <fieldset submitButton="false" autoRun="true">
     <input type="time" token="timeRangePicker5" searchWhenChanged="true">
       <label></label>
       <default>
