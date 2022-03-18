@@ -231,8 +231,8 @@
       <chart>
         <search>
           <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/compliance.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ComplianceStatus IN ($complianceStatusDropdown2$) | timechart dc(ComplianceDeviceID) by ComplianceComplianceType cont=false</query>
-          <earliest>-4h@m</earliest>
-          <latest>now</latest>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
