@@ -1,6 +1,6 @@
 <form>
   <label>Cisco DNA Center Image Health</label>
-  <fieldset submitButton="false">
+  <fieldset submitButton="false" autoRun="true">
     <input type="time" token="timeRangePicker4" searchWhenChanged="true">
       <label></label>
       <default>
@@ -89,11 +89,11 @@
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
-        <option name="colorBy">value</option>
+        <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
         <option name="rangeValues">[0,30,70,100]</option>
         <option name="refresh.display">progressbar</option>
         <option name="showSparkline">1</option>
@@ -104,7 +104,7 @@
         <option name="trendColorInterpretation">standard</option>
         <option name="trendDisplayMode">absolute</option>
         <option name="unitPosition">after</option>
-        <option name="useColors">0</option>
+        <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
@@ -117,11 +117,11 @@
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
-        <option name="colorBy">value</option>
+        <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
         <option name="rangeValues">[0,30,70,100]</option>
         <option name="refresh.display">progressbar</option>
         <option name="showSparkline">1</option>
@@ -132,7 +132,7 @@
         <option name="trendColorInterpretation">standard</option>
         <option name="trendDisplayMode">absolute</option>
         <option name="unitPosition">after</option>
-        <option name="useColors">0</option>
+        <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
@@ -142,7 +142,7 @@
       <title>Image by state (StackSwitchInfoState)</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval State=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | chart dc(ImageImageName) by State</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval State=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | chart dc(ImageImageName) as amount by State</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -182,10 +182,10 @@
       </chart>
     </panel>
     <panel>
-      <title>Images by name</title>
+      <title>Number of images by name</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="True" | chart dc(ImageImageName) by ImageImageName</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="True" | chart dc(ImageImageName) as amount by ImageImageName</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -230,7 +230,7 @@
       <title>Avg. of devices assigned to images</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="True" | timechart avg(ImageDevicesAmount) by ImageImageName cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="True" | timechart avg(ImageDevicesAmount) as amount by ImageImageName cont=false</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -238,7 +238,7 @@
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
         <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
         <option name="charting.axisTitleY2.visibility">visible</option>
         <option name="charting.axisX.abbreviation">none</option>
         <option name="charting.axisX.scale">linear</option>
@@ -260,7 +260,7 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
@@ -270,10 +270,10 @@
       </chart>
     </panel>
     <panel>
-      <title>Image by state history</title>
+      <title>Number of images by state over time</title>
       <chart>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | timechart dc(ImageImageName) by StackSwitchInfoState2 cont=false</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | timechart dc(ImageImageName) as amount by StackSwitchInfoState2 cont=false</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -303,22 +303,23 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.mode">seriesCompare</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
         <option name="refresh.display">progressbar</option>
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+        <option name="trellis.splitBy">StackSwitchInfoState2</option>
       </chart>
     </panel>
   </row>
   <row>
     <panel>
-      <title>Device by Image table</title>
+      <title>Table with image and its devices</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | dedup DeviceName keepevents=false | table ImageImageName, StackSwitchInfoState2, DeviceName,  DeviceImageVersion,  DeviceIpAddress,  DeviceMACAddress,  DevicePlatform,  DeviceRole,  DeviceSeries,  ImageDisplayVersion,  ImageFamily,  ImageSimpleName,  StackSwitchInfoRole</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | stats dc(DeviceIpAddress) as DeviceNumber, values(DeviceIpAddress) as DeviceIpAddresses BY ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2 | dedup ImageImageName keepevents=false | table ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2, DeviceNumber, DeviceIpAddresses</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -336,10 +337,10 @@
   </row>
   <row>
     <panel>
-      <title>Image by table</title>
+      <title>Table with device and its image</title>
       <table>
         <search>
-          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | stats dc(DeviceIpAddress) as DeviceNumber, values(DeviceIpAddress) as DeviceIpAddresses BY ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2 | dedup ImageImageName keepevents=false | table ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2, DeviceNumber, DeviceIpAddresses</query>
+          <query>source="/opt/splunk/etc/apps/CiscoDNACenter/bin/image_health.py" host="splunk" index="cisco_dnac_index" sourcetype="_json" ImageSummary="False" | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN") | dedup DeviceName keepevents=false | table DeviceName,  DeviceImageVersion,  DeviceIpAddress,  DeviceMACAddress,  DevicePlatform,  DeviceRole,  DeviceSeries, ImageImageName, StackSwitchInfoState2, ImageDisplayVersion,  ImageFamily,  ImageSimpleName,  StackSwitchInfoRole</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
