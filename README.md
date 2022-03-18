@@ -53,7 +53,12 @@ The repo includes:
     - [Cisco DNA Center Client Health.xml](./Cisco%20DNA%20Center%20Client%20Health.xml): sample dasboard that will display:
         + The health scores for all, for wired and for wireless devices in different graphs.
     - [Cisco DNA Center Compliance.xml](./Cisco%20DNA%20Center%20Compliance.xml): sample dasboard that will display:
-        + The number of compliance devices by compliance type, and a compliance table summary
+        + The number of compliance devices
+        + The number of compliance devices by status over time
+        + The percentage of compliance devices by status
+        + The number of compliance devices by type over time
+        + The percentage of compliance devices by type
+        + A compliance table summary
     - [Cisco DNA Center Device Health.xml](./Cisco%20DNA%20Center%20Device%20Health.xml): sample dasboard that will display:
         + The number of devices managed
         + The number of devices by family
