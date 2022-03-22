@@ -24,7 +24,7 @@ The repo includes:
     - [config.ini](./config.ini): Config file to set the Cisco DNA Center connection details for the SDK.
 
 - Python wrappers:
-    - [api.py](./api.py): Python file that wraps the session and the API's functions by.
+    - [api.py](./api.py): Python file that wraps the session and the API's functions by DNACenter's subdomain.
     - [mydict.py](./mydict.py): Python file that wraps the mydict class. It is a data factory function.
 
 - Python scripts:
