@@ -27,12 +27,12 @@ import configparser
 import json
 import os.path
 
-from dnacentersdk import api
+import api
 
 
 def read_config_file():
     config = configparser.ConfigParser()
-    config.read(os.path.join(os.path.dirname(__file__), 'config_primelab.ini'))
+    config.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
     return config
 
 def simplify_site(site_resp):

@@ -27,36 +27,13 @@ import configparser
 import json
 import os.path
 
-from dnacentersdk import api
+import api
 
 
 def read_config_file():
     config = configparser.ConfigParser()
     config.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
     return config
-
-def get_device_image_details(dnac, device_id):
-    """
-    This function will retrieve the specific device image details using a custom method
-    :param dnac: Cisco DNAC SDK api
-    :param device_id: device id
-    :return: device image response
-    """
-    def get_image_function(device_id):
-        return dnac.custom_caller.call_api(
-            'GET',
-            '/api/v2/device-image/device',
-            params={
-                'id': device_id
-            })
-    try:
-        device_image_details = get_image_function(device_id)
-        if device_image_details and device_image_details.response:
-            if len(device_image_details.response) > 0:
-                return device_image_details.response[0]
-        return None
-    except:
-        return None
 
 def get_important_image_details(details):
     """
@@ -205,66 +182,6 @@ def get_important_stack_details(details):
             response['StackSvlSwitchInfoAmount'] = len(details['svlSwitchInfo']) if isinstance(details['svlSwitchInfo'], list) else 0
             response['StackSvlSwitchInfo'] = details['svlSwitchInfo']
     return response
-
-def filter_data_as_images_2(dnac, images_items, devices_items):
-    """
-    This function will filter data to get the overall image health data.
-    This function uses a private/custom API.
-    :param dnac: Cisco DNAC SDK api
-    :param images_items: images
-    :param devices_items: devices
-    :return: image health summary response
-    """
-    summary_response = []
-    image_dict_summary = {}
-    image_dict = {}
-
-    for image_item in images_items:
-        image_key = image_item['ImageName'].lower()
-        image_dict_summary[image_key] = dict(image_item)
-        image_dict_summary[image_key]['ImageDevicesAmount'] = 0
-        image_dict_summary[image_key]['ImageSummary'] = 'True'
-        image_dict[image_key] = dict(image_item)
-        image_dict[image_key]['ImageDevicesAmount'] = 0
-        image_dict[image_key]['ImageSummary'] = 'False'
-
-    for device_item in devices_items:
-        stack_detail = get_important_image_details(get_device_image_details(dnac, device_item.get('id')))
-        stack_detail_key = 'DeviceInstalledInfoName'
-
-        device_detail = get_important_device_values(device_item)
-
-        if stack_detail.get(stack_detail_key) != "":
-            software_image = stack_detail[stack_detail_key].lower()
-            if image_dict_summary.get(software_image):
-                image_dict_summary[software_image]['ImagePresent'] = 'False'
-                image_dict_summary[software_image]['ImageDevicesAmount'] += 1
-                image_dict[software_image]['ImageDevicesAmount'] = 1
-                image_dict[software_image].update(device_detail)
-                image_dict[software_image].update(stack_detail)
-                summary_response.append(dict(image_dict[software_image]))
-            else:
-                image_key_2 = stack_detail[stack_detail_key].lower()
-                if image_dict_summary.get(image_key_2) is None:
-                    image_dict_summary[image_key_2] = {'ImageDevicesAmount': 0, 'ImageSummary': 'True', 'ImagePresent': 'False'}
-                if image_dict_summary.get(image_key_2):
-                    image_dict_summary[image_key_2]['ImageDevicesAmount'] += 1
-                    image_dict_summary[image_key_2]['ImageName'] = 'N/A'
-                    image_dict_summary[image_key_2]['ImageImageName'] = 'N/A'
-                    image_dict_summary[image_key_2]['ImageImageUuid'] = ''
-                    image_dict_summary[image_key_2]['ImageFamily'] = ''
-                    image_dict_summary[image_key_2]['ImageVersion'] = ''
-                    image_dict_summary[image_key_2]['ImageDisplayVersion'] = ''
-                    image_dict_summary[image_key_2]['ImageSimpleName'] = image_key_2
-
-                    image_dict[image_key_2] = dict(image_dict_summary[image_key_2])
-                    image_dict[image_key_2]['ImageSummary'] = 'False'
-                    image_dict[image_key_2]['ImageDevicesAmount'] = 1
-                    image_dict[image_key_2].update(device_detail)
-                    image_dict[image_key_2].update(stack_detail)
-                    summary_response.append(dict(image_dict[image_key_2]))
-    summary_response.extend(list(image_dict_summary.values()))
-    return summary_response
 
 
 def filter_data_as_images_1(dnac, images_items, devices_items):

@@ -28,7 +28,7 @@ import json
 import os.path
 import time
 
-from dnacentersdk import api
+import api
 
 
 def read_config_file():

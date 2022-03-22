@@ -8,19 +8,8 @@ The project contains multiple Python scripts and dashboards.
 
 ## Tools & Frameworks:
 
-- Cisco DNA Center SDK - [dnacentersdk](https://github.com/cisco-en-programmability/dnacentersdk) - (v2.4.6 or above is recommended)
 - Splunk Enterprise Server
 
-## Install dnacentersdk on Splunk
-
-To install the Python package `dnacentersdk` on the _Splunk environment_, you may use the following script.
-
-```shell
-$ # To install latest version
-$ /opt/splunk/bin/splunk cmd python3 -m pip install dnacentersdk
-$ # To update to latest version
-$ /opt/splunk/bin/splunk cmd python3 -m pip install dnacentersdk -U
-```
 
 ## Usage
 
@@ -33,6 +22,10 @@ The repo includes:
 
 - Config files:
     - [config.ini](./config.ini): Config file to set the Cisco DNA Center connection details for the SDK.
+
+- Python wrappers:
+    - [api.py](./api.py): Python file that wraps the session and the API's functions by.
+    - [mydict.py](./mydict.py): Python file that wraps the mydict class. It is a data factory function.
 
 - Python scripts:
     - [client_health.py](./client_health.py): script that will run on Splunk Enterprise to collect the overall client health data

@@ -26,14 +26,13 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 import configparser
 import json
 import os.path
-import re
 
-from dnacentersdk import api
+import api
 
 
 def read_config_file():
     config = configparser.ConfigParser()
-    config.read(os.path.join(os.path.dirname(__file__), 'config_primelab.ini'))
+    config.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
     return config
 
 

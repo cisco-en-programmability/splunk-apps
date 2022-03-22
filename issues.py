@@ -28,7 +28,7 @@ import json
 import os.path
 from datetime import datetime, timedelta
 
-from dnacentersdk import api
+import api
 
 
 def get_epoch_current_previous_times(interval_seconds):

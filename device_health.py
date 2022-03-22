@@ -28,7 +28,7 @@ import json
 import os.path
 from datetime import datetime, timedelta
 
-from dnacentersdk import api
+import api
 
 
 def read_config_file():
