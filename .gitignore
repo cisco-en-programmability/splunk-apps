@@ -1,5 +1,16 @@
-# Created by .ignore support plugin (hsz.mobi)
-### Python template
+### Splunk ###
+test/*.lic
+test/*.license
+test/*.License
+_build/
+*.pickle
+
+### IDE ###
+.vscode/
+.idea/
+.envrc
+
+### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -16,7 +27,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -130,4 +140,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
+### Exceptions ###
+!**/app.manifest
+!**/README/*.spec
+!demo/conf/eventgen_conf/eventgen.conf.spec
+.notes/
