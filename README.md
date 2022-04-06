@@ -20,7 +20,6 @@ https://cisco-en-programmability.github.io/splunk-apps/
 
 ### 💬 Support
 
-- [Troubleshooting Guide](https://splunk.paloaltonetworks.com/troubleshoot.html)
 - [Ask a Question](https://answers.splunk.com/answers/ask.html?appid= )
 - [Report a bug](https://github.com/cisco-en-programmability/splunk-apps/issues)
 
