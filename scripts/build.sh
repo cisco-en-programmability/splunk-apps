@@ -7,6 +7,11 @@ ROOT=${SCRIPT_BASE}/..
 source "$SCRIPT_BASE/log4bash.sh"
 # shellcheck source=/dev/null
 source "$SCRIPT_BASE/common.sh"
+if [[ -z "$DEBUG" ]]; then
+  log_set_debug "DEBUG"
+elif [[ -n "$DEBUG" ]]; then
+  log_set_debug "DEV"
+fi
 log_debug "DEBUG ENABLED"
 
 # Exit immediatly if any command exits with a non-zero status
@@ -117,7 +122,11 @@ fi
 find ${APP} -type f -name ".*" -exec rm {} \;
 find ${APP} -type d -name ".*" -exec rm -rf {} \;
 find ${APP} -type f -name "*.pyc" -exec rm {} \;
-find "${APP}/bin" -type f -name "*.py" -exec chmod +x {} 2> /dev/null \;
+
+if [[ -d "${APP}/bin" ]]; then
+  find "${APP}/bin" -type f -name "*.py" -exec chmod +x {} 2> /dev/null \;
+fi
+
 rm -f "${APP}/Makefile"
 rm -rf "${APP}/release"
 rm -rf "${APP}/local"

@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
 get_version () {
-  local APP_PATH="$1"
+  local APP_PATH="$(echo $1 | sed 's/\([/]\)\1*/\1/g')"
   # Get the current version from the app
   grep -o '^version = [0-9A-Za-z.-]*' "${APP_PATH}/default/app.conf" | awk '{print $3}'
 }
 
 get_splunk_supported () {
-  local APP_PATH="$1"
+  local APP_PATH="$(echo $1 | sed 's/\([/]\)\1*/\1/g')"
   # Get the current version of splunk supported from the app
   grep -o '^splunk_supported = [0-9A-Za-z.,-]*' "${APP_PATH}/default/app.conf" | awk '{print $3}'
 }
 
 get_cim_supported () {
-  local APP_PATH="$1"
+  local APP_PATH="$(echo $1 | sed 's/\([/]\)\1*/\1/g')"
   # Get the current version of splunk supported from the app
   grep -o '^cim_supported = [0-9A-Za-z.,-]*' "${APP_PATH}/default/app.conf" | awk '{print $3}'
 }

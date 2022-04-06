@@ -60,6 +60,8 @@ SUCCESS_NUM=30
 INFO_NUM=40
 DEBUG_NUM=50
 
+LOG_DEBUG_TAG="DEBUG"
+
 # This function scrubs the output of any control characters used in colorized output
 # It's designed to be piped through with text that needs scrubbing.  The scrubbed
 # text will come out the other side!
@@ -110,10 +112,11 @@ log_speak()     {
     return 0;
 }
 
+log_set_debug() { LOG_DEBUG_TAG="$1"; }
 log_success()   { log "$1" "SUCCESS" "${LOG_SUCCESS_COLOR}"; }
 log_error()     { log "$1" "ERROR" "${LOG_ERROR_COLOR}"; }
 log_warning()   { log "$1" "WARNING" "${LOG_WARN_COLOR}"; }
-log_debug()     { log "$1" "INFO" "${LOG_DEBUG_COLOR}"; }
+log_debug()     { log "$1" "${LOG_DEBUG_TAG}" "${LOG_DEBUG_COLOR}"; }
 log_captains()  {
     if type -P figlet >/dev/null;
     then

@@ -4,6 +4,11 @@ SCRIPT_BASE="$(cd "$( dirname "$0")" && pwd )"
 ROOT=${SCRIPT_BASE}/..
 # shellcheck source=/dev/null
 source "$SCRIPT_BASE/log4bash.sh"
+if [[ -z "$DEBUG" ]]; then
+  log_set_debug "DEBUG"
+elif [[ -n "$DEBUG" ]]; then
+  log_set_debug "DEV"
+fi
 log_debug "DEBUG ENABLED"
 
 # App and Add-on Directories
@@ -83,7 +88,13 @@ NEW_VERSION=${TEMP_VERSION/-beta\./beta}
 CHANNEL=${2:-default}
 
 # Get the current version from the app
-CURRENT_VERSION=$(grep -o '^version = [0-9a-z.-]*' "$WORK/$APP/default/app.conf" | awk '{print $3}')
+CURRENT_VERSION="1.0.0"
+if [ "$WHICHAPP" = "app" ] || [ "$WHICHAPP" = "both" ]; then
+  CURRENT_VERSION=$(grep -o '^version = [0-9a-z.-]*' "$WORK/$APP/default/app.conf" | awk '{print $3}')
+elif [ "$WHICHAPP" = "addon" ] || [ "$WHICHAPP" = "both" ]; then
+  CURRENT_VERSION=$(grep -o '^version = [0-9a-z.-]*' "$WORK/$ADDON/default/app.conf" | awk '{print $3}')
+fi
+
 # Generate a build number
 if [ "$TRAVIS" == "true" ]; then
     log_debug "Running in TravisCI"
@@ -124,20 +135,29 @@ log_info "Changing version from $CURRENT_VERSION to $NEW_VERSION build $BUILD on
 if [ "$WHICHAPP" = "app" ] || [ "$WHICHAPP" = "both" ]; then
   # Set App versions
   FILE="${WORK}/${APP}/${APPCONF}"
+  # Remove double //
+  FILE="$(echo $FILE | sed 's/\([/]\)\1*/\1/g')"
 
   log_debug "Set App ${APPCONF} version to ${NEW_VERSION}"
   grep -E '^version = .+$' "$FILE" >/dev/null
   sed -i.bak -E "s/version = .+/version = ${NEW_VERSION}/" "$FILE" && rm "${FILE}.bak"
 
-  log_debug "Set App ${APPCONF} build to ${BUILD}"
-  grep -E '^build = .+$' "$FILE" >/dev/null
-  sed -i.bak -E "s/build = .+/build = ${BUILD}/" "$FILE" && rm "${FILE}.bak"
+  if grep -E '^build = .+$' "$FILE"; then
+    log_debug "Set App ${APPCONF} build to ${BUILD}"
+    grep -E '^build = .+$' "$FILE" >/dev/null
+    log_debug "Set App ${APPCONF} build to ${BUILD}"
+    sed -i.bak -E "s/build = .+/build = ${BUILD}/" "$FILE" && rm "${FILE}.bak"
+  fi
 
-  log_debug "Set App ${APPCONF} add-on required version to ${NEW_VERSION}"
-  grep -E '^ta_dependency_version = .+$' "$FILE" >/dev/null
-  sed -i.bak -E "s/ta_dependency_version = .+/ta_dependency_version = ${NEW_VERSION}/" "$FILE" && rm "${FILE}.bak"
+  if grep -E '^ta_dependency_version = .+$' "$FILE"; then
+    log_debug "Set App ${APPCONF} add-on required version to ${NEW_VERSION}"
+    grep -E '^ta_dependency_version = .+$' "$FILE" >/dev/null
+    sed -i.bak -E "s/ta_dependency_version = .+/ta_dependency_version = ${NEW_VERSION}/" "$FILE" && rm "${FILE}.bak"
+  fi
 
   FILE="${WORK}/${APP}/${APPMANIFEST}"
+  # Remove double //
+  FILE="$(echo $FILE | sed 's/\([/]\)\1*/\1/g')"
 
   log_debug "Set App ${APPMANIFEST} version to ${NEW_VERSION}"
   grep -E '\"version\": .+' "$FILE" >/dev/null
@@ -152,6 +172,8 @@ if [ "$WHICHAPP" = "addon" ] || [ "$WHICHAPP" = "both" ]; then
   # Set Add-on versions
 
   FILE="${WORK}/${ADDON}/${APPCONF}"
+  # Remove double //
+  FILE="$(echo $FILE | sed 's/\([/]\)\1*/\1/g')"
 
   log_debug "Set Addon ${APPCONF} version to ${NEW_VERSION}"
   grep -E '^version = .+$' "$FILE" >/dev/null
@@ -162,6 +184,8 @@ if [ "$WHICHAPP" = "addon" ] || [ "$WHICHAPP" = "both" ]; then
   sed -i.bak -E "s/build = .+/build = ${BUILD}/" "$FILE" && rm "${FILE}.bak"
 
   FILE="${WORK}/${ADDON}/${APPMANIFEST}"
+  # Remove double //
+  FILE="$(echo $FILE | sed 's/\([/]\)\1*/\1/g')"
 
   log_debug "Set Addon ${APPMANIFEST} version to ${NEW_VERSION}"
   grep -E '\"version\": .+' "$FILE" >/dev/null
@@ -172,6 +196,8 @@ if [ "$WHICHAPP" = "addon" ] || [ "$WHICHAPP" = "both" ]; then
   sed -i.bak -E "s/developmentStatus\": .+/developmentStatus\": \"${DEVSTATUS}\"/" "$FILE" && rm "${FILE}.bak"
 
   FILE="${WORK}/${ADDON}/${GLOBALCONFIG}"
+  # Remove double //
+  FILE="$(echo $FILE | sed 's/\([/]\)\1*/\1/g')"
 
   log_debug "Set Addon GlobalConfig Version to ${NEW_VERSION}"
   grep -E '\"version\": .+' "$FILE" >/dev/null

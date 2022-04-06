@@ -25,6 +25,11 @@ source "$SCRIPT_BASE/log4bash.sh"
 # shellcheck source=/dev/null
 source "$SCRIPT_BASE/common.sh"
 
+if [[ -z "$DEBUG" ]]; then
+  log_set_debug "DEBUG"
+elif [[ -n "$DEBUG" ]]; then
+  log_set_debug "DEV"
+fi
 log_debug "DEBUG ENABLED"
 
 ## Print command usage
