@@ -47,13 +47,14 @@ This builds a tarball named `Splunk_CiscoDNACenter.spl` and the renamed tarball 
 
 ```shell
 $ scripts/build.sh -a addon -l -v 1.0.0
-[2022-04-06 11:32:12 CST] [INFO] Building Splunk-TA-cisco-dnacenter version 1.0.0 build local from branch develop 
-[2022-04-06 11:32:14 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk-TA-cisco-dnacenter-1.0.0-develop-local.spl
+[2022-04-06 14:45:32 CST] [INFO] Building Splunk-TA-cisco-dnacenter version 1.0.0 build local from branch main 
+[2022-04-06 14:45:34 CST] [INFO] Changing version from 1.0.0 to 1.0.0 build 1000 on channel default 
+[2022-04-06 14:45:34 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk-TA-cisco-dnacenter-1.0.0-main-local.spl
 
-$ scripts/build.sh -a app -l
-[2022-04-06 12:45:39 CST] [INFO] Using version from app.conf 
-[2022-04-06 12:45:39 CST] [INFO] Building Splunk_CiscoDNACenter version 1.0.0 build local from branch develop 
-[2022-04-06 12:45:39 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk_CiscoDNACenter-1.0.0-develop-local.spl 
+$ scripts/build.sh -a app -l -v 1.0.0
+[2022-04-06 14:45:53 CST] [INFO] Building Splunk_CiscoDNACenter version 1.0.0 build local from branch main 
+[2022-04-06 14:45:53 CST] [INFO] Changing version from 1.0.0 to 1.0.0 build 1000 on channel default 
+[2022-04-06 14:45:53 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk_CiscoDNACenter-1.0.0-main-local.spl 
 ```
 
 
