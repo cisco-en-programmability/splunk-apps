@@ -43,7 +43,7 @@ We welcome community contributions to them. If you find problems, need an enhanc
 
 ### ⚙️ Build the package
 
-This builds a tarball named `Splunk_CiscoDNACenter.tar.gz` and the renamed tarball `Splunk-TA-cisco-dnacenter.spl`.
+This builds a tarball named `Splunk_CiscoDNACenter.spl` and the renamed tarball `Splunk-TA-cisco-dnacenter.spl`.
 
 ```shell
 $ scripts/build.sh -a addon -l -v 1.0.0
@@ -51,8 +51,9 @@ $ scripts/build.sh -a addon -l -v 1.0.0
 [2022-04-06 11:32:14 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk-TA-cisco-dnacenter-1.0.0-develop-local.spl
 
 $ scripts/build.sh -a app -l
-[2022-04-06 11:51:36 CST] [INFO] Building Splunk_CiscoDNACenter version 1.0.0 build local from branch develop 
-[2022-04-06 11:51:36 CST] [INFO] Changing version from 1.0.0 to 1.0.0 build 1000 on channel default
+[2022-04-06 12:45:39 CST] [INFO] Using version from app.conf 
+[2022-04-06 12:45:39 CST] [INFO] Building Splunk_CiscoDNACenter version 1.0.0 build local from branch develop 
+[2022-04-06 12:45:39 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk_CiscoDNACenter-1.0.0-develop-local.spl 
 ```
 
 
@@ -63,7 +64,7 @@ $ scripts/build.sh -a app -l
 - Click "Install App from file"
 - Choose the `Splunk-TA-cisco-dnacenter.spl` file and check the box next to "Upgrade app. Checking this will overwrite the app if it already exists."
 - Click the "Upload" button.
-- Repeat for the `Splunk_CiscoDNACenter.tar.gz` file.
+- Repeat for the `Splunk_CiscoDNACenter.spl` file.
 
 ### 🔑 License
 
