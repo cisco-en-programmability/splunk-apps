@@ -1,0 +1,23 @@
+<nav search_view="search" color="#FFFFFF">
+
+  <collection label="Cisco DNA Center">
+    <a href="/app/Splunk-TA-cisco-dnacenter">Configuration</a>
+    <divider />
+  </collection>
+  
+  <collection label="Dashboards">
+    <view name="cisco_dna_center_client_health" />
+    <view name="cisco_dna_center_compliance" />
+    <view name="cisco_dna_center_device_health" />
+    <view name="cisco_dna_center_fabric_device" />
+    <view name="cisco_dna_center_fabric_site" />
+    <view name="cisco_dna_center_image_health" />
+    <view name="cisco_dna_center_issue" />
+    <view name="cisco_dna_center_network_health" />
+    <view name="cisco_dna_center_security_advisory" />
+    <view name="cisco_dna_center_sensor" />
+  </collection>
+
+  <view name="search" default="true"/>
+
+</nav>
