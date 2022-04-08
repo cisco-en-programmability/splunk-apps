@@ -1,11 +1,11 @@
 
 # encoding = utf-8
 
-import os
+import datetime
 import json
+import os
 import sys
 import time
-import datetime
 
 import cisco_dnac_api as api
 
@@ -136,6 +136,9 @@ def get_issues(dnac, interval_seconds, **kwargs):
             issue_id = issue_item.get('issueId') or ''
             site_id = issue_item.get('siteId') or ''
             device_id = issue_item.get('deviceId') or ''
+            # site_id represents a siteId hierarchy, the last value is the correct siteId
+            # Python allows to call last string array without issues here
+            site_id = site_id.split('/')[-1]
             if issue_id:
                 if issue_info.get(issue_id):
                     response.update(issue_info[issue_id])
