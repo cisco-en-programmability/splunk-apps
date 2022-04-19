@@ -21,19 +21,6 @@ def use_single_instance_mode():
     return True
 '''
 
-def get_epoch_current_previous_times(interval_seconds):
-    """
-    This function will return the epoch time for the {timestamp} and a previous epoch time
-    :return: epoch time (now) including msec, epoch time (previous) including msec
-    """
-    # REVIEW: It is recommended that this time matches the Splunk's data input interval
-    now = datetime.datetime.now()
-    rounded = now - datetime.timedelta(
-        seconds=now.second % interval_seconds + interval_seconds if interval_seconds > 0 else now.second)
-    now = now.replace(microsecond=0)
-    rounded = rounded.replace(microsecond=0)
-    return (int(now.timestamp() * 1000), int(rounded.timestamp() * 1000))
-
 def get_important_device_values(device_item):
     """
     This function will simplify the device information for Splunk searches
@@ -117,16 +104,15 @@ def clean_dict_of_empty_strings(**kwargs):
             dict_new[key] = value
     return dict_new
 
-def get_issues(dnac, interval_seconds, **kwargs):
+def get_issues(dnac, **kwargs):
     """
     This function will retrieve the issue details and devices&site data as necessary
     :param dnac: Cisco DNAC SDK api
-    :param interval_seconds: interval in seconds
+    :param **kwargs: key arguments
     :return: simplified issues and device&site response
     """
-    end_time, start_time = get_epoch_current_previous_times(interval_seconds)
     responses = []
-    issues_response = dnac.issues.issues(start_time=start_time, end_time=end_time, **clean_dict_of_empty_strings(**kwargs))
+    issues_response = dnac.issues.issues(**clean_dict_of_empty_strings(**kwargs))
     issue_info = {}
     site_info = {}
     device_info = {}
@@ -194,8 +180,6 @@ def validate_input(helper, definition):
     # This example accesses the modular input variable
     cisco_dna_center_host = definition.parameters.get('cisco_dna_center_host', None)
     cisco_dna_center_account = definition.parameters.get('cisco_dna_center_account', None)
-    status = definition.parameters.get('status', None)
-    priorities = definition.parameters.get('priorities', None)
     pass
 
 def collect_events(helper, ew):
@@ -209,13 +193,6 @@ def collect_events(helper, ew):
     current_verify = False
     current_debug = False
 
-    # use default input_interval
-    input_interval = 900
-    try:
-        input_interval = int(helper.get_arg("interval"))
-    except ValueError as e:
-        input_interval = 900
-
     dnac = api.DNACenterAPI(
         username=account_username,
         password=account_password,
@@ -226,19 +203,27 @@ def collect_events(helper, ew):
 
     r_json = []
 
-    # If empty searches and records all priority values: P1, P2, P3, or P4
-    priority = ','.join(helper.get_arg('priorities'))
-    # If empty searches and records all ai_driven values: Yes or No
-    ai_driven = ""
     # If empty searches and records all issue_status values: ACTIVE, IGNORED, RESOLVED
     issue_status = helper.get_arg('status').strip()
     # get the issue details and devices&site data as necessary
     overall_issues = []
+    overall_issues_active = []
+    overall_issues_ignored = []
+    overall_issues_resolved = []
     try:
-        overall_issues = get_issues(dnac, interval_seconds=input_interval, priority=priority, ai_driven=ai_driven, issue_status=issue_status)
+        overall_issues_active = get_issues(dnac, issue_status="ACTIVE")
     except Exception as e:
-        overall_issues = []
+        overall_issues_active = []
+    try:
+        overall_issues_ignored = get_issues(dnac, issue_status="IGNORED")
+    except Exception as e:
+        overall_issues_ignored = []
+    try:
+        overall_issues_resolved = get_issues(dnac, issue_status="RESOLVED")
+    except Exception as e:
+        overall_issues_resolved = []
 
+    overall_issues = overall_issues_active + overall_issues_ignored + overall_issues_resolved
     for item in overall_issues:
         key = "{0}_{1}".format(opt_cisco_dna_center_host, item.get('IssueID'))
         item["cisco_dnac_host"] = opt_cisco_dna_center_host
