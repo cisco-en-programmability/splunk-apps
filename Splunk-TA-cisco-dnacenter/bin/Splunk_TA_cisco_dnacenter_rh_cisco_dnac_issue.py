@@ -50,20 +50,6 @@ fields = [
         default=None,
         validator=None
     ), 
-    field.RestField(
-        'status',
-        required=False,
-        encrypted=False,
-        default=' ',
-        validator=None
-    ), 
-    field.RestField(
-        'priorities',
-        required=False,
-        encrypted=False,
-        default=None,
-        validator=None
-    ), 
 
     field.RestField(
         'disabled',

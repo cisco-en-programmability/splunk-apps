@@ -143,10 +143,6 @@
                     {
                         "field": "index",
                         "label": "Index"
-                    },
-                    {
-                        "field": "disabled",
-                        "label": "Status"
                     }
                 ],
                 "moreInfo": [
@@ -163,24 +159,12 @@
                         "label": "Index"
                     },
                     {
-                        "field": "disabled",
-                        "label": "Status"
-                    },
-                    {
                         "field": "cisco_dna_center_host",
                         "label": "Cisco DNA Center Host"
                     },
                     {
                         "field": "cisco_dna_center_account",
                         "label": "Cisco DNA Center Account"
-                    },
-                    {
-                        "field": "status",
-                        "label": "Status"
-                    },
-                    {
-                        "field": "priorities",
-                        "label": "Priorities"
                     }
                 ],
                 "actions": [
@@ -782,63 +766,6 @@
                             "type": "singleSelect",
                             "options": {
                                 "referenceName": "account"
-                            }
-                        },
-                        {
-                            "field": "status",
-                            "label": "Status",
-                            "help": "",
-                            "required": false,
-                            "type": "singleSelect",
-                            "defaultValue": " ",
-                            "options": {
-                                "disableSearch": true,
-                                "autoCompleteFields": [
-                                    {
-                                        "value": " ",
-                                        "label": "All"
-                                    },
-                                    {
-                                        "value": "ACTIVE",
-                                        "label": "ACTIVE"
-                                    },
-                                    {
-                                        "value": "IGNORED",
-                                        "label": "IGNORED"
-                                    },
-                                    {
-                                        "value": "RESOLVED",
-                                        "label": "RESOLVED"
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "field": "priorities",
-                            "label": "Priorities",
-                            "help": "",
-                            "required": false,
-                            "type": "multipleSelect",
-                            "options": {
-                                "delimiter": "~",
-                                "items": [
-                                    {
-                                        "value": "P1",
-                                        "label": "P1"
-                                    },
-                                    {
-                                        "value": "P2",
-                                        "label": "P2"
-                                    },
-                                    {
-                                        "value": "P3",
-                                        "label": "P3"
-                                    },
-                                    {
-                                        "value": "P4",
-                                        "label": "P4"
-                                    }
-                                ]
                             }
                         }
                     ]

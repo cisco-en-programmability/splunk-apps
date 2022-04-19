@@ -31,8 +31,6 @@ python.version = python3
 [cisco_dnac_issue://<name>]
 cisco_dna_center_host = 
 cisco_dna_center_account = 
-status = 
-priorities = 
 python.version = python3
 
 [cisco_dnac_networkhealth://<name>]

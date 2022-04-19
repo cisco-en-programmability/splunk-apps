@@ -54,14 +54,6 @@ class ModInputcisco_dnac_issue(modinput_wrapper.base_modinput.BaseModInput):
                                          description="",
                                          required_on_create=True,
                                          required_on_edit=False))
-        scheme.add_argument(smi.Argument("status", title="Status",
-                                         description="",
-                                         required_on_create=False,
-                                         required_on_edit=False))
-        scheme.add_argument(smi.Argument("priorities", title="Priorities",
-                                         description="",
-                                         required_on_create=False,
-                                         required_on_edit=False))
         return scheme
 
     def get_app_name(self):
