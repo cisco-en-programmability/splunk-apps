@@ -29,9 +29,9 @@ def get_epoch_current_previous_times(interval_seconds):
     # REVIEW: It is recommended that this time matches the Splunk's data input interval
     now = datetime.datetime.now()
     rounded = now - datetime.timedelta(
-        minutes=now.minute,
-        seconds=now.second % interval_seconds + interval_seconds if interval_seconds > 0 else now.second,
-        microseconds=now.microsecond)
+        seconds=now.second % interval_seconds + interval_seconds if interval_seconds > 0 else now.second)
+    now = now.replace(microsecond=0)
+    rounded = rounded.replace(microsecond=0)
     return (int(now.timestamp() * 1000), int(rounded.timestamp() * 1000))
 
 
