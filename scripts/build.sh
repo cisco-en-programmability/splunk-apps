@@ -128,8 +128,12 @@ if [[ -d "${APP}/bin" ]]; then
 fi
 
 rm -f "${APP}/Makefile"
-rm -f "${APP}/README.md"
-rm -f "${APP}/LICENSE"
+
+if [ "$WHICHAPP" == "addon" ]; then
+  rm -f "${APP}/README.md"
+  rm -f "${APP}/LICENSE"
+fi
+
 rm -rf "${APP}/release"
 rm -rf "${APP}/local"
 
