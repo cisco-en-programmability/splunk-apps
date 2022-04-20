@@ -128,6 +128,8 @@ if [[ -d "${APP}/bin" ]]; then
 fi
 
 rm -f "${APP}/Makefile"
+rm -f "${APP}/README.md"
+rm -f "${APP}/LICENSE"
 rm -rf "${APP}/release"
 rm -rf "${APP}/local"
 
