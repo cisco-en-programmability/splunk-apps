@@ -129,25 +129,37 @@ def get_issues(dnac, **kwargs):
                 if issue_info.get(issue_id):
                     response.update(issue_info[issue_id])
                 else:
-                    tmp_issue = dnac.issues.get_issue_enrichment_details(headers=dict(entity_type="issue_id", entity_value=issue_id))
+                    tmp_issue = {}
+                    try:
+                        tmp_issue = dnac.issues.get_issue_enrichment_details(headers=dict(entity_type="issue_id", entity_value=issue_id))
+                    except Exception:
+                        tmp_issue = {}
+
                     if tmp_issue and isinstance(tmp_issue.get('issueDetails'), dict) and isinstance(tmp_issue['issueDetails'].get('issue'), list):
                         issue_info[issue_id] = simplify_issue(tmp_issue['issueDetails']['issue'])
-                        issue_info[issue_id].update({
-                            'IssueName': issue_item.get('name') or '',
-                            'IssueDeviceRole': issue_item.get('deviceRole') or '',
-                            'IssueAiDriven': issue_item.get('aiDriven') or '',
-                            'IssueClientMac': issue_item.get('clientMac') or '',
-                            'IssueCount': issue_item.get('issue_occurence_count') or '',
-                            'IssueStatus': issue_item.get('status') or '',
-                            'IssuePriority': issue_item.get('priority') or '',
-                            'IssueCategory': issue_item.get('category') or '',
-                        })
-                        response.update(issue_info[issue_id])
+                    else:
+                        issue_info[issue_id] = {}
+
+                    issue_info[issue_id].update({
+                        'IssueName': issue_item.get('name') or '',
+                        'IssueDeviceRole': issue_item.get('deviceRole') or '',
+                        'IssueAiDriven': issue_item.get('aiDriven') or '',
+                        'IssueClientMac': issue_item.get('clientMac') or '',
+                        'IssueCount': issue_item.get('issue_occurence_count') or '',
+                        'IssueStatus': issue_item.get('status') or '',
+                        'IssuePriority': issue_item.get('priority') or '',
+                        'IssueCategory': issue_item.get('category') or '',
+                    })
+                    response.update(issue_info[issue_id])
             if site_id:
                 if site_info.get(site_id):
                     response.update(site_info[site_id])
                 else:
-                    tmp_site = dnac.sites.get_site(site_id=site_id)
+                    tmp_site = {}
+                    try:
+                        tmp_site = dnac.sites.get_site(site_id=site_id)
+                    except Exception:
+                        tmp_site = {}
                     if tmp_site and tmp_site.response:
                         site_info[site_id] = simplify_site(tmp_site['response'])
                         response.update(site_info[site_id])
@@ -155,7 +167,11 @@ def get_issues(dnac, **kwargs):
                 if device_info.get(device_id):
                     response.update(device_info[device_id])
                 else:
-                    tmp_device = dnac.devices.get_device_by_id(id=device_id)
+                    tmp_device = {}
+                    try:
+                        tmp_device = dnac.devices.get_device_by_id(id=device_id)
+                    except Exception:
+                        tmp_device = {}
                     if tmp_device and tmp_device.response:
                         device_info[device_id] = get_important_device_values(tmp_device['response'])
                         response.update(device_info[device_id])
@@ -203,8 +219,6 @@ def collect_events(helper, ew):
 
     r_json = []
 
-    # If empty searches and records all issue_status values: ACTIVE, IGNORED, RESOLVED
-    issue_status = helper.get_arg('status').strip()
     # get the issue details and devices&site data as necessary
     overall_issues = []
     overall_issues_active = []
