@@ -30,15 +30,15 @@ def dict_of_str(json_dict):
     """
     result = {}
     for key, value in json_dict.items():
-        result[key] = '{}'.format(value)
+        result[key] = "{}".format(value)
     return result
 
 
 def apply_path_params(URL, path_params):
     if isinstance(URL, str) and isinstance(path_params, dict):
         for k in path_params:
-            URL = URL.replace('${' + k + '}', str(path_params[k]))
-            URL = URL.replace('{' + k + '}', str(path_params[k]))
+            URL = URL.replace("${" + k + "}", str(path_params[k]))
+            URL = URL.replace("{" + k + "}", str(path_params[k]))
         return URL
     else:
         raise TypeError(
@@ -94,16 +94,76 @@ def object_factory(response):
     return mydict.MyDict(json_data=response).json_data
 
 
+def pprint_request_info(url, method, _headers, **kwargs):
+    debug_print = "\nRequest" "\n\tURL: {}" "\n\tMethod: {}" "\n\tHeaders: \n{}"
+    _headers.update(kwargs.get("headers", {}))
+    _headers = "\n".join(["\t\t{}: {}".format(a, b) for a, b in _headers.items()])
+    debug_print = debug_print.format(url, method, _headers)
+
+    kwargs_to_include = ["params", "json", "data", "stream"]
+    kwargs_pprint = {
+        "params": "Params",
+        "json": "Body",
+        "data": "Body",
+        "stream": "Stream",
+    }
+
+    for kw in kwargs_to_include:
+        if kwargs.get(kw) is not None and kwargs_pprint.get(kw):
+            value = kwargs.get(kw)
+            key = kwargs_pprint.get(kw)
+            if isinstance(value, list) or isinstance(value, dict):
+                value = json.dumps(value, indent=4)
+                lines = [" " * (8 + len(key)) + line for line in value.split("\n")]
+                value = "\n".join(lines)
+            else:
+                value = "\t\t{}".format(value)
+
+            format_str = "{}\n\t{}:\n{}"
+            debug_print = format_str.format(debug_print, key, value)
+    return debug_print
+
+
+def pprint_response_info(response):
+    debug_print = "\nResponse" "\n\tStatus: {} - {}" "\n\tHeaders: \n{}"
+    headers = response.headers
+    headers = "\n".join(["\t\t{}: {}".format(a, b) for a, b in headers.items()])
+    body = None
+    file_resp_headers = ["Content-Disposition", "fileName"]
+
+    if "application/json" in response.headers.get("Content-Type"):
+        try:
+            body = response.json()
+            body = json.dumps(body, indent=4)
+            body = "\n".join([" " * 13 + line for line in body.split("\n")])
+        except Exception:
+            body = response.text or response.content
+            pass
+    elif any([i in response.headers for i in file_resp_headers]):
+        body = None
+    else:
+        body = response.text or response.content
+
+    debug_print = debug_print.format(response.status_code, response.reason, headers)
+
+    if body is not None:
+        format_str = "{}\n\t{}:\n{}"
+        debug_print = format_str.format(debug_print, "Body", body)
+
+    return debug_print
+
+
 class Authentication(object):
-    def __init__(self, base_url,
-                 verify=True):
+    def __init__(self, base_url, verify=True):
         super(Authentication, self).__init__()
 
         self._base_url = str(base_url)
         self._single_request_timeout = 60
         self._verify = verify
-        self._request_kwargs = {"timeout": self._single_request_timeout,
-                                "verify": verify}
+        self._request_kwargs = {
+            "timeout": self._single_request_timeout,
+            "verify": verify,
+        }
 
         if verify is False:
             requests.packages.urllib3.disable_warnings()
@@ -125,15 +185,18 @@ class Authentication(object):
             ApiError: If the DNA Center cloud returns an error.
 
         """
-        temp_url = '/dna/system/api/v1/auth/token'
+        temp_url = "/dna/system/api/v1/auth/token"
         self._endpoint_url = urllib.parse.urljoin(self._base_url, temp_url)
 
         # API request
-        response = requests.post(self._endpoint_url, data=None,
-                                 auth=(username, password),
-                                 **self._request_kwargs)
+        response = requests.post(
+            self._endpoint_url,
+            data=None,
+            auth=(username, password),
+            **self._request_kwargs
+        )
 
-        assert(response.status_code in [200, 201, 202, 204, 206])
+        assert response.status_code in [200, 201, 202, 204, 206]
         json_data = extract_and_parse_json(response)
 
         # Return a access_token object created from the response JSON data
@@ -141,13 +204,16 @@ class Authentication(object):
 
 
 class DNACenterAPI(object):
-    def __init__(self,
-                 username=None,
-                 password=None,
-                 base_url=None,
-                 verify=None,
-                 debug=None,
-                 version=None):
+    def __init__(
+        self,
+        username=None,
+        password=None,
+        base_url=None,
+        verify=None,
+        debug=None,
+        version=None,
+        helper=None,
+    ):
 
         super(DNACenterAPI, self).__init__()
 
@@ -157,10 +223,13 @@ class DNACenterAPI(object):
         # Step 2, Create authentication
         self._authentication = Authentication(base_url, verify)
         # Step 3, Call requests to get auth token
-        self.session = RestSession(base_url,
+        self.session = RestSession(
+            base_url,
             verify,
             get_access_token=self._get_access_token,
-            access_token=self._get_access_token())
+            access_token=self._get_access_token(),
+            helper=helper,
+        )
         # Use session on clients
         self.clients = Clients(self.session)
         self.compliance = Compliance(self.session)
@@ -175,15 +244,20 @@ class DNACenterAPI(object):
         self.topology = Topology(self.session)
 
     def _get_access_token(self):
-        return self._authentication.authentication_api(self._username, self._password).Token
+        return self._authentication.authentication_api(
+            self._username, self._password
+        ).Token
 
 
 class RestSession(object):
-    def __init__(self,
-                 base_url=None,
-                 verify=None,
-                 get_access_token=None,
-                 access_token=None):
+    def __init__(
+        self,
+        base_url=None,
+        verify=None,
+        get_access_token=None,
+        access_token=None,
+        helper=None,
+    ):
 
         super(RestSession, self).__init__()
 
@@ -193,6 +267,7 @@ class RestSession(object):
         self._single_request_timeout = 60
         self._wait_on_rate_limit = True
         self._verify = verify
+        self._helper = helper
 
         # Initialize a new `requests` session
         self._req_session = requests.session()
@@ -201,9 +276,12 @@ class RestSession(object):
             requests.packages.urllib3.disable_warnings()
 
         # Update the headers of the `requests` session
-        self.update_headers({
-            'X-Auth-Token': access_token,
-            'Content-type': 'application/json;charset=utf-8'})
+        self.update_headers(
+            {
+                "X-Auth-Token": access_token,
+                "Content-type": "application/json;charset=utf-8",
+            }
+        )
 
     def update_headers(self, headers):
         """Update the HTTP headers used for requests in this session.
@@ -224,7 +302,7 @@ class RestSession(object):
         auth header with the new token.
         """
         self._access_token = self._get_access_token()
-        self.update_headers({'X-Auth-Token': self.access_token})
+        self.update_headers({"X-Auth-Token": self.access_token})
 
     def abs_url(self, url):
         """Given a relative or absolute URL; return an absolute URL.
@@ -245,53 +323,63 @@ class RestSession(object):
             return url
 
     def request(self, method, url, custom_refresh, **kwargs):
-        """Abstract base method for making requests to the DNA Center APIs.
-        """
+        """Abstract base method for making requests to the DNA Center APIs."""
         # Ensure the url is an absolute URL
         abs_url = self.abs_url(url)
 
         # Update request kwargs with session defaults
-        kwargs.setdefault('timeout', self._single_request_timeout)
-        kwargs.setdefault('verify', self._verify)
+        kwargs.setdefault("timeout", self._single_request_timeout)
+        kwargs.setdefault("verify", self._verify)
 
         # Fixes requests inconsistent behavior with additional parameters
-        if not kwargs.get('json'):
-            kwargs.pop('json', None)
+        if not kwargs.get("json"):
+            kwargs.pop("json", None)
 
-        if not kwargs.get('data'):
-            kwargs.pop('data', None)
+        if not kwargs.get("data"):
+            kwargs.pop("data", None)
 
         c = custom_refresh
         while True:
             c += 1
             # Make the HTTP request to the API endpoint
             try:
+                self._helper.log_debug("Attempt {0}".format(c))
+                self._helper.log_debug(
+                    pprint_request_info(
+                        abs_url, method, _headers=self.headers, **kwargs
+                    )
+                )
                 response = self._req_session.request(method, abs_url, **kwargs)
             except IOError as e:
                 if e.errno == errno.EPIPE:
                     # EPIPE error
                     try:
                         c += 1
-                        response = self._req_session.request(method, abs_url,
-                                                             **kwargs)
+                        self._helper.log_debug("Attempt {0}".format(c))
+                        response = self._req_session.request(method, abs_url, **kwargs)
                     except Exception as e:
                         raise e
                 else:
                     raise e
             try:
                 # Check the response code for error conditions
-                assert(response.status_code < 400)
+                assert response.status_code < 400
             except Exception:
                 if response.status_code == 429:
                     time.sleep(response.retry_after)
                     continue
                 if response.status_code == 401 and custom_refresh < 1:
+                    self._helper.log_debug(pprint_response_info(response))
+                    self._helper.log_debug("Refreshing access token")
                     self.refresh_token()
+                    self._helper.log_debug("Refreshed access token")
                     return self.request(method, url, 1, **kwargs)
                 else:
                     # Re-raise the error
+                    self._helper.log_debug(pprint_response_info(response))
                     raise
             else:
+                self._helper.log_debug(pprint_response_info(response))
                 return response
 
     @property
@@ -300,21 +388,23 @@ class RestSession(object):
         return self._req_session.headers.copy()
 
     def get(self, url, params=None, **kwargs):
-        response = self.request('GET', url, 0, params=params, **kwargs)
+        response = self.request("GET", url, 0, params=params, **kwargs)
         return extract_and_parse_json(response)
-    
+
     def post(self, url, params=None, json=None, data=None, **kwargs):
-        response = self.request('POST', url, 0, params=params,
-                                json=json, data=data, **kwargs)
+        response = self.request(
+            "POST", url, 0, params=params, json=json, data=data, **kwargs
+        )
         return extract_and_parse_json(response)
 
     def put(self, url, params=None, json=None, data=None, **kwargs):
-        response = self.request('PUT', url, 0, params=params,
-                                json=json, data=data, **kwargs)
+        response = self.request(
+            "PUT", url, 0, params=params, json=json, data=data, **kwargs
+        )
         return extract_and_parse_json(response)
 
     def delete(self, url, params=None, **kwargs):
-        response = self.request('DELETE', url, 0, params=params, **kwargs)
+        response = self.request("DELETE", url, 0, params=params, **kwargs)
         return extract_and_parse_json(response)
 
 
@@ -325,16 +415,14 @@ class Clients(object):
 
     def get_overall_client_health(self, timestamp):
         _params = {
-            'timestamp':
-                timestamp,
+            "timestamp": timestamp,
         }
 
-        if _params['timestamp'] is None:
-            _params['timestamp'] = ''
+        if _params["timestamp"] is None:
+            _params["timestamp"] = ""
         _params = dict_from_items_with_values(_params)
-        path_params = {
-        }
-        e_url = ('/dna/intent/api/v1/client-health')
+        path_params = {}
+        e_url = "/dna/intent/api/v1/client-health"
         endpoint_full_url = apply_path_params(e_url, path_params)
         json_data = self._session.get(endpoint_full_url, params=_params)
         return object_factory(json_data)
@@ -345,28 +433,24 @@ class Compliance(object):
         super(Compliance, self).__init__()
         self._session = session
 
-    def get_compliance_detail(self,
-                              compliance_status=None,
-                              compliance_type=None,
-                              device_uuid=None,
-                              limit=None,
-                              offset=None):
+    def get_compliance_detail(
+        self,
+        compliance_status=None,
+        compliance_type=None,
+        device_uuid=None,
+        limit=None,
+        offset=None,
+    ):
         _params = {
-            'complianceType':
-                compliance_type,
-            'complianceStatus':
-                compliance_status,
-            'deviceUuid':
-                device_uuid,
-            'offset':
-                offset,
-            'limit':
-                limit,
+            "complianceType": compliance_type,
+            "complianceStatus": compliance_status,
+            "deviceUuid": device_uuid,
+            "offset": offset,
+            "limit": limit,
         }
         _params = dict_from_items_with_values(_params)
-        path_params = {
-        }
-        e_url = ('/dna/intent/api/v1/compliance/detail')
+        path_params = {}
+        e_url = "/dna/intent/api/v1/compliance/detail"
         endpoint_full_url = apply_path_params(e_url, path_params)
         json_data = self._session.get(endpoint_full_url, params=_params)
         return object_factory(json_data)
@@ -377,56 +461,48 @@ class Devices(object):
         super(Devices, self).__init__()
         self._session = session
 
-    def devices(self,
-                device_role=None,
-                end_time=None,
-                health=None,
-                limit=None,
-                offset=None,
-                site_id=None,
-                start_time=None,
-                headers=None,
-                **request_parameters):
+    def devices(
+        self,
+        device_role=None,
+        end_time=None,
+        health=None,
+        limit=None,
+        offset=None,
+        site_id=None,
+        start_time=None,
+        headers=None,
+        **request_parameters
+    ):
         _params = {
-            'deviceRole':
-                device_role,
-            'siteId':
-                site_id,
-            'health':
-                health,
-            'startTime':
-                start_time,
-            'endTime':
-                end_time,
-            'limit':
-                limit,
-            'offset':
-                offset,
+            "deviceRole": device_role,
+            "siteId": site_id,
+            "health": health,
+            "startTime": start_time,
+            "endTime": end_time,
+            "limit": limit,
+            "offset": offset,
         }
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
         with_custom_headers = False
         _headers = self._session.headers or {}
         if headers:
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/device-health')
+        e_url = "/dna/intent/api/v1/device-health"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
         return object_factory(json_data)
 
-    def get_device_by_id(self,
-                         id,
-                         headers=None,
-                         **request_parameters):
+    def get_device_by_id(self, id, headers=None, **request_parameters):
         """Returns the network device details for the given device ID .
 
         Args:
@@ -445,13 +521,12 @@ class Devices(object):
             MalformedRequest: If the request body created is invalid.
             ApiError: If the DNA Center cloud returns an error.
         """
-        _params = {
-        }
+        _params = {}
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
         path_params = {
-            'id': id,
+            "id": id,
         }
 
         with_custom_headers = False
@@ -460,51 +535,54 @@ class Devices(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/network-device/{id}')
+        e_url = "/dna/intent/api/v1/network-device/{id}"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
         return object_factory(json_data)
 
-    def get_device_list(self,
-                        associated_wlc_ip=None,
-                        collection_interval=None,
-                        collection_status=None,
-                        device_support_level=None,
-                        error_code=None,
-                        error_description=None,
-                        family=None,
-                        hostname=None,
-                        id=None,
-                        license_name=None,
-                        license_status=None,
-                        license_type=None,
-                        location=None,
-                        location_name=None,
-                        mac_address=None,
-                        management_ip_address=None,
-                        module_equpimenttype=None,
-                        module_name=None,
-                        module_operationstatecode=None,
-                        module_partnumber=None,
-                        module_servicestate=None,
-                        module_vendorequipmenttype=None,
-                        not_synced_for_minutes=None,
-                        platform_id=None,
-                        reachability_status=None,
-                        role=None,
-                        serial_number=None,
-                        series=None,
-                        software_type=None,
-                        software_version=None,
-                        type=None,
-                        up_time=None,
-                        headers=None,
-                        **request_parameters):
+    def get_device_list(
+        self,
+        associated_wlc_ip=None,
+        collection_interval=None,
+        collection_status=None,
+        device_support_level=None,
+        error_code=None,
+        error_description=None,
+        family=None,
+        hostname=None,
+        id=None,
+        license_name=None,
+        license_status=None,
+        license_type=None,
+        location=None,
+        location_name=None,
+        mac_address=None,
+        management_ip_address=None,
+        module_equpimenttype=None,
+        module_name=None,
+        module_operationstatecode=None,
+        module_partnumber=None,
+        module_servicestate=None,
+        module_vendorequipmenttype=None,
+        not_synced_for_minutes=None,
+        platform_id=None,
+        reachability_status=None,
+        role=None,
+        serial_number=None,
+        series=None,
+        software_type=None,
+        software_version=None,
+        type=None,
+        up_time=None,
+        headers=None,
+        **request_parameters
+    ):
         """Returns list of network devices based on filter criteria such as management IP address, mac address, hostname,
         etc. You can use the .* in any value to conduct a wildcard search. For example, to find all hostnames
         beginning with myhost in the IP address range 192.25.18.n, issue the following request: GET
@@ -562,76 +640,43 @@ class Devices(object):
             ApiError: If the DNA Center cloud returns an error.
         """
         _params = {
-            'hostname':
-                hostname,
-            'managementIpAddress':
-                management_ip_address,
-            'macAddress':
-                mac_address,
-            'locationName':
-                location_name,
-            'serialNumber':
-                serial_number,
-            'location':
-                location,
-            'family':
-                family,
-            'type':
-                type,
-            'series':
-                series,
-            'collectionStatus':
-                collection_status,
-            'collectionInterval':
-                collection_interval,
-            'notSyncedForMinutes':
-                not_synced_for_minutes,
-            'errorCode':
-                error_code,
-            'errorDescription':
-                error_description,
-            'softwareVersion':
-                software_version,
-            'softwareType':
-                software_type,
-            'platformId':
-                platform_id,
-            'role':
-                role,
-            'reachabilityStatus':
-                reachability_status,
-            'upTime':
-                up_time,
-            'associatedWlcIp':
-                associated_wlc_ip,
-            'license.name':
-                license_name,
-            'license.type':
-                license_type,
-            'license.status':
-                license_status,
-            'module+name':
-                module_name,
-            'module+equpimenttype':
-                module_equpimenttype,
-            'module+servicestate':
-                module_servicestate,
-            'module+vendorequipmenttype':
-                module_vendorequipmenttype,
-            'module+partnumber':
-                module_partnumber,
-            'module+operationstatecode':
-                module_operationstatecode,
-            'id':
-                id,
-            'deviceSupportLevel':
-                device_support_level,
+            "hostname": hostname,
+            "managementIpAddress": management_ip_address,
+            "macAddress": mac_address,
+            "locationName": location_name,
+            "serialNumber": serial_number,
+            "location": location,
+            "family": family,
+            "type": type,
+            "series": series,
+            "collectionStatus": collection_status,
+            "collectionInterval": collection_interval,
+            "notSyncedForMinutes": not_synced_for_minutes,
+            "errorCode": error_code,
+            "errorDescription": error_description,
+            "softwareVersion": software_version,
+            "softwareType": software_type,
+            "platformId": platform_id,
+            "role": role,
+            "reachabilityStatus": reachability_status,
+            "upTime": up_time,
+            "associatedWlcIp": associated_wlc_ip,
+            "license.name": license_name,
+            "license.type": license_type,
+            "license.status": license_status,
+            "module+name": module_name,
+            "module+equpimenttype": module_equpimenttype,
+            "module+servicestate": module_servicestate,
+            "module+vendorequipmenttype": module_vendorequipmenttype,
+            "module+partnumber": module_partnumber,
+            "module+operationstatecode": module_operationstatecode,
+            "id": id,
+            "deviceSupportLevel": device_support_level,
         }
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -639,20 +684,20 @@ class Devices(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/network-device')
+        e_url = "/dna/intent/api/v1/network-device"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
         return object_factory(json_data)
 
-    def get_stack_details_for_device(self,
-                                     device_id,
-                                     headers=None,
-                                     **request_parameters):
+    def get_stack_details_for_device(
+        self, device_id, headers=None, **request_parameters
+    ):
         """Retrieves complete stack details for given device ID .
 
         Args:
@@ -671,13 +716,12 @@ class Devices(object):
             MalformedRequest: If the request body created is invalid.
             ApiError: If the DNA Center cloud returns an error.
         """
-        _params = {
-        }
+        _params = {}
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
         path_params = {
-            'deviceId': device_id,
+            "deviceId": device_id,
         }
 
         with_custom_headers = False
@@ -686,15 +730,18 @@ class Devices(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/network-device/{deviceId}/stack')
+        e_url = "/dna/intent/api/v1/network-device/{deviceId}/stack"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
-        return object_factory('bpm_c07eaefa1fa45faa801764d9094336ae_v2_2_3_3', json_data)
+        return object_factory(
+            "bpm_c07eaefa1fa45faa801764d9094336ae_v2_2_3_3", json_data
+        )
 
 
 class Issues(object):
@@ -702,9 +749,7 @@ class Issues(object):
         super(Issues, self).__init__()
         self._session = session
 
-    def get_issue_enrichment_details(self,
-                                     headers=None,
-                                     **request_parameters):
+    def get_issue_enrichment_details(self, headers=None, **request_parameters):
         """Enriches a given network issue context (an issue id or end user’s Mac Address) with details about the issue(s),
         impacted hosts and suggested actions for remediation .
 
@@ -724,13 +769,11 @@ class Issues(object):
             ApiError: If the DNA Center cloud returns an error.
         """
 
-        _params = {
-        }
+        _params = {}
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -738,27 +781,30 @@ class Issues(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/issue-enrichment-details')
+        e_url = "/dna/intent/api/v1/issue-enrichment-details"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
         return object_factory(json_data)
 
-    def issues(self,
-               ai_driven=None,
-               device_id=None,
-               end_time=None,
-               issue_status=None,
-               mac_address=None,
-               priority=None,
-               site_id=None,
-               start_time=None,
-               headers=None,
-               **request_parameters):
+    def issues(
+        self,
+        ai_driven=None,
+        device_id=None,
+        end_time=None,
+        issue_status=None,
+        mac_address=None,
+        priority=None,
+        site_id=None,
+        start_time=None,
+        headers=None,
+        **request_parameters
+    ):
         """Intent API to get a list of global issues, issues for a specific device, or issue for a specific client device's
         MAC address. .
 
@@ -792,28 +838,19 @@ class Issues(object):
         """
 
         _params = {
-            'startTime':
-                start_time,
-            'endTime':
-                end_time,
-            'siteId':
-                site_id,
-            'deviceId':
-                device_id,
-            'macAddress':
-                mac_address,
-            'priority':
-                priority,
-            'aiDriven':
-                ai_driven,
-            'issueStatus':
-                issue_status,
+            "startTime": start_time,
+            "endTime": end_time,
+            "siteId": site_id,
+            "deviceId": device_id,
+            "macAddress": mac_address,
+            "priority": priority,
+            "aiDriven": ai_driven,
+            "issueStatus": issue_status,
         }
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -821,11 +858,12 @@ class Issues(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/issues')
+        e_url = "/dna/intent/api/v1/issues"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
@@ -837,10 +875,9 @@ class Networks(object):
         super(Networks, self).__init__()
         self._session = session
 
-    def get_overall_network_health(self,
-                                   timestamp=None,
-                                   headers=None,
-                                   **request_parameters):
+    def get_overall_network_health(
+        self, timestamp=None, headers=None, **request_parameters
+    ):
         """Returns Overall Network Health information by Device category (Access, Distribution, Core, Router, Wireless) for
         any given point of time .
 
@@ -863,17 +900,15 @@ class Networks(object):
         """
 
         _params = {
-            'timestamp':
-                timestamp,
+            "timestamp": timestamp,
         }
 
-        if _params['timestamp'] is None:
-            _params['timestamp'] = ''
+        if _params["timestamp"] is None:
+            _params["timestamp"] = ""
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -881,11 +916,12 @@ class Networks(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/network-health')
+        e_url = "/dna/intent/api/v1/network-health"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
@@ -897,10 +933,7 @@ class Sda(object):
         super(Sda, self).__init__()
         self._session = session
 
-    def get_site(self,
-                 site_name_hierarchy,
-                 headers=None,
-                 **request_parameters):
+    def get_site(self, site_name_hierarchy, headers=None, **request_parameters):
         """Get Site info from SDA Fabric .
 
         Args:
@@ -920,14 +953,12 @@ class Sda(object):
             ApiError: If the DNA Center cloud returns an error.
         """
         _params = {
-            'siteNameHierarchy':
-                site_name_hierarchy,
+            "siteNameHierarchy": site_name_hierarchy,
         }
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -935,11 +966,12 @@ class Sda(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/business/sda/fabric-site')
+        e_url = "/dna/intent/api/v1/business/sda/fabric-site"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
@@ -951,9 +983,7 @@ class SecurityAdvisories(object):
         super(SecurityAdvisories, self).__init__()
         self._session = session
 
-    def get_advisories_list(self,
-                            headers=None,
-                            **request_parameters):
+    def get_advisories_list(self, headers=None, **request_parameters):
         """Retrieves list of advisories on the network .
 
         Args:
@@ -972,13 +1002,11 @@ class SecurityAdvisories(object):
             ApiError: If the DNA Center cloud returns an error.
         """
 
-        _params = {
-        }
+        _params = {}
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -986,19 +1014,18 @@ class SecurityAdvisories(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/security-advisory/advisory')
+        e_url = "/dna/intent/api/v1/security-advisory/advisory"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
         return object_factory(json_data)
 
-    def get_advisories_summary(self,
-                               headers=None,
-                               **request_parameters):
+    def get_advisories_summary(self, headers=None, **request_parameters):
         """Retrieves summary of advisories on the network. .
 
         Args:
@@ -1017,13 +1044,11 @@ class SecurityAdvisories(object):
             ApiError: If the DNA Center cloud returns an error.
         """
 
-        _params = {
-        }
+        _params = {}
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -1031,20 +1056,18 @@ class SecurityAdvisories(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/security-advisory/advisory/aggregate')
+        e_url = "/dna/intent/api/v1/security-advisory/advisory/aggregate"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
         return object_factory(json_data)
 
-    def get_devices_per_advisory(self,
-                                 advisory_id,
-                                 headers=None,
-                                 **request_parameters):
+    def get_devices_per_advisory(self, advisory_id, headers=None, **request_parameters):
         """Retrieves list of devices for an advisory .
 
         Args:
@@ -1064,13 +1087,12 @@ class SecurityAdvisories(object):
             ApiError: If the DNA Center cloud returns an error.
         """
 
-        _params = {
-        }
+        _params = {}
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
         path_params = {
-            'advisoryId': advisory_id,
+            "advisoryId": advisory_id,
         }
 
         with_custom_headers = False
@@ -1079,12 +1101,12 @@ class SecurityAdvisories(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/security-'
-                 + 'advisory/advisory/{advisoryId}/device')
+        e_url = "/dna/intent/api/v1/security-" + "advisory/advisory/{advisoryId}/device"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
@@ -1096,10 +1118,7 @@ class Sensors(object):
         super(Sensors, self).__init__()
         self._session = session
 
-    def sensors(self,
-                site_id=None,
-                headers=None,
-                **request_parameters):
+    def sensors(self, site_id=None, headers=None, **request_parameters):
         """Intent API to get a list of SENSOR devices .
 
         Args:
@@ -1120,14 +1139,12 @@ class Sensors(object):
         """
 
         _params = {
-            'siteId':
-                site_id,
+            "siteId": site_id,
         }
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -1135,11 +1152,12 @@ class Sensors(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/sensor')
+        e_url = "/dna/intent/api/v1/sensor"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
@@ -1151,14 +1169,16 @@ class Sites(object):
         super(Sites, self).__init__()
         self._session = session
 
-    def get_site(self,
-                 limit=None,
-                 name=None,
-                 offset=None,
-                 site_id=None,
-                 type=None,
-                 headers=None,
-                 **request_parameters):
+    def get_site(
+        self,
+        limit=None,
+        name=None,
+        offset=None,
+        site_id=None,
+        type=None,
+        headers=None,
+        **request_parameters
+    ):
         """Get site using siteNameHierarchy/siteId/type ,return all sites if these parameters are not given as input. .
 
         Args:
@@ -1183,22 +1203,16 @@ class Sites(object):
         """
 
         _params = {
-            'name':
-                name,
-            'siteId':
-                site_id,
-            'type':
-                type,
-            'offset':
-                offset,
-            'limit':
-                limit,
+            "name": name,
+            "siteId": site_id,
+            "type": type,
+            "offset": offset,
+            "limit": limit,
         }
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -1206,11 +1220,12 @@ class Sites(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/site')
+        e_url = "/dna/intent/api/v1/site"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
@@ -1222,27 +1237,29 @@ class Swim(object):
         super(Swim, self).__init__()
         self._session = session
 
-    def get_software_image_details(self,
-                                   application_type=None,
-                                   created_time=None,
-                                   family=None,
-                                   image_integrity_status=None,
-                                   image_name=None,
-                                   image_series=None,
-                                   image_size_greater_than=None,
-                                   image_size_lesser_than=None,
-                                   image_uuid=None,
-                                   is_cco_latest=None,
-                                   is_cco_recommended=None,
-                                   is_tagged_golden=None,
-                                   limit=None,
-                                   name=None,
-                                   offset=None,
-                                   sort_by=None,
-                                   sort_order=None,
-                                   version=None,
-                                   headers=None,
-                                   **request_parameters):
+    def get_software_image_details(
+        self,
+        application_type=None,
+        created_time=None,
+        family=None,
+        image_integrity_status=None,
+        image_name=None,
+        image_series=None,
+        image_size_greater_than=None,
+        image_size_lesser_than=None,
+        image_uuid=None,
+        is_cco_latest=None,
+        is_cco_recommended=None,
+        is_tagged_golden=None,
+        limit=None,
+        name=None,
+        offset=None,
+        sort_by=None,
+        sort_order=None,
+        version=None,
+        headers=None,
+        **request_parameters
+    ):
         """Returns software image list based on a filter criteria. For example: "filterbyName = cat3k%" .
 
         Args:
@@ -1281,48 +1298,29 @@ class Swim(object):
         """
 
         _params = {
-            'imageUuid':
-                image_uuid,
-            'name':
-                name,
-            'family':
-                family,
-            'applicationType':
-                application_type,
-            'imageIntegrityStatus':
-                image_integrity_status,
-            'version':
-                version,
-            'imageSeries':
-                image_series,
-            'imageName':
-                image_name,
-            'isTaggedGolden':
-                is_tagged_golden,
-            'isCCORecommended':
-                is_cco_recommended,
-            'isCCOLatest':
-                is_cco_latest,
-            'createdTime':
-                created_time,
-            'imageSizeGreaterThan':
-                image_size_greater_than,
-            'imageSizeLesserThan':
-                image_size_lesser_than,
-            'sortBy':
-                sort_by,
-            'sortOrder':
-                sort_order,
-            'limit':
-                limit,
-            'offset':
-                offset,
+            "imageUuid": image_uuid,
+            "name": name,
+            "family": family,
+            "applicationType": application_type,
+            "imageIntegrityStatus": image_integrity_status,
+            "version": version,
+            "imageSeries": image_series,
+            "imageName": image_name,
+            "isTaggedGolden": is_tagged_golden,
+            "isCCORecommended": is_cco_recommended,
+            "isCCOLatest": is_cco_latest,
+            "createdTime": created_time,
+            "imageSizeGreaterThan": image_size_greater_than,
+            "imageSizeLesserThan": image_size_lesser_than,
+            "sortBy": sort_by,
+            "sortOrder": sort_order,
+            "limit": limit,
+            "offset": offset,
         }
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -1330,11 +1328,12 @@ class Swim(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/image/importation')
+        e_url = "/dna/intent/api/v1/image/importation"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
@@ -1346,10 +1345,9 @@ class Topology(object):
         super(Topology, self).__init__()
         self._session = session
 
-    def get_overall_network_health(self,
-                                   timestamp=None,
-                                   headers=None,
-                                   **request_parameters):
+    def get_overall_network_health(
+        self, timestamp=None, headers=None, **request_parameters
+    ):
         """Returns Overall Network Health information by Device category (Access, Distribution, Core, Router, Wireless) for
         any given point of time .
 
@@ -1372,17 +1370,15 @@ class Topology(object):
         """
 
         _params = {
-            'timestamp':
-                timestamp,
+            "timestamp": timestamp,
         }
 
-        if _params['timestamp'] is None:
-            _params['timestamp'] = ''
+        if _params["timestamp"] is None:
+            _params["timestamp"] = ""
         _params.update(request_parameters)
         _params = dict_from_items_with_values(_params)
 
-        path_params = {
-        }
+        path_params = {}
 
         with_custom_headers = False
         _headers = self._session.headers or {}
@@ -1390,13 +1386,13 @@ class Topology(object):
             _headers.update(dict_of_str(headers))
             with_custom_headers = True
 
-        e_url = ('/dna/intent/api/v1/network-health')
+        e_url = "/dna/intent/api/v1/network-health"
         endpoint_full_url = apply_path_params(e_url, path_params)
         if with_custom_headers:
-            json_data = self._session.get(endpoint_full_url, params=_params,
-                                          headers=_headers)
+            json_data = self._session.get(
+                endpoint_full_url, params=_params, headers=_headers
+            )
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
         return object_factory(json_data)
-
