@@ -17,17 +17,20 @@
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
+      <selectFirstChoice>true</selectFirstChoice>
     </input>
   </fieldset>
   <row>
     <panel>
-      <title>All score</title>
+      <title>All Clients Health Score</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(scoreValue) as scoreValue cont=false | where isnotnull(scoreValue)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -49,13 +52,15 @@
       </single>
     </panel>
     <panel>
-      <title>Wired score</title>
+      <title>Wired Clients Health Score</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(scoreValue) as scoreValue cont=false  | where isnotnull(scoreValue)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -77,13 +82,15 @@
       </single>
     </panel>
     <panel>
-      <title>Wireless score</title>
+      <title>Wireless Clients Health Score</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL" | timechart avg(scoreValue) as scoreValue  cont=false | where isnotnull(scoreValue)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -107,13 +114,15 @@
   </row>
   <row>
     <panel>
-      <title>All count</title>
+      <title>All Clients Count</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
@@ -135,13 +144,44 @@
       </single>
     </panel>
     <panel>
-      <title>Wireless count</title>
+      <title>Wired Clients Count</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xdc4e41","0xdc4e41","0xf1813f","0xf8be34","0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0,25,50,75,100]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Wireless Clients Count</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
@@ -163,43 +203,18 @@
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
-    <panel>
-      <title>Wired count</title>
-      <single>
-        <search>
-          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(clientCount) as clientCount cont=false | where isnotnull(clientCount)</query>
-          <earliest>$timeRangePicker2.earliest$</earliest>
-          <latest>$timeRangePicker2.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="colorBy">trend</option>
-        <option name="colorMode">none</option>
-        <option name="drilldown">none</option>
-        <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0xdc4e41","0xdc4e41","0xf1813f","0xf8be34","0x53a051","0x53a051"]</option>
-        <option name="rangeValues">[0,25,50,75,100]</option>
-        <option name="showSparkline">1</option>
-        <option name="showTrendIndicator">1</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-        <option name="trendColorInterpretation">standard</option>
-        <option name="trendDisplayMode">absolute</option>
-        <option name="unitPosition">after</option>
-        <option name="useColors">1</option>
-        <option name="useThousandSeparators">1</option>
-      </single>
-    </panel>
   </row>
   <row>
     <panel>
-      <title>Wired scores by type</title>
+      <title>Wired Clients Health Scores by Type</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType!="ALL" | dedup scoreType keepevents=false | table scoreType, scoreValue</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -236,13 +251,15 @@
       </chart>
     </panel>
     <panel>
-      <title>Wireless scores by type</title>
+      <title>Wireless Clients Health Scores by Type</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType!="ALL" | dedup scoreType keepevents=false | table scoreType, scoreValue</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -281,13 +298,15 @@
   </row>
   <row>
     <panel>
-      <title>Average of wired score over time</title>
+      <title>Average of Wired Client Health Scores over Time</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType!="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(FAIR)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -324,13 +343,15 @@
       </chart>
     </panel>
     <panel>
-      <title>Average of wireless score over time</title>
+      <title>Average of Wireless Client Health Scores over Time</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType!="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(FAIR)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -369,13 +390,15 @@
   </row>
   <row>
     <panel>
-      <title>Average of final wired score over time</title>
+      <title>Average of Wired Client Health Score over Time</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisTitleX.visibility">visible</option>
         <option name="charting.axisTitleY.visibility">visible</option>
@@ -387,13 +410,15 @@
       </chart>
     </panel>
     <panel>
-      <title>Average of final wireless score over time</title>
+      <title>Average of Wireless Client Health Score over Time</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
@@ -403,13 +428,15 @@
   </row>
   <row>
     <panel>
-      <title>Average of score over time</title>
+      <title>Average Client Health Score over Time</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
