@@ -6,6 +6,8 @@
   </collection>
   
   <collection label="Dashboards">
+    <view name="cisco_dna_center_overview" default="true"/>
+    <divider />
     <view name="cisco_dna_center_client_health" />
     <view name="cisco_dna_center_compliance" />
     <view name="cisco_dna_center_device_health" />
@@ -18,6 +20,6 @@
     <view name="cisco_dna_center_sensor" />
   </collection>
 
-  <view name="search" default="true"/>
+  <view name="search"/>
 
 </nav>
