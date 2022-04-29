@@ -455,6 +455,43 @@ class Compliance(object):
         json_data = self._session.get(endpoint_full_url, params=_params)
         return object_factory(json_data)
 
+    def get_compliance_status(self,
+                              compliance_status=None,
+                              device_uuid=None,
+                              limit=None,
+                              offset=None):
+        _params = {
+            'complianceStatus':
+                compliance_status,
+            'deviceUuid':
+                device_uuid,
+            'offset':
+                offset,
+            'limit':
+                limit,
+        }
+        _params = dict_from_items_with_values(_params)
+        path_params = {}
+        e_url = ('/dna/intent/api/v1/compliance')
+        endpoint_full_url = apply_path_params(e_url, path_params)
+        json_data = self._session.get(endpoint_full_url, params=_params)
+        return object_factory(json_data)
+
+    def get_compliance_status_count(self,
+                                    compliance_status=None,
+                                    headers=None,
+                                    **request_parameters):
+        _params = {
+            'complianceStatus':
+                compliance_status,
+        }
+        _params = dict_from_items_with_values(_params)
+        path_params = {}
+        e_url = ('/dna/intent/api/v1/compliance/count')
+        endpoint_full_url = apply_path_params(e_url, path_params)
+        json_data = self._session.get(endpoint_full_url, params=_params)
+        return object_factory(json_data)
+
 
 class Devices(object):
     def __init__(self, session):

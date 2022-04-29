@@ -75,7 +75,7 @@ def get_important_device_values(device_item):
     return response
 
 
-def get_simplified_compliance(compliance_item):
+def get_simplified_compliance_detail(compliance_item):
     """
     This function will simplify the compliance data for Splunk searches
     :param compliance_item: compliance data
@@ -93,7 +93,60 @@ def get_simplified_compliance(compliance_item):
     return response
 
 
-def simplified_complaince_page(
+def get_simplified_compliance_status(compliance_item):
+    """
+    This function will simplify the compliance data for Splunk searches
+    :param compliance_item: compliance data
+    :return: new compliance response
+    """
+    response = {}
+    response["ComplianceDeviceID"] = (
+        compliance_item.get("deviceUuid") or compliance_item.get("deviceId") or ""
+    )
+    response["ComplianceStatus"] = compliance_item.get("complianceStatus") or ""
+    response["ComplianceLastUpdateTime"] = compliance_item.get("lastUpdateTime") or 0
+    return response
+
+
+def simplified_complaince_status_page(
+    helper, dnac, compliance_page_response, devices_retrieved
+):
+    """
+    This function will retrieve the compliance status and devices data as necessary
+    :param dnac: Cisco DNAC SDK api
+    :return: compliance status response
+    """
+    simplified_complaince_response = []
+    for compliance in compliance_page_response:
+        simplified_complaince = dict(get_simplified_compliance_status(compliance))
+        device_key = simplified_complaince["ComplianceDeviceID"]
+        # Manage device info ...
+        device_info = {}
+        # ... if already present, reuse
+        if devices_retrieved.get(device_key):
+            device_info = dict(devices_retrieved[device_key])
+        else:  # ... if not retrieve and save it
+            helper.log_debug(
+                "Getting the device data from the compliance device id {0}".format(
+                    device_key
+                )
+            )
+            device_info = dnac.devices.get_device_by_id(id=device_key)
+            devices_retrieved[device_key] = device_info
+        if isinstance(device_info, dict) and device_info.get("response"):
+            simplified_complaince.update(
+                get_important_device_values(device_info["response"])
+            )
+            helper.log_debug(
+                "Saved the device data from the compliance device id {0}".format(
+                    device_key
+                )
+            )
+        simplified_complaince_response.append(simplified_complaince)
+    return simplified_complaince_response
+
+
+def simplified_complaince_detail_page(
     helper, dnac, compliance_page_response, devices_retrieved
 ):
     """
@@ -103,7 +156,7 @@ def simplified_complaince_page(
     """
     simplified_complaince_response = []
     for compliance in compliance_page_response:
-        simplified_complaince = dict(get_simplified_compliance(compliance))
+        simplified_complaince = dict(get_simplified_compliance_detail(compliance))
         device_key = simplified_complaince["ComplianceDeviceID"]
         # Manage device info ...
         device_info = {}
@@ -137,26 +190,27 @@ def get_compliance_and_device_details(helper, dnac):
     :param dnac: Cisco DNAC SDK api
     :return: compliance details response
     """
+    compliances_details_response = []
+    compliances_response = []
+    devices_retrieved = {}
     limit = 20
     offset = 1
-    compliances_response = []
     do_request_next = True
-    devices_retrieved = {}
     while do_request_next:
         try:
-            compliance_page_response = dnac.compliance.get_compliance_detail(
+            compliances_page_response = dnac.compliance.get_compliance_status(
                 limit=str(limit), offset=str(offset)
             )
-            if compliance_page_response and compliance_page_response.response:
+            if compliances_page_response and compliances_page_response.response:
                 compliances_response.extend(
-                    simplified_complaince_page(
+                    simplified_complaince_status_page(
                         helper,
                         dnac,
-                        compliance_page_response.response,
+                        compliances_page_response.response,
                         devices_retrieved,
                     )
                 )
-                if len(compliance_page_response.response) < limit:
+                if len(compliances_page_response.response) < limit:
                     do_request_next = False
                     break
             else:
@@ -166,7 +220,36 @@ def get_compliance_and_device_details(helper, dnac):
             do_request_next = False
             break
         offset = offset + limit
-    return compliances_response
+
+    # Set again for new requests
+    do_request_next = True
+    limit = 20
+    offset = 1
+    while do_request_next:
+        try:
+            compliances_page_details_response = dnac.compliance.get_compliance_detail(
+                limit=str(limit), offset=str(offset)
+            )
+            if compliances_page_details_response and compliances_page_details_response.response:
+                compliances_details_response.extend(
+                    simplified_complaince_detail_page(
+                        helper,
+                        dnac,
+                        compliances_page_details_response.response,
+                        devices_retrieved,
+                    )
+                )
+                if len(compliances_page_details_response.response) < limit:
+                    do_request_next = False
+                    break
+            else:
+                do_request_next = False
+                break
+        except Exception:
+            do_request_next = False
+            break
+        offset = offset + limit
+    return [ compliances_details_response, compliances_response]
 
 
 def is_different(helper, state, item):
@@ -224,8 +307,26 @@ def collect_events(helper, ew):
     )
 
     r_json = []
+
+    # get the compliance devices count
+    compliance_device_count = {
+        "ComplianceDetail": "False",
+        "ComplianceCount": "True",
+        "cisco_dnac_host": opt_cisco_dna_center_host
+    }
+    try:
+        all_status = dnac.compliance.get_compliance_status_count()
+        if all_status and all_status.response:
+            compliance_device_count["ComplianceDeviceCount"] = all_status.response
+        compliant_status = dnac.compliance.get_compliance_status_count(compliance_status="COMPLIANT")
+        if compliant_status and compliant_status.response:
+            compliance_device_count["CompliantDeviceCount"] = compliant_status.response
+    except Exception:
+        pass
+    r_json.append(compliance_device_count)
+
     # get the compliance details and devices data as necessary
-    overall_compliance_details = get_compliance_and_device_details(helper, dnac)
+    [overall_compliance_details, overall_compliance] = get_compliance_and_device_details(helper, dnac)
 
     for item in overall_compliance_details:
         key = "{0}_{1}_{2}_{3}".format(
@@ -236,6 +337,26 @@ def collect_events(helper, ew):
         )
         state = helper.get_check_point(key)
         item["cisco_dnac_host"] = opt_cisco_dna_center_host
+        item["ComplianceDetail"] = "True"
+        item["ComplianceCount"] = "False"
+        if state is None:
+            helper.save_check_point(key, item)
+            r_json.append(item)
+        elif is_different(helper, state, item):
+            helper.save_check_point(key, item)
+            r_json.append(item)
+        # helper.delete_check_point(key)
+
+    for item in overall_compliance:
+        key = "{0}_{1}_{2}".format(
+            opt_cisco_dna_center_host,
+            item.get("ComplianceDeviceID") or "N/A",
+            item.get("IpAddress") or "N/A",
+        )
+        state = helper.get_check_point(key)
+        item["cisco_dnac_host"] = opt_cisco_dna_center_host
+        item["ComplianceDetail"] = "False"
+        item["ComplianceCount"] = "False"
         if state is None:
             helper.save_check_point(key, item)
             r_json.append(item)
