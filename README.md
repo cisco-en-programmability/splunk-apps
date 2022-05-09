@@ -45,12 +45,12 @@ We welcome community contributions to them. If you find problems, need an enhanc
 This builds a tarball named `Splunk_CiscoDNACenter.spl` and the renamed tarball `Splunk-TA-cisco-dnacenter.spl`.
 
 ```shell
-$ scripts/build.sh -a addon -l -v 1.0.0
+$ make addon v=1.0.0
 [2022-04-06 14:45:32 CST] [INFO] Building Splunk-TA-cisco-dnacenter version 1.0.0 build local from branch main 
 [2022-04-06 14:45:34 CST] [INFO] Changing version from 1.0.0 to 1.0.0 build 1000 on channel default 
 [2022-04-06 14:45:34 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk-TA-cisco-dnacenter-1.0.0-main-local.spl
 
-$ scripts/build.sh -a app -l -v 1.0.0
+$ make app v=1.0.0
 [2022-04-06 14:45:53 CST] [INFO] Building Splunk_CiscoDNACenter version 1.0.0 build local from branch main 
 [2022-04-06 14:45:53 CST] [INFO] Changing version from 1.0.0 to 1.0.0 build 1000 on channel default 
 [2022-04-06 14:45:53 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk_CiscoDNACenter-1.0.0-main-local.spl 
