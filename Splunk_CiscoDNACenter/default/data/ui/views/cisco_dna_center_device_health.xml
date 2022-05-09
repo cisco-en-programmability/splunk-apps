@@ -17,17 +17,22 @@
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
+      <selectFirstChoice>true</selectFirstChoice>
     </input>
   </fieldset>
   <row>
     <panel>
-      <title>Manageability types</title>
+      <title>Device Manageability Type Percentages</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | stats dc(IpAddress) as amount by Manageability</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
+| stats dc(IpAddress) as amount by Manageability</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -64,13 +69,17 @@
       </chart>
     </panel>
     <panel>
-      <title>Reachability types</title>
+      <title>Device Reachability Type Percentages</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | stats dc(IpAddress) as amount by Reachability</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
+| stats dc(IpAddress) as amount by Reachability</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -107,13 +116,17 @@
       </chart>
     </panel>
     <panel>
-      <title>Device families</title>
+      <title>Device Family Percentages</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | stats dc(IpAddress) as amount by DeviceFamily</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
+| stats dc(IpAddress) as amount by DeviceFamily</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -150,13 +163,15 @@
       </chart>
     </panel>
     <panel>
-      <title>Device roles</title>
+      <title>Device Role Percentages</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | stats dc(IpAddress) as amount by DeviceRole</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -193,13 +208,17 @@
       </chart>
     </panel>
     <panel>
-      <title>Device series count</title>
+      <title>Device Series Percentages</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | chart dc(IpAddress) as amount by DeviceSeries</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
+| chart dc(IpAddress) as amount by DeviceSeries</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -238,13 +257,18 @@
   </row>
   <row>
     <panel>
-      <title>Managed devices</title>
+      <title>Number of Managed Devices</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where Manageability="Managed" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where Manageability="Managed"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
@@ -266,13 +290,18 @@
       </single>
     </panel>
     <panel>
-      <title>Unmanaged devices</title>
+      <title>Number of Unmanaged Devices</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where Manageability="Unmanaged" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where Manageability="Unmanaged"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
@@ -294,13 +323,18 @@
       </single>
     </panel>
     <panel>
-      <title>Managed (with errors) devices</title>
+      <title>Number of Managed With Errors Devices</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where Manageability="Managed (With Errors)" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where Manageability="Managed (With Errors)"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
@@ -324,13 +358,18 @@
   </row>
   <row>
     <panel>
-      <title>Switches and hubs count</title>
+      <title>Number of Switches and Hubs</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where DeviceFamily="Switches and Hubs" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where DeviceFamily="Switches and Hubs"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
@@ -352,13 +391,18 @@
       </single>
     </panel>
     <panel>
-      <title>Wireless controller count</title>
+      <title>Number of Wireless Controllers</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where DeviceFamily="Wireless Controller" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where DeviceFamily="Wireless Controller"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -380,13 +424,18 @@
       </single>
     </panel>
     <panel>
-      <title>Routers count</title>
+      <title>Number of Routers</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where DeviceFamily="Routers" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where DeviceFamily="Routers"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -408,13 +457,18 @@
       </single>
     </panel>
     <panel>
-      <title>APs count</title>
+      <title>Number of APs</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where DeviceFamily="APs" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where DeviceFamily="APs"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -438,13 +492,18 @@
   </row>
   <row>
     <panel>
-      <title>Access count</title>
+      <title>Number of Devices with Role Access</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where DeviceRole="ACCESS" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where DeviceRole="ACCESS"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -466,13 +525,18 @@
       </single>
     </panel>
     <panel>
-      <title>Distribution count</title>
+      <title>Number of Devices with Distribution</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where DeviceRole="DISTRIBUTION" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where DeviceRole="DISTRIBUTION"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -496,13 +560,18 @@
   </row>
   <row>
     <panel>
-      <title>Reachable count</title>
+      <title>Number of Reachable Devices</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where Reachability="Reachable" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where Reachability="Reachable"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
         <option name="drilldown">none</option>
@@ -515,13 +584,18 @@
       </single>
     </panel>
     <panel>
-      <title>Ping reachable count</title>
+      <title>Number of Ping Reachable Devices</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where Reachability="Ping Reachable" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where Reachability="Ping Reachable"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
@@ -543,13 +617,18 @@
       </single>
     </panel>
     <panel>
-      <title>Unreachable count</title>
+      <title>Number of Unreachable Devices</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | where Reachability="Unreachable" | timechart dc(IpAddress) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| where Reachability="Unreachable"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
@@ -573,13 +652,37 @@
   </row>
   <row>
     <panel>
-      <title>Device health table</title>
+      <title>Device Health Table</title>
+      <input type="dropdown" token="reachabilityDropdown" searchWhenChanged="true">
+        <label>Reachability</label>
+        <choice value="*">All</choice>
+        <choice value="Reachable">Reachable</choice>
+        <choice value="Ping Reachable">Ping Reachable</choice>
+        <choice value="Unreachable">Unreachable</choice>
+        <default>*</default>
+        <initialValue>*</initialValue>
+      </input>
+      <input type="dropdown" token="manageabilityDropdown" searchWhenChanged="true">
+        <label>Manageability</label>
+        <choice value="*">All</choice>
+        <choice value="Managed">Managed</choice>
+        <choice value="Managed (With Errors)">Managed (With Errors)</choice>
+        <choice value="Unmanaged">Unmanaged</choice>
+        <default>*</default>
+        <initialValue>*</initialValue>
+      </input>
       <table>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | dedup IpAddress keepevents=false | table IpAddress, DeviceName, DeviceFamily, Reachability, ReachabilityFailureReason, ManageErrors, Manageability, ManageErrors, MACAddress, DeviceRole, ImageVersion, Uptime, UptimeSeconds, LastUpdated, LastUpdateTime, SerialNumber, DeviceSeries, Platform, SupportType, AssociatedWLCIP, HealthScore, IssueCount, Site, CPUUtilization, CPUHealth, MemoryUtilization, MemoryUtilizationHealth, InterfaceLinkErrHealth, InterDeviceLinkAvailHealth</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" 
+| dedup IpAddress keepevents=false
+| search Reachability="$reachabilityDropdown$"
+| search Manageability="$manageabilityDropdown$"
+| table IpAddress, DeviceName, DeviceFamily, Reachability, ReachabilityFailureReason, ManageErrors, Manageability, ManageErrors, MACAddress, DeviceRole, ImageVersion, Uptime, UptimeSeconds, LastUpdated, LastUpdateTime, SerialNumber, DeviceSeries, Platform, SupportType, AssociatedWLCIP, HealthScore, IssueCount, Site, CPUUtilization, CPUHealth, MemoryUtilization, MemoryUtilizationHealth, InterfaceLinkErrHealth, InterDeviceLinkAvailHealth</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="count">20</option>
         <option name="dataOverlayMode">none</option>
@@ -590,502 +693,6 @@
         <option name="totalsRow">false</option>
         <option name="wrap">true</option>
       </table>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Average of health score by IP over time</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | timechart avg(HealthScore) by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">column</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">minmax</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-    <panel>
-      <title>Average of uptimeSeconds - log scaled over time</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | timechart avg(UptimeSeconds) as avgLnUptimeSeconds by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">log</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">column</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Issue count by IP</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | dedup IpAddress keepevents=false | table IpAddress, IssueCount</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">pie</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-    <panel>
-      <title>Average of issue count by IP over time</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | timechart avg(IssueCount) by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">column</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Average of CPU Health by IP over time</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | timechart avg(CPUHealth) by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-    <panel>
-      <title>Average of CPU utilization by IP over time</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | timechart avg(CPUUtilization) by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Average of memory utilization health by IP over time</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | timechart avg(MemoryUtilizationHealth) by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-    <panel>
-      <title>Average of memory utilization by IP over time</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | timechart avg(MemoryUtilization) by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Average of interDeviceLinkAvailHealth by IP over time</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | timechart avg(InterDeviceLinkAvailHealth) by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-    <panel>
-      <title>Average of interfaceLinkErrHealth by IP over time</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | timechart avg(InterfaceLinkErrHealth) by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Average of CPU health by IP with family:  "$familyDropdown$" - over time</title>
-      <input type="dropdown" token="familyDropdown" searchWhenChanged="true">
-        <label>Device family filter</label>
-        <choice value="*">All</choice>
-        <choice value="Wireless Controller">Wireless Controller</choice>
-        <choice value="Switches and Hubs">Switches and Hubs</choice>
-        <search>
-          <query/>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
-        </search>
-        <initialValue>*</initialValue>
-      </input>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" DeviceFamily="$familyDropdown$" | timechart avg(CPUHealth) by IpAddress cont=false</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">column</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
     </panel>
   </row>
 </form>

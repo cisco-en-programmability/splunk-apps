@@ -17,17 +17,23 @@
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
+      <selectFirstChoice>true</selectFirstChoice>
     </input>
   </fieldset>
   <row>
     <panel>
-      <title>Number of fabric sites</title>
+      <title>Number of Fabric Sites</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$" | where HasFabric="True" | timechart dc(SiteNameHierarchy) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$"
+| where HasFabric="True"
+| timechart dc(SiteNameHierarchy) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -49,13 +55,18 @@
       </single>
     </panel>
     <panel>
-      <title>Number of sites that are not fabric</title>
+      <title>Number of Non-Fabric Sites</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$" | where HasFabric="False" | timechart dc(SiteNameHierarchy) as amount cont=false | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$"
+| where HasFabric="False"
+| timechart dc(SiteNameHierarchy) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -63,6 +74,7 @@
         <option name="numberPrecision">0</option>
         <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
         <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
         <option name="showSparkline">1</option>
         <option name="showTrendIndicator">1</option>
         <option name="trellis.enabled">0</option>
@@ -78,13 +90,18 @@
   </row>
   <row>
     <panel>
-      <title>Sites with fabric</title>
+      <title>Percentage of Sites with/without Fabric</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$" | eval WithFabric=if(HasFabric="True", "Yes", "No") | stats dc(SiteNameHierarchy) as amount by WithFabric</query>
+          <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup SiteNameHierarchy keepevents=false
+| eval WithFabric=if(HasFabric="True", "Yes", "No")
+| stats dc(SiteNameHierarchy) as amount by WithFabric</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -123,7 +140,7 @@
   </row>
   <row>
     <panel>
-      <title>Fabric sites table</title>
+      <title>Fabric Sites Table</title>
       <input type="dropdown" token="hasFabricDropdown" searchWhenChanged="true">
         <label>Has fabric</label>
         <choice value="*">All</choice>
@@ -133,10 +150,14 @@
       </input>
       <table>
         <search>
-          <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$"  HasFabric="$hasFabricDropdown$" | dedup SiteNameHierarchy keepevents=false | table SiteName, SiteNameHierarchy, SiteType, HasFabric, FabricName, FabricSiteNameHierarchy, FabricType, FabricDomainType</query>
+          <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$"  HasFabric="$hasFabricDropdown$"
+| dedup SiteNameHierarchy keepevents=false
+| table SiteName, SiteNameHierarchy, SiteType, HasFabric, FabricName, FabricSiteNameHierarchy, FabricType, FabricDomainType</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="count">20</option>
         <option name="dataOverlayMode">none</option>

@@ -63,7 +63,7 @@
 | eventstats dc(ComplianceDeviceID) as total 
 | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
 | dedup ComplianceStatus keepevents=false 
-| eval percentage=((subtotal/total)*100) 
+| eval percentage=round((subtotal/total)*100, 2)
 | table ComplianceStatus, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
@@ -125,12 +125,12 @@
       </input>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="https://sandboxdnac.cisco.com" ComplianceCount="False" ComplianceDetail="False" 
+          <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
 | dedup ComplianceDeviceID keepevents=false 
 | eventstats dc(ComplianceDeviceID) as total 
 | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
 | dedup ComplianceStatus keepevents=false 
-| eval percentage=((subtotal/total)*100) 
+| eval percentage=round((subtotal/total)*100, 2)
 | where ComplianceStatus="$complianceStatusDropdown4$" 
 | appendpipe [stats count | where count=0 | rename count as "percentage"] 
 | table percentage</query>
@@ -183,7 +183,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$"  ComplianceCount="True" ComplianceDetail="False" 
-| eval percentage=((CompliantDeviceCount/ComplianceDeviceCount)*100) 
+| eval percentage=round((CompliantDeviceCount/ComplianceDeviceCount)*100, 2)
 | table _time, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
@@ -277,7 +277,7 @@
         <option name="charting.chart.bubbleMinimumSize">10</option>
         <option name="charting.chart.bubbleSizeBy">area</option>
         <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">minmax</option>
+        <option name="charting.chart.showDataLabels">none</option>
         <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
         <option name="charting.chart.stackMode">default</option>
         <option name="charting.chart.style">shiny</option>
@@ -298,7 +298,7 @@
   </row>
   <row>
     <panel>
-      <title>Compliant Devices by Type</title>
+      <title>Percentage of Compliant Devices by Type</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$"  ComplianceCount="False" ComplianceDetail="True" 
@@ -306,7 +306,7 @@
  | search ComplianceStatus="COMPLIANT"
  | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType 
  | dedup ComplianceComplianceType keepevents=false 
- | eval percentage=((subtotal/total)*100) 
+ | eval percentage=round((subtotal/total)*100, 2)
  | table ComplianceComplianceType, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
@@ -322,11 +322,13 @@
         <option name="charting.axisX.abbreviation">none</option>
         <option name="charting.axisX.scale">linear</option>
         <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
         <option name="charting.axisY.scale">linear</option>
         <option name="charting.axisY2.abbreviation">none</option>
         <option name="charting.axisY2.enabled">0</option>
         <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">pie</option>
+        <option name="charting.chart">column</option>
         <option name="charting.chart.bubbleMaximumSize">50</option>
         <option name="charting.chart.bubbleMinimumSize">10</option>
         <option name="charting.chart.bubbleSizeBy">area</option>
@@ -352,7 +354,7 @@
   </row>
   <row>
     <panel>
-      <title>Compliance Table</title>
+      <title>Device Compliance Table</title>
       <input type="dropdown" token="deviceIpAddressDropdown" searchWhenChanged="true">
         <label>Device IP Address</label>
         <choice value="*">All</choice>
@@ -365,23 +367,6 @@
           <latest>now</latest>
         </search>
         <default>*</default>
-      </input>
-      <input type="dropdown" token="complianceDeviceStatusDropdown" searchWhenChanged="true">
-        <label>Compliance Device Status</label>
-        <choice value="*">All</choice>
-        <choice value="COMPLIANT">COMPLIANT</choice>
-        <choice value="NON_COMPLIANT">NON_COMPLIANT</choice>
-        <choice value="IN_PROGRESS">IN_PROGRESS</choice>
-        <choice value="NOT_AVAILABLE">NOT_AVAILABLE</choice>
-        <choice value="NOT_APPLICABLE">NOT_APPLICABLE</choice>
-        <choice value="ERROR">ERROR</choice>
-        <search>
-          <query/>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
-        </search>
-        <initialValue>COMPLIANT</initialValue>
-        <default>COMPLIANT</default>
       </input>
       <input type="dropdown" token="complianceTypeDropdown" searchWhenChanged="true">
         <label>Compliance Type</label>
@@ -419,7 +404,7 @@
   | dedup ComplianceDeviceID, ComplianceComplianceType keepevents=false 
   | table ComplianceDeviceID, DeviceName, DeviceRole, IpAddress, MACAddress,  Manageability, Reachability, ComplianceComplianceType, ComplianceState, ComplianceStatus, ComplianceLastSyncTime, ComplianceLastUpdateTime
 | join left=L right=R where L.ComplianceDeviceID=R.ComplianceDeviceID type=inner [search
-sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="False" ComplianceDetail="False" ComplianceStatus="$complianceDeviceStatusDropdown$" IpAddress="$deviceIpAddressDropdown$"
+sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="False" ComplianceDetail="False" IpAddress="$deviceIpAddressDropdown$"
 | dedup ComplianceDeviceID keepevents=false
 | table  ComplianceDeviceID, IpAddress, ComplianceStatus
 ]

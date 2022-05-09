@@ -74,16 +74,16 @@
       </single>
     </panel>
     <panel>
-      <title>Device Compliance Status Percentages</title>
+      <title>Percentage of Compliant Devices by Type</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
-| dedup ComplianceDeviceID keepevents=false 
-| eventstats dc(ComplianceDeviceID) as total 
-| eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
-| dedup ComplianceStatus keepevents=false 
-| eval percentage=((subtotal/total)*100) 
-| table ComplianceStatus, percentage</query>
+          <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$"  ComplianceCount="False" ComplianceDetail="True" 
+ | eventstats dc(ComplianceDeviceID) as total 
+ | search ComplianceStatus="COMPLIANT"
+ | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType 
+ | dedup ComplianceComplianceType keepevents=false 
+ | eval percentage=round((subtotal/total)*100, 2)
+ | table ComplianceComplianceType, percentage</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -98,11 +98,13 @@
         <option name="charting.axisX.abbreviation">none</option>
         <option name="charting.axisX.scale">linear</option>
         <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
         <option name="charting.axisY.scale">linear</option>
         <option name="charting.axisY2.abbreviation">none</option>
         <option name="charting.axisY2.enabled">0</option>
         <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">pie</option>
+        <option name="charting.chart">column</option>
         <option name="charting.chart.bubbleMaximumSize">50</option>
         <option name="charting.chart.bubbleMinimumSize">10</option>
         <option name="charting.chart.bubbleSizeBy">area</option>
@@ -118,7 +120,7 @@
         <option name="charting.legend.mode">standard</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
-        <option name="height">271</option>
+        <option name="height">334</option>
         <option name="refresh.display">progressbar</option>
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>

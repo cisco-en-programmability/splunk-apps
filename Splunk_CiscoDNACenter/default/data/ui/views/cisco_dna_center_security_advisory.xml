@@ -17,17 +17,21 @@
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
+      <selectFirstChoice>true</selectFirstChoice>
     </input>
   </fieldset>
   <row>
     <panel>
-      <title>Critical count</title>
+      <title>Critical Count</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True"  SubCategory="Total" Category="CRITICAL" | timechart sum(Amount) cont=false</query>
+          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True"  SubCategory="Total" Category="CRITICAL"
+| timechart sum(Amount) cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -49,13 +53,15 @@
       </single>
     </panel>
     <panel>
-      <title>High count</title>
+      <title>High Count</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory="Total" Category="HIGH" | timechart sum(Amount) cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -76,13 +82,15 @@
       </single>
     </panel>
     <panel>
-      <title>Medium count</title>
+      <title>Medium Count</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory="Total" Category="MEDIUM" | timechart sum(Amount) cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -106,13 +114,17 @@
   </row>
   <row>
     <panel>
-      <title>Security Advisories count by category</title>
+      <title>Security Advisories Count by Category</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True"  SubCategory="Total" | dedup Category keepevents=false | chart sum(Amount) as amount by Category</query>
+          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True"  SubCategory="Total"
+| dedup Category keepevents=false
+| chart sum(Amount) as amount by Category</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -149,13 +161,16 @@
       </chart>
     </panel>
     <panel>
-      <title>Security Advisories by category over time</title>
+      <title>Security Advisories by Category over Time</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True"  SubCategory="Total" | timechart sum(Amount) as amount by Category cont=false</query>
+          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory="Total"
+| timechart sum(Amount) as amount by Category cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -194,7 +209,7 @@
   </row>
   <row>
     <panel>
-      <title>Security Advisories count by subcategory</title>
+      <title>Security Advisories Count by Subcategory</title>
       <input type="dropdown" token="categoryDropdown" searchWhenChanged="true">
         <label>Category</label>
         <fieldForLabel>Category</fieldForLabel>
@@ -207,10 +222,14 @@
       </input>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory!="Total" Category="$categoryDropdown$" | dedup SubCategory keepevents=false  | chart sum(Amount) as amount by SubCategory</query>
+          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory!="Total" Category="$categoryDropdown$"
+| dedup SubCategory keepevents=false
+| chart sum(Amount) as amount by SubCategory</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -247,7 +266,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Security Advisories by subcategory over time</title>
+      <title>Security Advisories by Subcategory over Time</title>
       <input type="dropdown" token="categoryDropdown2" searchWhenChanged="true">
         <label>Category</label>
         <fieldForLabel>Category</fieldForLabel>
@@ -258,10 +277,13 @@
       </input>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory!="Total" Category="$categoryDropdown2$" | timechart sum(Amount) as amount by SubCategory cont=false</query>
+          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory!="Total" Category="$categoryDropdown2$"
+| timechart sum(Amount) as amount by SubCategory cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -300,7 +322,7 @@
   </row>
   <row>
     <panel>
-      <title>Security Advisories with devices</title>
+      <title>Security Advisories with Devices</title>
       <input type="dropdown" token="ipAddressDropdown" searchWhenChanged="true">
         <label>IP Address</label>
         <choice value="*">All</choice>
@@ -325,10 +347,14 @@
       </input>
       <table>
         <search>
-          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="False" DeviceIpAddress="$ipAddressDropdown$" AdvisoryID="$advisoryIDDropdown$" | dedup AdvisoryID keepevents=false | table AdvisoryID, AdvisoryCvesStr, AdvisoryDefaultDetectionType, AdvisoryDetectionType, AdvisoryPublicationUrl, AdvisorySir, DeviceIpAddress, DeviceName,  DeviceMACAddress, DeviceSerialNumber, DeviceFamily,  DevicePlatform,  DeviceSeries,  DeviceUptimeSeconds</query>
+          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="False" DeviceIpAddress="$ipAddressDropdown$" AdvisoryID="$advisoryIDDropdown$"
+| dedup AdvisoryID keepevents=false
+| table AdvisoryID, AdvisoryCvesStr, AdvisoryDefaultDetectionType, AdvisoryDetectionType, AdvisoryPublicationUrl, AdvisorySir, DeviceIpAddress, DeviceName,  DeviceMACAddress, DeviceSerialNumber, DeviceFamily,  DevicePlatform,  DeviceSeries,  DeviceUptimeSeconds</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="count">20</option>
         <option name="dataOverlayMode">none</option>
