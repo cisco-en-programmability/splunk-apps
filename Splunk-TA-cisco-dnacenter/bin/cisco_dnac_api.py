@@ -776,9 +776,7 @@ class Devices(object):
         else:
             json_data = self._session.get(endpoint_full_url, params=_params)
 
-        return object_factory(
-            "bpm_c07eaefa1fa45faa801764d9094336ae_v2_2_3_3", json_data
-        )
+        return object_factory(json_data)
 
 
 class Issues(object):
