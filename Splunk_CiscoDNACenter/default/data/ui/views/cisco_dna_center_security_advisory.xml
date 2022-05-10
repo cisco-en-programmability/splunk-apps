@@ -224,7 +224,12 @@
         <search>
           <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory!="Total" Category="$categoryDropdown$"
 | dedup SubCategory keepevents=false
-| chart sum(Amount) as amount by SubCategory</query>
+| chart sum(Amount) as amount by SubCategory
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval SubCategory=SubCategory." (".perc."%)"
+| table SubCategory amount</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>

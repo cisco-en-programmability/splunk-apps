@@ -27,7 +27,12 @@
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup IpAddress keepevents=false
-| stats dc(IpAddress) as amount by Manageability</query>
+| stats dc(IpAddress) as amount by Manageability
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval Manageability=Manageability." (".perc."%)"
+| table Manageability amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -74,7 +79,12 @@
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup IpAddress keepevents=false
-| stats dc(IpAddress) as amount by Reachability</query>
+| stats dc(IpAddress) as amount by Reachability
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval Reachability=Reachability." (".perc."%)"
+| table Reachability amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -121,7 +131,12 @@
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup IpAddress keepevents=false
-| stats dc(IpAddress) as amount by DeviceFamily</query>
+| stats dc(IpAddress) as amount by DeviceFamily
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval DeviceFamily=DeviceFamily." (".perc."%)"
+| table DeviceFamily amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -166,7 +181,13 @@
       <title>Device Role Percentages</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" | stats dc(IpAddress) as amount by DeviceRole</query>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| stats dc(IpAddress) as amount by DeviceRole
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval DeviceRole=DeviceRole." (".perc."%)"
+| table DeviceRole amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -213,7 +234,12 @@
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup IpAddress keepevents=false
-| chart dc(IpAddress) as amount by DeviceSeries</query>
+| chart dc(IpAddress) as amount by DeviceSeries
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval DeviceSeries=DeviceSeries." (".perc."%)"
+| table DeviceSeries amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>

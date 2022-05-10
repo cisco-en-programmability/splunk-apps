@@ -96,7 +96,12 @@
           <query>sourcetype="cisco:dnac:fabricdevice" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup DeviceIpAddress keepevents=false
 | eval WithFabric=if(HasFabric="True", "Yes", "No")
-| stats dc(DeviceIpAddress) as amount by WithFabric</query>
+| stats dc(DeviceIpAddress) as amount by WithFabric
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval WithFabric=WithFabric." (".perc."%)"
+| table WithFabric amount</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>

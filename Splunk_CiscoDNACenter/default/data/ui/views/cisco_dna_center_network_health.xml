@@ -362,7 +362,10 @@
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category!="All"
 | dedup category keepevents=false 
-| table category, totalCount</query>
+| eventstats sum(totalCount) as Total
+| eval perc=round((totalCount/Total)*100, 2)
+| eval category=category." (".perc."%)"
+| table category totalCount</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>

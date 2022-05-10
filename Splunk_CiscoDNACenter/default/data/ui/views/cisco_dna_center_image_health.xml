@@ -178,7 +178,12 @@
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="False"
 | dedup ImageImageName keepevents=false
 | eval State=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
-| chart dc(ImageImageName) as amount by State</query>
+| chart dc(ImageImageName) as amount by State
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval State=State." (".perc."%)"
+| table State amount</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -225,7 +230,12 @@
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="True"
 | dedup ImageImageName keepevents=false
-| chart dc(ImageImageName) as amount by ImageImageName</query>
+| chart dc(ImageImageName) as amount by ImageImageName
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval ImageImageName=ImageImageName." (".perc."%)"
+| table ImageImageName amount</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>

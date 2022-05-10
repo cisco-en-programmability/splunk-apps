@@ -96,7 +96,12 @@
           <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup SiteNameHierarchy keepevents=false
 | eval WithFabric=if(HasFabric="True", "Yes", "No")
-| stats dc(SiteNameHierarchy) as amount by WithFabric</query>
+| stats dc(SiteNameHierarchy) as amount by WithFabric
+
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval WithFabric=WithFabric." (".perc."%)"
+| table WithFabric amount</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>

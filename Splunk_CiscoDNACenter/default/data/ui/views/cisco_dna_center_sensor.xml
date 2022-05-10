@@ -52,7 +52,11 @@
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup ipAddress keepevents=false
-| chart dc(ipAddress) as amount by status</query>
+| chart dc(ipAddress) as amount by status
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval status=status." (".perc."%)"
+| table status amount</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -99,7 +103,11 @@
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup ipAddress keepevents=false
-| chart dc(ipAddress) as amount by type</query>
+| chart dc(ipAddress) as amount by type
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval type=type." (".perc."%)"
+| table type amount</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -147,7 +155,11 @@
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup ipAddress keepevents=false
 | eval site=if(location="", "N/A", location)
-| chart dc(ipAddress) as amount by site cont=false</query>
+| chart dc(ipAddress) as amount by site cont=false
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval site=site." (".perc."%)"
+| table site amount</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -194,7 +206,11 @@
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
 | dedup ipAddress keepevents=false
-| chart dc(ipAddress) as amount by backhaulType cont=false</query>
+| chart dc(ipAddress) as amount by backhaulType cont=false
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval backhaulType=backhaulType." (".perc."%)"
+| table backhaulType amount</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>

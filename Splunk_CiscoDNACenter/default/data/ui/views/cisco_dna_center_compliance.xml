@@ -64,6 +64,9 @@
 | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
 | dedup ComplianceStatus keepevents=false 
 | eval percentage=round((subtotal/total)*100, 2)
+| table ComplianceStatus, percentage
+
+| eval ComplianceStatus=ComplianceStatus." (".percentage."%)"
 | table ComplianceStatus, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
