@@ -287,6 +287,7 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
 | where Manageability="Managed"
 | timechart dc(IpAddress) as amount cont=false
 | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -320,6 +321,7 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
 | where Manageability="Unmanaged"
 | timechart dc(IpAddress) as amount cont=false
 | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -353,6 +355,7 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
 | where Manageability="Managed (With Errors)"
 | timechart dc(IpAddress) as amount cont=false
 | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -388,6 +391,7 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
 | where DeviceFamily="Switches and Hubs"
 | timechart dc(IpAddress) as amount cont=false
 | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -421,6 +425,7 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
 | where DeviceFamily="Wireless Controller"
 | timechart dc(IpAddress) as amount cont=false
 | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -454,6 +459,7 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
 | where DeviceFamily="Routers"
 | timechart dc(IpAddress) as amount cont=false
 | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -487,7 +493,8 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where DeviceFamily="APs"
+| dedup IpAddress keepevents=false
+| where (DeviceFamily LIKE "%AP%")
 | timechart dc(IpAddress) as amount cont=false
 | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
@@ -522,6 +529,7 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
 | where DeviceRole="ACCESS"
 | timechart dc(IpAddress) as amount cont=false
 | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -551,10 +559,45 @@
       </single>
     </panel>
     <panel>
-      <title>Number of Devices with Distribution</title>
+      <title>Number of Devices with Role Core</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
+| where DeviceRole="CORE"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Devices with Role Distribution</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
 | where DeviceRole="DISTRIBUTION"
 | timechart dc(IpAddress) as amount cont=false
 | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -569,6 +612,40 @@
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
         <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Devices with Role Border Router</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+| dedup IpAddress keepevents=false
+| where DeviceRole="BORDER ROUTER"
+| timechart dc(IpAddress) as amount cont=false
+| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
         <option name="rangeValues">[0,30,70,100]</option>
         <option name="refresh.display">progressbar</option>
         <option name="showSparkline">1</option>
@@ -606,38 +683,6 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
-        <option name="useColors">1</option>
-      </single>
-    </panel>
-    <panel>
-      <title>Number of Ping Reachable Devices</title>
-      <single>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where Reachability="Ping Reachable"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
-        </search>
-        <option name="colorBy">trend</option>
-        <option name="colorMode">none</option>
-        <option name="drilldown">none</option>
-        <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
-        <option name="rangeValues">[0,30,70,100]</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="showSparkline">1</option>
-        <option name="showTrendIndicator">1</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-        <option name="trendColorInterpretation">standard</option>
-        <option name="trendDisplayMode">absolute</option>
-        <option name="unitPosition">after</option>
         <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
@@ -683,7 +728,6 @@
         <label>Reachability</label>
         <choice value="*">All</choice>
         <choice value="Reachable">Reachable</choice>
-        <choice value="Ping Reachable">Ping Reachable</choice>
         <choice value="Unreachable">Unreachable</choice>
         <default>*</default>
         <initialValue>*</initialValue>

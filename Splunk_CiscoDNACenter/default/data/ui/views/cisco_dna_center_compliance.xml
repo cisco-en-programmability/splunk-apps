@@ -252,7 +252,7 @@
 | eventstats dc(ComplianceDeviceID) as total by ComplianceComplianceType
 | search ComplianceStatus="COMPLIANT"
 | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType
-| eval percentage=((subtotal/total)*100)
+| eval percentage=round((subtotal/total)*100, 2)
 | timechart avg(percentage) by ComplianceComplianceType cont=false</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>

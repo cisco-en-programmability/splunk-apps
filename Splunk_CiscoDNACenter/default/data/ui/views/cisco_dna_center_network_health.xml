@@ -357,7 +357,7 @@
   </row>
   <row>
     <panel>
-      <title>Network Count by Category</title>
+      <title>Network Device Type Count by Category</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category!="All"

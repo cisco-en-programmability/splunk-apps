@@ -26,7 +26,7 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True"  SubCategory="Total" Category="CRITICAL"
-| timechart sum(Amount) cont=false</query>
+| timechart avg(Amount) cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -56,7 +56,7 @@
       <title>High Count</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory="Total" Category="HIGH" | timechart sum(Amount) cont=false</query>
+          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory="Total" Category="HIGH" | timechart avg(Amount) cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -85,7 +85,7 @@
       <title>Medium Count</title>
       <single>
         <search>
-          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory="Total" Category="MEDIUM" | timechart sum(Amount) cont=false</query>
+          <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory="Total" Category="MEDIUM" | timechart avg(Amount) cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -165,7 +165,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory="Total"
-| timechart sum(Amount) as amount by Category cont=false</query>
+| timechart avg(Amount) as amount by Category cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -219,6 +219,7 @@
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
+        <selectFirstChoice>true</selectFirstChoice>
       </input>
       <chart>
         <search>
@@ -279,11 +280,12 @@
         <search>
           <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory!="Total" | dedup Category keepevents=false | table Category</query>
         </search>
+        <selectFirstChoice>true</selectFirstChoice>
       </input>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory!="Total" Category="$categoryDropdown2$"
-| timechart sum(Amount) as amount by SubCategory cont=false</query>
+| timechart avg(Amount) as amount by SubCategory cont=false</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
