@@ -525,7 +525,7 @@
   </row>
   <row>
     <panel>
-      <title>Number of Devices with Role Access</title>
+      <title>Number of Access Devices</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
@@ -559,7 +559,7 @@
       </single>
     </panel>
     <panel>
-      <title>Number of Devices with Role Core</title>
+      <title>Number of Core Devices</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
@@ -593,7 +593,7 @@
       </single>
     </panel>
     <panel>
-      <title>Number of Devices with Role Distribution</title>
+      <title>Number of Distribution Devices</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
@@ -627,7 +627,7 @@
       </single>
     </panel>
     <panel>
-      <title>Number of Devices with Role Border Router</title>
+      <title>Number of Border Router Devices</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
