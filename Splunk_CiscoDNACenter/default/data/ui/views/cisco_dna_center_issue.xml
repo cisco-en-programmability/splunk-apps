@@ -39,9 +39,9 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Active"
-| eventstats sum(IssueCount) as subtotal by _time
-| dedup _time keepevents=false
-| chart sum(subtotal) by _time</query>
+          | eventstats sum(IssueCount) as subtotal by _time
+          | dedup _time keepevents=false
+          | chart sum(subtotal) by _time</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -61,9 +61,9 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Resolved"
-| eventstats sum(IssueCount) as subtotal by _time
-| dedup _time keepevents=false
-| chart sum(subtotal) by _time</query>
+          | eventstats sum(IssueCount) as subtotal by _time
+          | dedup _time keepevents=false
+          | chart sum(subtotal) by _time</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -85,13 +85,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
-| dedup IssueID keepevents=false
-| chart dc(IssueID) as amount cont=false by IssueSpecificPriority
+          | dedup IssueID keepevents=false
+          | chart dc(IssueID) as amount cont=false by IssueSpecificPriority
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval IssueSpecificPriority=IssueSpecificPriority." (".perc."%)"
-| table IssueSpecificPriority amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval IssueSpecificPriority=IssueSpecificPriority." (".perc."%)"
+          | table IssueSpecificPriority amount</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -138,13 +138,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
-| dedup IssueID keepevents=false
-| chart dc(IssueID) as amount cont=false by IssueSpecificSeverity
+          | dedup IssueID keepevents=false
+          | chart dc(IssueID) as amount cont=false by IssueSpecificSeverity
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval IssueSpecificSeverity=IssueSpecificSeverity." (".perc."%)"
-| table IssueSpecificSeverity amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval IssueSpecificSeverity=IssueSpecificSeverity." (".perc."%)"
+          | table IssueSpecificSeverity amount</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -191,13 +191,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
-| dedup IssueID keepevents=false
-| chart dc(IssueID) as amount cont=false by IssueSpecificCategory
+          | dedup IssueID keepevents=false
+          | chart dc(IssueID) as amount cont=false by IssueSpecificCategory
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval IssueSpecificCategory=IssueSpecificCategory." (".perc."%)"
-| table IssueSpecificCategory amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval IssueSpecificCategory=IssueSpecificCategory." (".perc."%)"
+          | table IssueSpecificCategory amount</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -244,13 +244,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
-| dedup IssueID keepevents=false
-| chart dc(IssueID) as amount cont=false by IssueSpecificEntity
+          | dedup IssueID keepevents=false
+          | chart dc(IssueID) as amount cont=false by IssueSpecificEntity
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval IssueSpecificEntity=IssueSpecificEntity." (".perc."%)"
-| table IssueSpecificEntity amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval IssueSpecificEntity=IssueSpecificEntity." (".perc."%)"
+          | table IssueSpecificEntity amount</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -297,13 +297,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
-| dedup IssueID keepevents=false
-| chart dc(IssueID) as amount cont=false by IssueSpecificName
+          | dedup IssueID keepevents=false
+          | chart dc(IssueID) as amount cont=false by IssueSpecificName
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval IssueSpecificName=IssueSpecificName." (".perc."%)"
-| table IssueSpecificName amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval IssueSpecificName=IssueSpecificName." (".perc."%)"
+          | table IssueSpecificName amount</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -352,9 +352,9 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
-| eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity
-| dedup _time, IssueSpecificSeverity keepevents=false
-| chart sum(subtotal) by _time, IssueSpecificSeverity cont=false</query>
+          | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity
+          | dedup _time, IssueSpecificSeverity keepevents=false
+          | chart sum(subtotal) by _time, IssueSpecificSeverity cont=false</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -402,9 +402,9 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
-| eventstats sum(IssueCount) as subtotal by _time, IssueSpecificPriority
-| dedup _time, IssueSpecificPriority keepevents=false
-| chart sum(subtotal) by _time, IssueSpecificPriority cont=false</query>
+          | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificPriority
+          | dedup _time, IssueSpecificPriority keepevents=false
+          | chart sum(subtotal) by _time, IssueSpecificPriority cont=false</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -450,11 +450,11 @@
       <table>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$"
-| dedup IssueID keepevents=false
-| eventstats sum(IssueCount) as IssueCountSpecific, list(IssueName) as IssueNames, list(IssueSpecificTimestamp) as IssueSpecificTimestamps, list(IssueStatus) as IssueStatuses, list(DeviceName) as DeviceNames, list(DeviceIpAddress) as DeviceIpAddresses, list(DeviceMACAddress) as DeviceMACAddresses, list(DeviceFamily) as DeviceFamilies, list(DeviceRole) as DeviceRoles by IssueSpecificName
-| dedup IssueSpecificName keepevents=false
-| sort limit=10 +str(IssueSpecificPriority), -num(IssueCountSpecific), +str(IssueSpecificName)
-| table IssueSpecificName, IssueSpecificPriority, IssueCountSpecific, , IssueSpecificSeverity, IssueSpecificSummary, IssueNames, IssueSpecificTimestamps, IssueStatuses, DeviceNames, DeviceIpAddresses, DeviceMACAddresses, DeviceFamilies, DeviceRoles</query>
+          | dedup IssueID keepevents=false
+          | eventstats sum(IssueCount) as IssueCountSpecific, list(IssueName) as IssueNames, list(IssueSpecificTimestamp) as IssueSpecificTimestamps, list(IssueStatus) as IssueStatuses, list(DeviceName) as DeviceNames, list(DeviceIpAddress) as DeviceIpAddresses, list(DeviceMACAddress) as DeviceMACAddresses, list(DeviceFamily) as DeviceFamilies, list(DeviceRole) as DeviceRoles by IssueSpecificName
+          | dedup IssueSpecificName keepevents=false
+          | sort limit=10 +str(IssueSpecificPriority), -num(IssueCountSpecific), +str(IssueSpecificName)
+          | table IssueSpecificName, IssueSpecificPriority, IssueCountSpecific, , IssueSpecificSeverity, IssueSpecificSummary, IssueNames, IssueSpecificTimestamps, IssueStatuses, DeviceNames, DeviceIpAddresses, DeviceMACAddresses, DeviceFamilies, DeviceRoles</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -472,11 +472,11 @@
       <table>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$"
-| dedup IssueID keepevents=false
-| eventstats sum(IssueCount) as IssueCountDevice, dc(IssueID) as IssueIDAmount, list(IssueSpecificName) as IssueSpecificNames, list(IssueSpecificPriority) as IssueSpecificPriorities, list(IssueSpecificSeverity) as IssueSpecificSeverities by DeviceID
-| dedup DeviceID keepevents=false
-| sort limit=10 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName)
-| table DeviceName, IssueCountDevice, DeviceIpAddress, DeviceMACAddress, DeviceFamily, DeviceRole, IssueIDAmount, IssueCountDevice, IssueSpecificNames, IssueSpecificPriorities, IssueSpecificSeverities</query>
+          | dedup IssueID keepevents=false
+          | eventstats sum(IssueCount) as IssueCountDevice, dc(IssueID) as IssueIDAmount, list(IssueSpecificName) as IssueSpecificNames, list(IssueSpecificPriority) as IssueSpecificPriorities, list(IssueSpecificSeverity) as IssueSpecificSeverities by DeviceID
+          | dedup DeviceID keepevents=false
+          | sort limit=10 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName)
+          | table DeviceName, IssueCountDevice, DeviceIpAddress, DeviceMACAddress, DeviceFamily, DeviceRole, IssueIDAmount, IssueCountDevice, IssueSpecificNames, IssueSpecificPriorities, IssueSpecificSeverities</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>

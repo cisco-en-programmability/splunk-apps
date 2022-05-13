@@ -26,9 +26,10 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="All"
-| timechart avg(healthScore) as healthScore cont=false
-| where isnotnull(healthScore)
-| appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
+          | chart values(healthScore) as t by _time
+          | chart avg(t) as healthScore by _time
+          | where isnotnull(healthScore)
+          | appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -47,7 +48,9 @@
       <title>Average Client Health Score</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL" | timechart avg(scoreValue) by scoreType cont=false | where isnotnull(ALL)</query>
+          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
+          | chart avg(scoreValue) by _time, scoreType
+          | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -67,9 +70,9 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Active"
-| eventstats sum(IssueCount) as subtotal by _time
-| dedup _time keepevents=false
-| chart sum(subtotal) as amount by _time</query>
+          | eventstats sum(IssueCount) as subtotal by _time
+          | dedup _time keepevents=false
+          | chart sum(subtotal) as amount by _time</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -90,9 +93,9 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Resolved"
-| eventstats sum(IssueCount) as subtotal by _time
-| dedup _time keepevents=false
-| chart sum(subtotal) as amount by _time</query>
+          | eventstats sum(IssueCount) as subtotal by _time
+          | dedup _time keepevents=false
+          | chart sum(subtotal) as amount by _time</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -112,13 +115,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup IpAddress keepevents=false
-| stats dc(IpAddress) as amount by Reachability
+          | dedup IpAddress keepevents=false
+          | stats dc(IpAddress) as amount by Reachability
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval Reachability=Reachability." (".perc."%)"
-| table Reachability amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval Reachability=Reachability." (".perc."%)"
+          | table Reachability amount</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -166,11 +169,11 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category!="All"
-| dedup category keepevents=false 
-| eventstats sum(totalCount) as Total
-| eval perc=round((totalCount/Total)*100, 2)
-| eval category=category." (".perc."%)"
-| table category totalCount</query>
+          | dedup category keepevents=false 
+          | eventstats sum(totalCount) as Total
+          | eval perc=round((totalCount/Total)*100, 2)
+          | eval category=category." (".perc."%)"
+          | table category totalCount</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -216,8 +219,8 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="True" ComplianceDetail="False" 
-| timechart avg(CompliantDeviceCount) as amount cont=false 
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | chart avg(CompliantDeviceCount) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>

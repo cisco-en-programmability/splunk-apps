@@ -26,9 +26,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="All"
-| timechart avg(healthScore) as healthScore cont=false
-| where isnotnull(healthScore)
-| appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
+          | chart values(healthScore) as t by _time
+          | chart avg(t) as healthScore by _time
+          | where isnotnull(healthScore)
+          | appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -59,9 +60,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="Access"
-| timechart avg(healthScore) as healthScore cont=false
-| where isnotnull(healthScore)
-| appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
+          | chart avg(healthScore) as healthScore by _time
+          | where isnotnull(healthScore)
+          | appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -93,9 +94,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="Distribution"
-| timechart avg(healthScore) as healthScore cont=false
-| where isnotnull(healthScore)
-| appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
+          | chart avg(healthScore) as healthScore by _time
+          | where isnotnull(healthScore)
+          | appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -126,9 +127,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="WLC"
-| timechart avg(healthScore) as healthScore cont=false
-| where isnotnull(healthScore)
-| appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
+          | chart avg(healthScore) as healthScore by _time
+          | where isnotnull(healthScore)
+          | appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -159,9 +160,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="Router"
-| timechart avg(healthScore) as healthScore cont=false
-| where isnotnull(healthScore)
-| appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
+          | chart avg(healthScore) as healthScore by _time
+          | where isnotnull(healthScore)
+          | appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -194,9 +195,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="All"
-| timechart avg(totalCount) as totalCount cont=false
-| where isnotnull(totalCount)
-| appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
+          | chart avg(totalCount) as totalCount by _time
+          | where isnotnull(totalCount)
+          | appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -227,9 +228,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="Access"
-| timechart avg(totalCount) as totalCount cont=false
-| where isnotnull(totalCount)
-| appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
+          | chart avg(totalCount) as totalCount by _time
+          | where isnotnull(totalCount)
+          | appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -260,9 +261,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="Distribution"
-| timechart avg(totalCount) as totalCount cont=false
-| where isnotnull(totalCount)
-| appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
+          | chart avg(totalCount) as totalCount by _time
+          | where isnotnull(totalCount)
+          | appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -293,9 +294,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="WLC"
-| timechart avg(totalCount) as totalCount cont=false
-| where isnotnull(totalCount)
-| appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
+          | chart avg(totalCount) as totalCount by _time
+          | where isnotnull(totalCount)
+          | appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -326,9 +327,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="Router"
-| timechart avg(totalCount) as totalCount cont=false
-| where isnotnull(totalCount)
-| appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
+          | chart avg(totalCount) as totalCount by _time
+          | where isnotnull(totalCount)
+          | appendpipe [stats count | where count=0 | rename count as "totalCount"]</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -361,11 +362,11 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category!="All"
-| dedup category keepevents=false 
-| eventstats sum(totalCount) as Total
-| eval perc=round((totalCount/Total)*100, 2)
-| eval category=category." (".perc."%)"
-| table category totalCount</query>
+          | dedup category keepevents=false 
+          | eventstats sum(totalCount) as Total
+          | eval perc=round((totalCount/Total)*100, 2)
+          | eval category=category." (".perc."%)"
+          | table category totalCount</query>
           <earliest>$timeRangePicker.earliest$</earliest>
           <latest>$timeRangePicker.latest$</latest>
           <sampleRatio>1</sampleRatio>

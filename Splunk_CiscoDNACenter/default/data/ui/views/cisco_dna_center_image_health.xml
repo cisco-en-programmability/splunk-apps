@@ -26,8 +26,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="True"
-| timechart dc(ImageImageName) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | chart values(ImageImageName) as t by _time
+          | chart count(t) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -44,9 +45,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="True"
-| where ImageImageName!="N/A"
-| timechart dc(ImageImageName) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | where ImageImageName!="N/A"
+          | chart values(ImageImageName) as t by _time
+          | chart count(t) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -77,9 +79,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="True"
-| where ImageImageName="N/A"
-| timechart dc(ImageImageName) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | where ImageImageName="N/A"
+          | chart values(ImageImageName) as t by _time
+          | chart count(t) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -110,8 +113,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="False" StackSwitchInfoState="READY"
-| timechart dc(ImageImageName) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | chart values(ImageImageName) as t by _time
+          | chart count(t) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -142,8 +146,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="False" StackSwitchInfoState="READY"
-| timechart dc(ImageImageName) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | chart values(ImageImageName) as t by _time
+          | chart count(t) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -176,14 +181,14 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="False"
-| dedup ImageImageName keepevents=false
-| eval State=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
-| chart dc(ImageImageName) as amount by State
+          | dedup ImageImageName keepevents=false
+          | eval State=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
+          | chart dc(ImageImageName) as amount by State
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval State=State." (".perc."%)"
-| table State amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval State=State." (".perc."%)"
+          | table State amount</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -229,13 +234,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="True"
-| dedup ImageImageName keepevents=false
-| chart dc(ImageImageName) as amount by ImageImageName
+          | dedup ImageImageName keepevents=false
+          | chart dc(ImageImageName) as amount by ImageImageName
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval ImageImageName=ImageImageName." (".perc."%)"
-| table ImageImageName amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval ImageImageName=ImageImageName." (".perc."%)"
+          | table ImageImageName amount</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -283,7 +288,8 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="True"
-| timechart avg(ImageDevicesAmount) as amount by ImageImageName cont=false</query>
+          | chart values(ImageDevicesAmount) as t by _time
+          | chart avg(t) as amount by _time</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -329,8 +335,8 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="False"
-| eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
-| timechart dc(ImageImageName) as amount by StackSwitchInfoState2 cont=false</query>
+          | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
+          | chart dc(ImageImageName) as amount by _time, StackSwitchInfoState2</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -379,10 +385,10 @@
       <table>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="False"
-| eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
-| stats dc(DeviceIpAddress) as DeviceNumber, values(DeviceIpAddress) as DeviceIpAddresses BY ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2
-| dedup ImageImageName keepevents=false
-| table ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2, DeviceNumber, DeviceIpAddresses</query>
+          | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
+          | stats dc(DeviceIpAddress) as DeviceNumber, values(DeviceIpAddress) as DeviceIpAddresses BY ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2
+          | dedup ImageImageName keepevents=false
+          | table ImageImageName, ImageDisplayVersion, ImageFamily,  ImageSimpleName,  StackSwitchInfoRole, StackSwitchInfoState2, DeviceNumber, DeviceIpAddresses</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -406,9 +412,9 @@
       <table>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="False"
-| eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
-| dedup DeviceName keepevents=false
-| table DeviceName,  DeviceImageVersion,  DeviceIpAddress,  DeviceMACAddress,  DevicePlatform,  DeviceRole,  DeviceSeries, ImageImageName, StackSwitchInfoState2, ImageDisplayVersion,  ImageFamily,  ImageSimpleName,  StackSwitchInfoRole</query>
+          | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
+          | dedup DeviceName keepevents=false
+          | table DeviceName,  DeviceImageVersion,  DeviceIpAddress,  DeviceMACAddress,  DevicePlatform,  DeviceRole,  DeviceSeries, ImageImageName, StackSwitchInfoState2, ImageDisplayVersion,  ImageFamily,  ImageSimpleName,  StackSwitchInfoRole</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
