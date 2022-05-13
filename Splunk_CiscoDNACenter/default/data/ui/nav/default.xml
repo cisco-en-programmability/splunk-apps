@@ -17,7 +17,6 @@
     <view name="cisco_dna_center_issue" />
     <view name="cisco_dna_center_network_health" />
     <view name="cisco_dna_center_security_advisory" />
-    <view name="cisco_dna_center_sensor" />
   </collection>
 
   <view name="search"/>
