@@ -331,7 +331,7 @@
   </row>
   <row>
     <panel>
-      <title>Average of Wired Client Health Scores over Time</title>
+      <title>Average of Wired Client Health Scores</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType!="ALL"
@@ -379,7 +379,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Average of Wireless Client Health Scores over Time</title>
+      <title>Average of Wireless Client Health Scores</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType!="ALL"
@@ -429,7 +429,7 @@
   </row>
   <row>
     <panel>
-      <title>Average of Wired Client Health Score over Time</title>
+      <title>Average of Wired Client Health Score</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
@@ -452,7 +452,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Average of Wireless Client Health Score over Time</title>
+      <title>Average of Wireless Client Health Score</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
@@ -473,7 +473,7 @@
   </row>
   <row>
     <panel>
-      <title>Average Client Health Score over Time</title>
+      <title>Average Client Health Score</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"

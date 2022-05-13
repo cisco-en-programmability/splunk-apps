@@ -255,7 +255,7 @@
   </row>
   <row>
     <panel>
-      <title>Sensor Devices by Backhaul Type over Time</title>
+      <title>Sensor Devices by Backhaul Type</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
@@ -305,7 +305,7 @@
   </row>
   <row>
     <panel>
-      <title>Sensor Devices by Type over Time</title>
+      <title>Sensor Devices by Type</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
@@ -351,7 +351,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Sensor devices by Status over Time</title>
+      <title>Sensor devices by Status</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"

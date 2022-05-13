@@ -284,7 +284,7 @@
   </row>
   <row>
     <panel>
-      <title>Average of Devices Assigned to Images over Time</title>
+      <title>Average of Devices Assigned to Images</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="True"
@@ -332,7 +332,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Number of Images by State over Time</title>
+      <title>Number of Images by State</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="False"

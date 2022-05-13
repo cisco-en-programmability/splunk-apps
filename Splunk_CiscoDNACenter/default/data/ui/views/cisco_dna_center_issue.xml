@@ -350,7 +350,7 @@
   </row>
   <row>
     <panel>
-      <title>Issue Count by Severity over Time</title>
+      <title>Issue Count by Severity</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
@@ -401,7 +401,7 @@
   </row>
   <row>
     <panel>
-      <title>Issue Count by Priority over Time</title>
+      <title>Issue Count by Priority</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"

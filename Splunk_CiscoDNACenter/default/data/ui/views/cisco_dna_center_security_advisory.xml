@@ -163,7 +163,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Security Advisories by Category over Time</title>
+      <title>Security Advisories by Category</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:securityadvisory" cisco_dnac_host="$ciscodnachostDropdown$" Summary="True" SubCategory="Total"
@@ -275,7 +275,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Security Advisories by Subcategory over Time</title>
+      <title>Security Advisories by Subcategory</title>
       <input type="dropdown" token="categoryDropdown2" searchWhenChanged="true">
         <label>Category</label>
         <fieldForLabel>Category</fieldForLabel>

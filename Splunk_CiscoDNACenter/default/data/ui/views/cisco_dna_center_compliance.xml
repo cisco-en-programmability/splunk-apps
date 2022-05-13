@@ -183,7 +183,7 @@
   </row>
   <row>
     <panel>
-      <title>Percentage of Compliant Devices over Time</title>
+      <title>Percentage of Compliant Devices</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$"  ComplianceCount="True" ComplianceDetail="False" 
@@ -233,7 +233,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Percentage of Compliant Devices by Type over Time</title>
+      <title>Percentage of Compliant Devices by Type</title>
       <input type="dropdown" token="complianceTypeDropdown3" searchWhenChanged="true">
         <label>Compliance Type</label>
         <choice value="*">All</choice>
