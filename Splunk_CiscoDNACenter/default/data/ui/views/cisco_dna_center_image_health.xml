@@ -328,6 +328,7 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
     <panel>
@@ -376,6 +377,7 @@
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
         <option name="trellis.splitBy">StackSwitchInfoState2</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
   </row>

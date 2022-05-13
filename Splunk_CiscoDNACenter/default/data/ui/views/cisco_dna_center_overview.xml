@@ -36,6 +36,7 @@
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
         <option name="refresh.display">progressbar</option>
@@ -102,6 +103,7 @@
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
         <option name="refresh.display">progressbar</option>

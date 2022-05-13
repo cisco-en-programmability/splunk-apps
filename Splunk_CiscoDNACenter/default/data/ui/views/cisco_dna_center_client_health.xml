@@ -375,6 +375,7 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
     <panel>
@@ -422,6 +423,7 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
   </row>
@@ -446,6 +448,7 @@
         <option name="charting.drilldown">none</option>
         <option name="charting.legend.placement">right</option>
         <option name="refresh.display">progressbar</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
     <panel>
@@ -461,6 +464,7 @@
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
         <option name="refresh.display">progressbar</option>
@@ -481,6 +485,7 @@
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
         <option name="refresh.display">progressbar</option>
