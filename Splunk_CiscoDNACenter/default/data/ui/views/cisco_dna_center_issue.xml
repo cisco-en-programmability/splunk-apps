@@ -32,15 +32,6 @@
         <latest>now</latest>
       </search>
     </input>
-    <input type="multiselect" token="issuePrioritySelect" searchWhenChanged="true">
-      <label>Issue Priority filter for Top 5 searches</label>
-      <choice value="P1">P1</choice>
-      <choice value="P2">P2</choice>
-      <choice value="P3">P3</choice>
-      <choice value="P4">P4</choice>
-      <delimiter> </delimiter>
-      <initialValue>P1,P2,P3,P4</initialValue>
-    </input>
   </fieldset>
   <row>
     <panel>
@@ -458,7 +449,7 @@
       <title>Table of Top 10 Issues</title>
       <table>
         <search>
-          <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$)
+          <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$"
 | dedup IssueID keepevents=false
 | eventstats sum(IssueCount) as IssueCountSpecific, list(IssueName) as IssueNames, list(IssueSpecificTimestamp) as IssueSpecificTimestamps, list(IssueStatus) as IssueStatuses, list(DeviceName) as DeviceNames, list(DeviceIpAddress) as DeviceIpAddresses, list(DeviceMACAddress) as DeviceMACAddresses, list(DeviceFamily) as DeviceFamilies, list(DeviceRole) as DeviceRoles by IssueSpecificName
 | dedup IssueSpecificName keepevents=false
@@ -480,7 +471,7 @@
       <title>Table of Top 10 Impacted Devices</title>
       <table>
         <search>
-          <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$" IssueSpecificPriority IN ($issuePrioritySelect$)
+          <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$"
 | dedup IssueID keepevents=false
 | eventstats sum(IssueCount) as IssueCountDevice, dc(IssueID) as IssueIDAmount, list(IssueSpecificName) as IssueSpecificNames, list(IssueSpecificPriority) as IssueSpecificPriorities, list(IssueSpecificSeverity) as IssueSpecificSeverities by DeviceID
 | dedup DeviceID keepevents=false
