@@ -73,7 +73,7 @@
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Active"
           | eventstats sum(IssueCount) as subtotal by _time
           | dedup _time keepevents=false
-          | chart sum(subtotal) as amount by _time</query>
+          | chart avg(subtotal) as amount by _time</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -96,7 +96,7 @@
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Resolved"
           | eventstats sum(IssueCount) as subtotal by _time
           | dedup _time keepevents=false
-          | chart sum(subtotal) as amount by _time</query>
+          | chart avg(subtotal) as amount by _time</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>

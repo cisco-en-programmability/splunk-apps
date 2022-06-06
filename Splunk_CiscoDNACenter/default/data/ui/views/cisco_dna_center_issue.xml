@@ -41,7 +41,7 @@
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Active"
           | eventstats sum(IssueCount) as subtotal by _time
           | dedup _time keepevents=false
-          | chart sum(subtotal) by _time</query>
+          | chart avg(subtotal) by _time</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -64,7 +64,7 @@
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Resolved"
           | eventstats sum(IssueCount) as subtotal by _time
           | dedup _time keepevents=false
-          | chart sum(subtotal) by _time</query>
+          | chart avg(subtotal) by _time</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -356,7 +356,7 @@
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
           | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity
           | dedup _time, IssueSpecificSeverity keepevents=false
-          | chart sum(subtotal) by _time, IssueSpecificSeverity cont=false</query>
+          | chart avg(subtotal) by _time, IssueSpecificSeverity cont=false</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -407,7 +407,7 @@
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="$statusDropdown$"
           | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificPriority
           | dedup _time, IssueSpecificPriority keepevents=false
-          | chart sum(subtotal) by _time, IssueSpecificPriority cont=false</query>
+          | chart avg(subtotal) by _time, IssueSpecificPriority cont=false</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
