@@ -8,11 +8,6 @@ cisco_dna_center_host =
 cisco_dna_center_account = 
 python.version = python3
 
-[cisco_dnac_fabricdevice://<name>]
-cisco_dna_center_host = 
-cisco_dna_center_account = 
-python.version = python3
-
 [cisco_dnac_compliance://<name>]
 cisco_dna_center_host = 
 cisco_dna_center_account = 
