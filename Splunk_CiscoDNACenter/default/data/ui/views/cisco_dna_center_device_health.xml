@@ -26,13 +26,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup IpAddress keepevents=false
-| stats dc(IpAddress) as amount by Manageability
+          | dedup IpAddress keepevents=false
+          | stats dc(IpAddress) as amount by Manageability
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval Manageability=Manageability." (".perc."%)"
-| table Manageability amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval Manageability=Manageability." (".perc."%)"
+          | table Manageability amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -78,13 +78,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup IpAddress keepevents=false
-| stats dc(IpAddress) as amount by Reachability
+          | dedup IpAddress keepevents=false
+          | stats dc(IpAddress) as amount by Reachability
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval Reachability=Reachability." (".perc."%)"
-| table Reachability amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval Reachability=Reachability." (".perc."%)"
+          | table Reachability amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -130,13 +130,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup IpAddress keepevents=false
-| stats dc(IpAddress) as amount by DeviceFamily
+          | dedup IpAddress keepevents=false
+          | stats dc(IpAddress) as amount by DeviceFamily
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval DeviceFamily=DeviceFamily." (".perc."%)"
-| table DeviceFamily amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval DeviceFamily=DeviceFamily." (".perc."%)"
+          | table DeviceFamily amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -182,12 +182,12 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| stats dc(IpAddress) as amount by DeviceRole
+          | stats dc(IpAddress) as amount by DeviceRole
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval DeviceRole=DeviceRole." (".perc."%)"
-| table DeviceRole amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval DeviceRole=DeviceRole." (".perc."%)"
+          | table DeviceRole amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -233,13 +233,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup IpAddress keepevents=false
-| chart dc(IpAddress) as amount by DeviceSeries
+          | dedup IpAddress keepevents=false
+          | chart dc(IpAddress) as amount by DeviceSeries
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval DeviceSeries=DeviceSeries." (".perc."%)"
-| table DeviceSeries amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval DeviceSeries=DeviceSeries." (".perc."%)"
+          | table DeviceSeries amount</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -287,9 +287,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where Manageability="Managed"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where Manageability="Managed"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -320,9 +321,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where Manageability="Unmanaged"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where Manageability="Unmanaged"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -353,9 +355,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where Manageability="Managed (With Errors)"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where Manageability="Managed (With Errors)"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -388,9 +391,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where DeviceFamily="Switches and Hubs"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where DeviceFamily="Switches and Hubs"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -421,9 +425,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where DeviceFamily="Wireless Controller"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where DeviceFamily="Wireless Controller"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -454,9 +459,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where DeviceFamily="Routers"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where DeviceFamily="Routers"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -487,9 +493,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where DeviceFamily="APs"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where (DeviceFamily LIKE "%AP%")
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -518,13 +525,14 @@
   </row>
   <row>
     <panel>
-      <title>Number of Devices with Role Access</title>
+      <title>Number of Access Devices</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where DeviceRole="ACCESS"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where DeviceRole="ACCESS"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -551,13 +559,14 @@
       </single>
     </panel>
     <panel>
-      <title>Number of Devices with Distribution</title>
+      <title>Number of Core Devices</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where DeviceRole="DISTRIBUTION"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where DeviceRole="CORE"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -583,47 +592,22 @@
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
-  </row>
-  <row>
     <panel>
-      <title>Number of Reachable Devices</title>
+      <title>Number of Distribution Devices</title>
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where Reachability="Reachable"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | dedup IpAddress keepevents=false
+          | where DeviceRole="DISTRIBUTION"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
-        <option name="colorBy">trend</option>
-        <option name="drilldown">none</option>
-        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-        <option name="useColors">1</option>
-      </single>
-    </panel>
-    <panel>
-      <title>Number of Ping Reachable Devices</title>
-      <single>
-        <search>
-          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where Reachability="Ping Reachable"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
-          <earliest>$timeRangePicker3.earliest$</earliest>
-          <latest>$timeRangePicker3.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
-        </search>
-        <option name="colorBy">trend</option>
+        <option name="colorBy">value</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
@@ -638,6 +622,66 @@
         <option name="trendColorInterpretation">standard</option>
         <option name="trendDisplayMode">absolute</option>
         <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Border Router Devices</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where DeviceRole="BORDER ROUTER"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Number of Reachable Devices</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
+          | where Reachability="Reachable"
+          | chart dc(IpAddress) as amount by _time</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
         <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
@@ -647,9 +691,8 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-| where Reachability="Unreachable"
-| timechart dc(IpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | where Reachability="Unreachable"
+          | chart dc(IpAddress) as amount by _time</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -657,20 +700,12 @@
           <refreshType>delay</refreshType>
         </search>
         <option name="colorBy">trend</option>
-        <option name="colorMode">none</option>
         <option name="drilldown">none</option>
-        <option name="numberPrecision">0</option>
         <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
-        <option name="rangeValues">[0,30,70,100]</option>
         <option name="refresh.display">progressbar</option>
-        <option name="showSparkline">1</option>
-        <option name="showTrendIndicator">1</option>
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
-        <option name="trendColorInterpretation">inverse</option>
-        <option name="trendDisplayMode">absolute</option>
-        <option name="unitPosition">after</option>
         <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
@@ -683,7 +718,6 @@
         <label>Reachability</label>
         <choice value="*">All</choice>
         <choice value="Reachable">Reachable</choice>
-        <choice value="Ping Reachable">Ping Reachable</choice>
         <choice value="Unreachable">Unreachable</choice>
         <default>*</default>
         <initialValue>*</initialValue>
@@ -700,10 +734,10 @@
       <table>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$" 
-| dedup IpAddress keepevents=false
-| search Reachability="$reachabilityDropdown$"
-| search Manageability="$manageabilityDropdown$"
-| table IpAddress, DeviceName, DeviceFamily, Reachability, ReachabilityFailureReason, ManageErrors, Manageability, ManageErrors, MACAddress, DeviceRole, ImageVersion, Uptime, UptimeSeconds, LastUpdated, LastUpdateTime, SerialNumber, DeviceSeries, Platform, SupportType, AssociatedWLCIP, HealthScore, IssueCount, Site, CPUUtilization, CPUHealth, MemoryUtilization, MemoryUtilizationHealth, InterfaceLinkErrHealth, InterDeviceLinkAvailHealth</query>
+          | dedup IpAddress keepevents=false
+          | search Reachability="$reachabilityDropdown$"
+          | search Manageability="$manageabilityDropdown$"
+          | table IpAddress, DeviceName, DeviceFamily, Reachability, ReachabilityFailureReason, ManageErrors, Manageability, ManageErrors, MACAddress, DeviceRole, ImageVersion, Uptime, UptimeSeconds, LastUpdated, LastUpdateTime, SerialNumber, DeviceSeries, Platform, SupportType, AssociatedWLCIP, HealthScore, IssueCount, Site, CPUUtilization, CPUHealth, MemoryUtilization, MemoryUtilizationHealth, InterfaceLinkErrHealth, InterDeviceLinkAvailHealth</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>

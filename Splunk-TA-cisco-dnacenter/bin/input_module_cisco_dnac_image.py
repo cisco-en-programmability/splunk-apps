@@ -1,11 +1,12 @@
 
 # encoding = utf-8
 
-import os
+import datetime
 import json
+import os
+import re
 import sys
 import time
-import datetime
 
 import cisco_dnac_api as api
 
@@ -241,12 +242,29 @@ def filter_data_as_images_1(helper, dnac, images_items, devices_items):
 
     for image_item in images_items:
         image_key = image_item["ImageSimpleName"].lower()
+        if image_dict_summary.get(image_key) is None:
+            image_dict_summary[image_key] = {}
+        if image_dict.get(image_key) is None:
+            image_dict[image_key] = {}
+
+        image_key = image_item["ImageSimpleName"].lower()
         image_dict_summary[image_key] = dict(image_item)
         image_dict_summary[image_key]["ImageDevicesAmount"] = 0
         image_dict_summary[image_key]["ImageSummary"] = "True"
         image_dict[image_key] = dict(image_item)
         image_dict[image_key]["ImageDevicesAmount"] = 0
         image_dict[image_key]["ImageSummary"] = "False"
+
+        if image_dict_summary[image_key].get("ImageVersionsAmount") is None:
+            image_dict_summary[image_key]["ImageVersionsAmount"] = 0
+            image_dict_summary[image_key]["ImageImageUuid"] = []
+        if image_dict[image_key].get("ImageVersionsAmount") is None:
+            image_dict[image_key]["ImageVersionsAmount"] = 0
+            image_dict[image_key]["ImageImageUuid"] = []
+        image_dict_summary[image_key]["ImageVersionsAmount"] += 1
+        image_dict[image_key]["ImageVersionsAmount"] += 1
+        image_dict_summary[image_key]["ImageImageUuid"].append(image_item.get("ImageImageUuid"))
+        image_dict[image_key]["ImageImageUuid"].append(image_item.get("ImageImageUuid"))
 
     for device_item in devices_items:
         helper.log_debug(
@@ -261,46 +279,47 @@ def filter_data_as_images_1(helper, dnac, images_items, devices_items):
 
         device_detail = get_important_device_values(device_item)
 
-        if stack_detail.get(stack_detail_key) != "N/A":
-            software_image = stack_detail[stack_detail_key].lower()
-            if image_dict_summary.get(software_image):
-                image_dict_summary[software_image]["ImageDevicesAmount"] += 1
-                image_dict[software_image]["ImageDevicesAmount"] = 1
-                image_dict[software_image].update(device_detail)
-                image_dict[software_image].update(stack_detail)
-                summary_response.append(dict(image_dict[software_image]))
-                helper.log_debug(
-                    "Saved the {0} stack details from the device id {1}".format(
-                        software_image, device_item.get("id")
-                    )
-                )
-        else:
-            image_key_2 = stack_detail[stack_detail_key].lower()
-            if image_dict_summary.get(image_key_2) is None:
-                image_dict_summary[image_key_2] = {
-                    "ImageDevicesAmount": 0,
-                    "ImageSummary": "True",
-                }
-            if image_dict_summary.get(image_key_2):
-                image_dict_summary[image_key_2]["ImageDevicesAmount"] += 1
-                image_dict_summary[image_key_2]["ImageName"] = "N/A"
-                image_dict_summary[image_key_2]["ImageImageName"] = "N/A"
-                image_dict_summary[image_key_2]["ImageImageUuid"] = ""
-                image_dict_summary[image_key_2]["ImageFamily"] = ""
-                image_dict_summary[image_key_2]["ImageVersion"] = ""
-                image_dict_summary[image_key_2]["ImageDisplayVersion"] = ""
-                image_dict_summary[image_key_2]["ImageSimpleName"] = image_key_2
-                image_dict[image_key_2] = dict(image_dict_summary[image_key_2])
-                image_dict[image_key_2]["ImageSummary"] = "False"
-                image_dict[image_key_2]["ImageDevicesAmount"] = 1
-                image_dict[image_key_2].update(device_detail)
-                image_dict[image_key_2].update(stack_detail)
-                summary_response.append(dict(image_dict[image_key_2]))
-                helper.log_debug(
-                    "Saved the {0} stack details from the device id {1}".format(
-                        image_key_2, device_item.get("id")
-                    )
-                )
+        # Note. skip unknown case
+        if stack_detail is None or stack_detail.get(stack_detail_key) is None:
+            continue
+
+        image_key_2 = stack_detail[stack_detail_key].lower()
+        image_dict_summary_keys = list(image_dict_summary.keys())
+        for i in image_dict_summary_keys:
+            if i == image_key_2 or image_key_2.startswith(i):
+                image_key_2 = i
+
+        # Setting image_dict_summary
+        if image_dict_summary.get(image_key_2) is None:
+            image_dict_summary[image_key_2] = {
+                "ImageDevicesAmount": 0, "ImageSummary":  "True"
+            }
+        # N/A from stack detail.
+        if stack_detail[stack_detail_key] == "N/A":
+            image_dict_summary[image_key_2]["ImageDevicesAmount"] += 1
+            image_dict_summary[image_key_2]["ImageName"] = "N/A"
+            image_dict_summary[image_key_2]["ImageImageName"] = "N/A"
+            image_dict_summary[image_key_2]["ImageImageUuid"] = ""
+            image_dict_summary[image_key_2]["ImageFamily"] = ""
+            image_dict_summary[image_key_2]["ImageVersion"] = ""
+            image_dict_summary[image_key_2]["ImageDisplayVersion"] = ""
+            image_dict_summary[image_key_2]["ImageSimpleName"] = image_key_2
+            # Setting image_dict
+            image_dict[image_key_2] = dict(image_dict_summary[image_key_2])
+            image_dict[image_key_2]["ImageSummary"] = "False"
+            image_dict[image_key_2]["ImageDevicesAmount"] = 1
+            image_dict[image_key_2].update(device_detail)
+            image_dict[image_key_2].update(stack_detail)
+            # Adding current image_dict to summary_response
+            summary_response.append(dict(image_dict[image_key_2]))
+            continue
+
+        if image_dict_summary.get(image_key_2):
+            image_dict_summary[image_key_2]["ImageDevicesAmount"] += 1
+            image_dict[image_key_2]["ImageDevicesAmount"] += 1
+            image_dict[image_key_2].update(device_detail)
+            image_dict[image_key_2].update(stack_detail)
+            summary_response.append(dict(image_dict[image_key_2]))
     summary_response.extend(list(image_dict_summary.values()))
     return summary_response
 
@@ -318,18 +337,34 @@ def filter_data_as_images(helper, dnac, images_items, devices_items):
 
 def simplify_name(name, display_version):
     """
-    This function trims from the image name, removing the display_version and other information, to use the new image name as an index.
+    This function trims from the image name, removing the display_version and other information, to use the new image name as an index
     :param name: image name
     :param display_version: image display version
     :return: simplified image name
     """
     if name:
-        if display_version:
-            new_name = name.split(".{0}".format(display_version))[0]
-            return new_name
-        return name
+        return re.sub(r'\.\d{2}.*', '', name)
     else:
         return ""
+
+
+def get_important_image_info(image_response):
+    response = {}
+    response["ImageImageUuid"] = image_response.get("imageUuid")
+    response["ImageName"] = image_response.get("name")
+    response["ImageImageName"] = image_response.get("imageName")
+    response["ImageFamily"] = image_response.get("family")
+    response["ImageVersion"] = image_response.get("version")
+    response["ImageDisplayVersion"] = image_response.get(
+        "displayVersion"
+    )
+    response["ImageVendor"] = image_response.get("vendor")
+    response["ImageIntegrityStatus"] = image_response.get("imageIntegrityStatus")
+    response["ImageIsGolden"] = str(image_response.get("isTaggedGolden"))
+    response["ImageSimpleName"] = simplify_name(
+        image_response.get("name"), image_response.get("displayVersion")
+    )
+    return response
 
 
 def get_images(dnac):
@@ -360,19 +395,7 @@ def get_images(dnac):
             images_response = images_response_fn(limit=limit, offset=offset)
             if images_response and images_response.response:
                 for image_response in images_response.response:
-                    response = {}
-                    response["ImageName"] = image_response.get("name")
-                    response["ImageImageName"] = image_response.get("imageName")
-                    response["ImageImageUuid"] = image_response.get("imageUuid")
-                    response["ImageFamily"] = image_response.get("family")
-                    response["ImageVersion"] = image_response.get("version")
-                    response["ImageDisplayVersion"] = image_response.get(
-                        "displayVersion"
-                    )
-                    response["ImageSimpleName"] = simplify_name(
-                        image_response.get("name"), image_response.get("displayVersion")
-                    )
-                    responses.append(response)
+                    responses.append(get_important_image_info(image_response))
                 if len(images_response.response) < limit:
                     do_request_next = False
                     break

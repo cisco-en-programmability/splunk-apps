@@ -26,9 +26,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:fabricdevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| where HasFabric="True"
-| timechart dc(DeviceIpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | where HasFabric="True"
+          | chart values(DeviceIpAddress) as t by _time
+          | chart count(t) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -59,9 +60,10 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:fabricdevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| where HasFabric="False"
-| timechart dc(DeviceIpAddress) as amount cont=false
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | where HasFabric="False"
+          | chart values(DeviceIpAddress) as t by _time
+          | chart count(t) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -94,14 +96,14 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:fabricdevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup DeviceIpAddress keepevents=false
-| eval WithFabric=if(HasFabric="True", "Yes", "No")
-| stats dc(DeviceIpAddress) as amount by WithFabric
+          | dedup DeviceIpAddress keepevents=false
+          | eval WithFabric=if(HasFabric="True", "Yes", "No")
+          | stats dc(DeviceIpAddress) as amount by WithFabric
 
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval WithFabric=WithFabric." (".perc."%)"
-| table WithFabric amount</query>
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval WithFabric=WithFabric." (".perc."%)"
+          | table WithFabric amount</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
           <sampleRatio>1</sampleRatio>

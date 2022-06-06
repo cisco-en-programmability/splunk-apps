@@ -26,8 +26,8 @@
       <table>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup name, ipAddress, serialNumber, location keepevents=false
-| table name, ipAddress, serialNumber, location, type, status, version, backhaulType, ethernetMacAddress, radioMacAddress, lastSeen</query>
+          | dedup name, ipAddress, serialNumber, location keepevents=false
+          | table name, ipAddress, serialNumber, location, type, status, version, backhaulType, ethernetMacAddress, radioMacAddress, lastSeen</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -51,12 +51,12 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup ipAddress keepevents=false
-| chart dc(ipAddress) as amount by status
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval status=status." (".perc."%)"
-| table status amount</query>
+          | dedup ipAddress keepevents=false
+          | chart dc(ipAddress) as amount by status
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval status=status." (".perc."%)"
+          | table status amount</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -102,12 +102,12 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup ipAddress keepevents=false
-| chart dc(ipAddress) as amount by type
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval type=type." (".perc."%)"
-| table type amount</query>
+          | dedup ipAddress keepevents=false
+          | chart dc(ipAddress) as amount by type
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval type=type." (".perc."%)"
+          | table type amount</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -153,13 +153,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup ipAddress keepevents=false
-| eval site=if(location="", "N/A", location)
-| chart dc(ipAddress) as amount by site cont=false
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval site=site." (".perc."%)"
-| table site amount</query>
+          | dedup ipAddress keepevents=false
+          | eval site=if(location="", "N/A", location)
+          | chart dc(ipAddress) as amount by site cont=false
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval site=site." (".perc."%)"
+          | table site amount</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -205,12 +205,12 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| dedup ipAddress keepevents=false
-| chart dc(ipAddress) as amount by backhaulType cont=false
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval backhaulType=backhaulType." (".perc."%)"
-| table backhaulType amount</query>
+          | dedup ipAddress keepevents=false
+          | chart dc(ipAddress) as amount by backhaulType cont=false
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval backhaulType=backhaulType." (".perc."%)"
+          | table backhaulType amount</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -255,11 +255,11 @@
   </row>
   <row>
     <panel>
-      <title>Sensor Devices by Backhaul Type over Time</title>
+      <title>Sensor Devices by Backhaul Type</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| timechart dc(ipAddress) as amount by backhaulType cont=false</query>
+          | chart dc(ipAddress) as amount by _time, backhaulType</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -299,15 +299,17 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
   </row>
   <row>
     <panel>
-      <title>Sensor Devices by Type over Time</title>
+      <title>Sensor Devices by Type</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$" |  timechart dc(ipAddress) as amount by type cont=false</query>
+          <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
+          |  chart dc(ipAddress) as amount by _time, type</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -345,14 +347,15 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
     <panel>
-      <title>Sensor devices by Status over Time</title>
+      <title>Sensor devices by Status</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:sensordevice" cisco_dnac_host="$ciscodnachostDropdown$"
-| timechart dc(ipAddress) as amount by status cont=false</query>
+          | chart dc(ipAddress) as amount by _time, status</query>
           <earliest>$timeRangePicker8.earliest$</earliest>
           <latest>$timeRangePicker8.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -392,6 +395,7 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
   </row>

@@ -26,8 +26,9 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="True" ComplianceDetail="False" 
-| timechart avg(CompliantDeviceCount) as amount cont=false 
-| appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          | chart values(CompliantDeviceCount) as t by _time
+          | chart avg(t) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -59,15 +60,15 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
-| dedup ComplianceDeviceID keepevents=false 
-| eventstats dc(ComplianceDeviceID) as total 
-| eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
-| dedup ComplianceStatus keepevents=false 
-| eval percentage=round((subtotal/total)*100, 2)
-| table ComplianceStatus, percentage
+          | dedup ComplianceDeviceID keepevents=false 
+          | eventstats dc(ComplianceDeviceID) as total 
+          | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
+          | dedup ComplianceStatus keepevents=false 
+          | eval percentage=round((subtotal/total)*100, 2)
+          | table ComplianceStatus, percentage
 
-| eval ComplianceStatus=ComplianceStatus." (".percentage."%)"
-| table ComplianceStatus, percentage</query>
+          | eval ComplianceStatus=ComplianceStatus." (".percentage."%)"
+          | table ComplianceStatus, percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -129,14 +130,14 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
-| dedup ComplianceDeviceID keepevents=false 
-| eventstats dc(ComplianceDeviceID) as total 
-| eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
-| dedup ComplianceStatus keepevents=false 
-| eval percentage=round((subtotal/total)*100, 2)
-| where ComplianceStatus="$complianceStatusDropdown4$" 
-| appendpipe [stats count | where count=0 | rename count as "percentage"] 
-| table percentage</query>
+          | dedup ComplianceDeviceID keepevents=false 
+          | eventstats dc(ComplianceDeviceID) as total 
+          | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
+          | dedup ComplianceStatus keepevents=false 
+          | eval percentage=round((subtotal/total)*100, 2)
+          | where ComplianceStatus="$complianceStatusDropdown4$" 
+          | appendpipe [stats count | where count=0 | rename count as "percentage"] 
+          | table percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -182,12 +183,13 @@
   </row>
   <row>
     <panel>
-      <title>Percentage of Compliant Devices over Time</title>
+      <title>Percentage of Compliant Devices</title>
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$"  ComplianceCount="True" ComplianceDetail="False" 
-| eval percentage=round((CompliantDeviceCount/ComplianceDeviceCount)*100, 2)
-| table _time, percentage</query>
+          | eval percentage=round((CompliantDeviceCount/ComplianceDeviceCount)*100, 2)
+          | table _time, percentage
+          | timechart avg(percentage) as percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -232,7 +234,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Percentage of Compliant Devices by Type over Time</title>
+      <title>Percentage of Compliant Devices by Type</title>
       <input type="dropdown" token="complianceTypeDropdown3" searchWhenChanged="true">
         <label>Compliance Type</label>
         <choice value="*">All</choice>
@@ -249,11 +251,11 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="False" ComplianceDetail="True" ComplianceComplianceType="$complianceTypeDropdown3$" 
-| eventstats dc(ComplianceDeviceID) as total by ComplianceComplianceType
-| search ComplianceStatus="COMPLIANT"
-| eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType
-| eval percentage=((subtotal/total)*100)
-| timechart avg(percentage) by ComplianceComplianceType cont=false</query>
+          | eventstats dc(ComplianceDeviceID) as total by ComplianceComplianceType
+          | search ComplianceStatus="COMPLIANT"
+          | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType
+          | eval percentage=round((subtotal/total)*100, 2)
+          | timechart avg(percentage) by ComplianceComplianceType</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -296,6 +298,7 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
   </row>
@@ -406,13 +409,13 @@
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="False" ComplianceDetail="True" ComplianceComplianceType="$complianceTypeDropdown$" ComplianceStatus="$complianceTypeStatusDropdown$" IpAddress="$deviceIpAddressDropdown$"
   | dedup ComplianceDeviceID, ComplianceComplianceType keepevents=false 
   | table ComplianceDeviceID, DeviceName, DeviceRole, IpAddress, MACAddress,  Manageability, Reachability, ComplianceComplianceType, ComplianceState, ComplianceStatus, ComplianceLastSyncTime, ComplianceLastUpdateTime
-| join left=L right=R where L.ComplianceDeviceID=R.ComplianceDeviceID type=inner [search
+          | join left=L right=R where L.ComplianceDeviceID=R.ComplianceDeviceID type=inner [search
 sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="False" ComplianceDetail="False" IpAddress="$deviceIpAddressDropdown$"
-| dedup ComplianceDeviceID keepevents=false
-| table  ComplianceDeviceID, IpAddress, ComplianceStatus
+          | dedup ComplianceDeviceID keepevents=false
+          | table  ComplianceDeviceID, IpAddress, ComplianceStatus
 ]
-| rename L.DeviceName as DeviceName, L.DeviceRole as DeviceRole, L.IpAddress as IpAddress, L.MACAddress as MACAddress, L.Manageability as Manageability, L.Reachability as Reachability, R.ComplianceStatus as ComplianceDeviceStatus, L.ComplianceComplianceType as ComplianceType, L.ComplianceStatus as ComplianceTypeStatus, L.ComplianceState as ComplianceState, L.ComplianceLastSyncTime as ComplianceLastSyncTime, L.ComplianceLastUpdateTime as ComplianceLastUpdateTime
-| table DeviceName, DeviceRole, IpAddress, MACAddress, Manageability, Reachability, ComplianceDeviceStatus, ComplianceType, ComplianceTypeStatus, ComplianceState, ComplianceLastSyncTime, ComplianceLastUpdateTime</query>
+          | rename L.DeviceName as DeviceName, L.DeviceRole as DeviceRole, L.IpAddress as IpAddress, L.MACAddress as MACAddress, L.Manageability as Manageability, L.Reachability as Reachability, R.ComplianceStatus as ComplianceDeviceStatus, L.ComplianceComplianceType as ComplianceType, L.ComplianceStatus as ComplianceTypeStatus, L.ComplianceState as ComplianceState, L.ComplianceLastSyncTime as ComplianceLastSyncTime, L.ComplianceLastUpdateTime as ComplianceLastUpdateTime
+          | table DeviceName, DeviceRole, IpAddress, MACAddress, Manageability, Reachability, ComplianceDeviceStatus, ComplianceType, ComplianceTypeStatus, ComplianceState, ComplianceLastSyncTime, ComplianceLastUpdateTime</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
