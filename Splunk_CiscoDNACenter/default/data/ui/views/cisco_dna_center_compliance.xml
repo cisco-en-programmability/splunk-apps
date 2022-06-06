@@ -188,7 +188,8 @@
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$"  ComplianceCount="True" ComplianceDetail="False" 
           | eval percentage=round((CompliantDeviceCount/ComplianceDeviceCount)*100, 2)
-          | table _time, percentage</query>
+          | table _time, percentage
+          | timechart avg(percentage) as percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -254,7 +255,7 @@
           | search ComplianceStatus="COMPLIANT"
           | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType
           | eval percentage=round((subtotal/total)*100, 2)
-          | chart avg(percentage) by _time, ComplianceComplianceType</query>
+          | timechart avg(percentage) by ComplianceComplianceType</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>

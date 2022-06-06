@@ -289,7 +289,7 @@
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="True"
           | chart values(ImageDevicesAmount) as t by _time
-          | chart avg(t) as amount by _time</query>
+          | timechart avg(t) as amount</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -337,7 +337,8 @@
         <search>
           <query>sourcetype="cisco:dnac:image" cisco_dnac_host="$ciscodnachostDropdown$" ImageSummary="False"
           | eval StackSwitchInfoState2=if(StackSwitchInfoState!="", StackSwitchInfoState, "UNKNOWN")
-          | chart dc(ImageImageName) as amount by _time, StackSwitchInfoState2</query>
+          | stats dc(ImageImageName) as amount by _time, StackSwitchInfoState2
+          | timechart avg(amount) by StackSwitchInfoState2</query>
           <earliest>$timeRangePicker4.earliest$</earliest>
           <latest>$timeRangePicker4.latest$</latest>
           <sampleRatio>1</sampleRatio>

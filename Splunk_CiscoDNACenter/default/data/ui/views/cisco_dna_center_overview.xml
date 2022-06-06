@@ -27,7 +27,7 @@
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category="All"
           | chart values(healthScore) as t by _time
-          | chart avg(t) as healthScore by _time
+          | timechart avg(t) as healthScore
           | where isnotnull(healthScore)
           | appendpipe [stats count | where count=0 | rename count as "healthScore"]</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
@@ -50,7 +50,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
-          | chart avg(scoreValue) by _time, scoreType
+          | timechart avg(scoreValue) by scoreType
           | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -221,7 +221,8 @@
       <single>
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="True" ComplianceDetail="False" 
-          | chart avg(CompliantDeviceCount) as amount by _time
+          | chart values(CompliantDeviceCount) as t by _time
+          | chart avg(t) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>

@@ -27,7 +27,7 @@
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
           | chart values(scoreValue) as t by _time
-          | chart avg(t) as scoreValue by _time
+          | timechart avg(t) as scoreValue
           | where isnotnull(scoreValue)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -60,7 +60,7 @@
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
           | chart values(scoreValue) as t by _time
-          | chart avg(t) as scoreValue by _time
+          | timechart avg(t) as scoreValue
           | where isnotnull(scoreValue)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -93,7 +93,7 @@
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
           | chart values(scoreValue) as t by _time
-          | chart avg(t) as scoreValue by _time
+          | timechart avg(t) as scoreValue
           | where isnotnull(scoreValue)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -128,7 +128,7 @@
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL" 
           | chart values(clientCount) as t by _time
-          | chart avg(t) as clientCount by _time
+          | timechart avg(t) as clientCount
           | where isnotnull(clientCount)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -161,7 +161,7 @@
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
           | chart values(clientCount) as t by _time
-          | chart avg(t) as clientCount by _time
+          | timechart avg(t) as clientCount
           | where isnotnull(clientCount)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -194,7 +194,7 @@
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
           | chart values(clientCount) as t by _time
-          | chart avg(t) as clientCount by _time
+          | timechart avg(t) as clientCount
           | where isnotnull(clientCount)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -335,7 +335,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType!="ALL"
-          | chart avg(scoreValue) by _time, scoreType
+          | timechart avg(scoreValue) by scoreType
           | where isnotnull(FAIR)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -383,7 +383,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType!="ALL"
-          | chart avg(scoreValue) by _time, scoreType
+          | timechart avg(scoreValue) by scoreType
           | where isnotnull(FAIR)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -433,7 +433,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
-          | chart avg(scoreValue) by _time, scoreType
+          | timechart avg(scoreValue) by scoreType
           | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -456,7 +456,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
-          | chart avg(scoreValue) by _time, scoreType
+          | timechart avg(scoreValue) by scoreType
           | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -477,7 +477,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
-          | chart avg(scoreValue) by _time, scoreType
+          | timechart avg(scoreValue) by scoreType
           | where isnotnull(ALL)</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
