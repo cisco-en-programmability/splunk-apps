@@ -57,7 +57,7 @@ def simplify_device_health(device_health_response):
     return response
 
 
-def simplify_devices_health(dnac, devices_health_responses):
+def simplify_devices_health(helper, dnac, devices_health_responses):
     """
     This function will simplify the device health data and add the fabric site
     :param dnac: Cisco DNAC SDK api
@@ -68,7 +68,7 @@ def simplify_devices_health(dnac, devices_health_responses):
     for device_health in devices_health_responses:
         device = simplify_device_health(device_health)
         device_key = device["DeviceLocation"]
-        fabric_site = get_simplified_fabric_site(dnac, device_key)
+        fabric_site = get_simplified_fabric_site(helper, dnac, device_key)
         fabric_device_new = dict(device)
         if fabric_site:
             fabric_device_new.update({"HasFabric": "True"})
@@ -79,7 +79,7 @@ def simplify_devices_health(dnac, devices_health_responses):
     return fabric_devices_response
 
 
-def get_device_health(dnac, input_interval):
+def get_device_health(helper, dnac, input_interval):
     """
     This function will retrieve the device health from a previous time to the time the function is called
     :param dnac: Cisco DNAC SDK api
@@ -102,7 +102,7 @@ def get_device_health(dnac, input_interval):
             )
             if health_response and health_response.response:
                 devices_responses.extend(
-                    simplify_devices_health(dnac, health_response.response)
+                    simplify_devices_health(helper, dnac, health_response.response)
                 )
                 if len(health_response.response) < limit:
                     do_request_next = False
@@ -117,7 +117,7 @@ def get_device_health(dnac, input_interval):
     return devices_responses
 
 
-def get_simplified_fabric_site(dnac, site_name_hierarchy):
+def get_simplified_fabric_site(helper, dnac, site_name_hierarchy):
     """
     This function will retrieve the fabric site and simplify them
     :param dnac: Cisco DNAC SDK api
@@ -135,7 +135,10 @@ def get_simplified_fabric_site(dnac, site_name_hierarchy):
             response["FabricType"] = fabric_site.get("fabricType") or ""
             response["FabricDomainType"] = fabric_site.get("fabricDomainType") or ""
         return response
-    except Exception:
+    except Exception as e:
+        import traceback
+        helper.log_error(traceback.format_exc())
+        helper.log_error('Error getting site. ' + str(e))
         return response
 
 
@@ -201,7 +204,7 @@ def collect_events(helper, ew):
     )
 
     # get the devices (health) and fabric sites associated with them
-    devices_health = get_device_health(dnac, input_interval)
+    devices_health = get_device_health(helper, dnac, input_interval)
 
     r_json = []
     for item in devices_health:

@@ -161,8 +161,11 @@ def get_issues(helper, dnac, **kwargs):
                         tmp_issue = dnac.issues.get_issue_enrichment_details(
                             headers=dict(entity_type="issue_id", entity_value=issue_id)
                         )
-                    except Exception:
+                    except Exception as e:
                         tmp_issue = {}
+                        import traceback
+                        helper.log_error(traceback.format_exc())
+                        helper.log_error('Error getting issues. ' + str(e))
 
                     if (
                         tmp_issue
@@ -213,8 +216,12 @@ def get_issues(helper, dnac, **kwargs):
                     tmp_site = {}
                     try:
                         tmp_site = dnac.sites.get_site(site_id=site_id)
-                    except Exception:
+                    except Exception as e:
                         tmp_site = {}
+                        import traceback
+                        helper.log_error(traceback.format_exc())
+                        helper.log_error('Error getting site. ' + str(e))
+
                     if tmp_site and tmp_site.response:
                         site_info[site_id] = simplify_site(tmp_site["response"])
                         response.update(site_info[site_id])
@@ -238,8 +245,12 @@ def get_issues(helper, dnac, **kwargs):
                     tmp_device = {}
                     try:
                         tmp_device = dnac.devices.get_device_by_id(id=device_id)
-                    except Exception:
+                    except Exception as e:
                         tmp_device = {}
+                        import traceback
+                        helper.log_error(traceback.format_exc())
+                        helper.log_error('Error getting device. ' + str(e))
+
                     if tmp_device and tmp_device.response:
                         device_info[device_id] = get_important_device_values(
                             tmp_device["response"]
@@ -319,14 +330,23 @@ def collect_events(helper, ew):
     try:
         overall_issues_active = get_issues(helper, dnac, issue_status="ACTIVE")
     except Exception as e:
+        import traceback
+        helper.log_error(traceback.format_exc())
+        helper.log_error('Get exception when getting issues of type ACTIVE. ' + str(e))
         overall_issues_active = []
     try:
         overall_issues_ignored = get_issues(helper, dnac, issue_status="IGNORED")
     except Exception as e:
+        import traceback
+        helper.log_error(traceback.format_exc())
+        helper.log_error('Get exception when getting issues of type IGNORED. ' + str(e))
         overall_issues_ignored = []
     try:
         overall_issues_resolved = get_issues(helper, dnac, issue_status="RESOLVED")
     except Exception as e:
+        import traceback
+        helper.log_error(traceback.format_exc())
+        helper.log_error('Get exception when getting issues of type RESOLVED. ' + str(e))
         overall_issues_resolved = []
 
     overall_issues = (

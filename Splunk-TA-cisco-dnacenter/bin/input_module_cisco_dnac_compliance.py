@@ -321,7 +321,10 @@ def collect_events(helper, ew):
         compliant_status = dnac.compliance.get_compliance_status_count(compliance_status="COMPLIANT")
         if compliant_status and compliant_status.response:
             compliance_device_count["CompliantDeviceCount"] = compliant_status.response
-    except Exception:
+    except Exception as e:
+        import traceback
+        helper.log_error(traceback.format_exc())
+        helper.log_error('Error getting COMPLIANT count. ' + str(e))
         pass
     r_json.append(compliance_device_count)
 

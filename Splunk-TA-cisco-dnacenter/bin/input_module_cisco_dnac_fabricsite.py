@@ -72,7 +72,7 @@ def simplify_sites(helper, dnac, sites_response, seen):
                 site_key
             )
         )
-        fabric_site = get_simplified_fabric_site(dnac, site_key)
+        fabric_site = get_simplified_fabric_site(helper, dnac, site_key)
         fabric_site_new = dict(site)
         if fabric_site:
             fabric_site_new.update({"HasFabric": "True"})
@@ -119,7 +119,7 @@ def get_simplified_sites(helper, dnac):
     return sites_responses
 
 
-def get_simplified_fabric_site(dnac, site_name_hierarchy):
+def get_simplified_fabric_site(helper, dnac, site_name_hierarchy):
     """
     This function will retrieve the fabric site and simplify them
     :param dnac: Cisco DNAC SDK api
@@ -137,7 +137,10 @@ def get_simplified_fabric_site(dnac, site_name_hierarchy):
             response["FabricType"] = fabric_site.get("fabricType") or ""
             response["FabricDomainType"] = fabric_site.get("fabricDomainType") or ""
         return response
-    except Exception:
+    except Exception as e:
+        import traceback
+        helper.log_error(traceback.format_exc())
+        helper.log_error('Error getting site. ' + str(e))
         return response
 
 
