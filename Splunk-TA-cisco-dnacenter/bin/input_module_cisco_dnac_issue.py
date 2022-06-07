@@ -135,8 +135,10 @@ def get_issues(helper, dnac, **kwargs):
     issue_info = {}
     site_info = {}
     device_info = {}
+    wait_seconds_for_issue_details_requests = 15
     if issues_response and issues_response.response:
-        for issue_item in issues_response.response:
+        last_index = len(issues_response.response) - 1
+        for index, issue_item in enumerate(issues_response.response):
             response = {}
             issue_id = issue_item.get("issueId") or ""
             site_id = issue_item.get("siteId") or ""
@@ -161,6 +163,8 @@ def get_issues(helper, dnac, **kwargs):
                         tmp_issue = dnac.issues.get_issue_enrichment_details(
                             headers=dict(entity_type="issue_id", entity_value=issue_id)
                         )
+                        if index != last_index:
+                            time.sleep(wait_seconds_for_issue_details_requests)
                     except Exception as e:
                         tmp_issue = {}
                         import traceback
