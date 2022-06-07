@@ -459,21 +459,12 @@
                             "label": "Interval",
                             "type": "text",
                             "required": true,
-                            "defaultValue": "900",
-                            "help": "Time interval of input in seconds, 900 is default, anything below is not recommended.",
+                            "help": "Time interval of input in seconds. Minimum value is 900.",
                             "validators": [
                                 {
                                     "type": "regex",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$",
-                                    "errorMsg": "Interval must be an integer."
-                                },
-                                {
-                                    "type": "number",
-                                    "range": [
-                                        900,
-                                        31536000
-                                    ],
-                                    "errorMsg": "Interval must be above 900 seconds."
+                                    "pattern": "^9\\d\\d$|^[1-9]\\d\\d\\d\\d*$|^-1$",
+                                    "errorMsg": "Interval must be an integer greater than or equal to 900."
                                 }
                             ]
                         },

@@ -19,16 +19,8 @@ fields = [
         required=True,
         encrypted=False,
         default=None,
-        validator=validator.AllOf(
-            [
-                validator.Pattern(
-                    regex=r"""^\-[1-9]\d*$|^\d*$""", 
-                ),
-                validator.Range(
-                    minVal=900,
-                    maxVal=31536000,
-                )
-            ]
+        validator=validator.Pattern(
+            regex=r"""^9\d\d$|^[1-9]\d\d\d\d*$|^-1$""", 
         )
     ), 
     field.RestField(
