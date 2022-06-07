@@ -463,7 +463,7 @@
                             "validators": [
                                 {
                                     "type": "regex",
-                                    "pattern": "^9\\d\\d$|^[1-9]\\d\\d\\d\\d*$|^-1$",
+                                    "pattern": "^9\\d\\d$|^[1-9]\\d\\d\\d\\d*$|^\\-1$",
                                     "errorMsg": "Interval must be an integer greater than or equal to 900."
                                 }
                             ]
