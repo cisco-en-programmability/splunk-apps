@@ -374,12 +374,12 @@
                             "label": "Interval",
                             "type": "text",
                             "required": true,
-                            "help": "Time interval of input in seconds.",
+                            "help": "Time interval of input in seconds. Minimum value is 900.",
                             "validators": [
                                 {
                                     "type": "regex",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$",
-                                    "errorMsg": "Interval must be an integer."
+                                    "pattern": "^9\\d\\d$|^[1-9]\\d\\d\\d\\d*$|^\\-1$",
+                                    "errorMsg": "Interval must be an integer greater than or equal to 900."
                                 }
                             ]
                         },
@@ -544,12 +544,12 @@
                             "label": "Interval",
                             "type": "text",
                             "required": true,
-                            "help": "Time interval of input in seconds.",
+                            "help": "Time interval of input in seconds. Minimum value is 300.",
                             "validators": [
                                 {
                                     "type": "regex",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$",
-                                    "errorMsg": "Interval must be an integer."
+                                    "pattern": "^3\\d\\d$|^[1-9]\\d\\d\\d\\d*$|^\\-1$",
+                                    "errorMsg": "Interval must be an integer greater than or equal to 300."
                                 }
                             ]
                         },
@@ -629,12 +629,12 @@
                             "label": "Interval",
                             "type": "text",
                             "required": true,
-                            "help": "Time interval of input in seconds.",
+                            "help": "Time interval of input in seconds. Minimum value is 3600.",
                             "validators": [
                                 {
                                     "type": "regex",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$",
-                                    "errorMsg": "Interval must be an integer."
+                                    "pattern": "^3[6-9]\\d\\d$|^[1-9]\\d\\d\\d\\d\\d*$|^\\-1$",
+                                    "errorMsg": "Interval must be an integer greater than or equal to 3600."
                                 }
                             ]
                         },
