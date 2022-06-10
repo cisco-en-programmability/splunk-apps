@@ -37,6 +37,7 @@
           <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisY.maximumNumber">100</option>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
         <option name="refresh.display">progressbar</option>
@@ -58,6 +59,8 @@
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisY.maximumNumber">100</option>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
         <option name="height">258</option>
@@ -73,30 +76,7 @@
           <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Active"
           | eventstats sum(IssueCount) as subtotal by _time
           | dedup _time keepevents=false
-          | chart avg(subtotal) as amount by _time</query>
-          <earliest>$timeRangePicker2.earliest$</earliest>
-          <latest>$timeRangePicker2.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
-        </search>
-        <option name="charting.axisTitleX.visibility">collapsed</option>
-        <option name="charting.chart">area</option>
-        <option name="charting.drilldown">none</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-    <panel>
-      <title>Total Number of Resolved Issues</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:issue" cisco_dnac_host="$ciscodnachostDropdown$" IssueStatus="Resolved"
-          | eventstats sum(IssueCount) as subtotal by _time
-          | dedup _time keepevents=false
-          | chart avg(subtotal) as amount by _time</query>
+          | chart avg(subtotal) as Active by _time</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -117,13 +97,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:devicehealth" cisco_dnac_host="$ciscodnachostDropdown$"
-          | dedup IpAddress keepevents=false
-          | stats dc(IpAddress) as amount by Reachability
+| dedup IpAddress keepevents=false
+| stats dc(IpAddress) as amount by Reachability
 
-          | eventstats sum(amount) as Total
-          | eval perc=round((amount/Total)*100, 2)
-          | eval Reachability=Reachability." (".perc."%)"
-          | table Reachability amount</query>
+| eventstats sum(amount) as Total
+| eval perc=round((amount/Total)*100, 2)
+| eval Reachability=Reachability." (".perc."%)"
+| table Reachability amount</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -171,11 +151,11 @@
       <chart>
         <search>
           <query>sourcetype="cisco:dnac:networkhealth" cisco_dnac_host="$ciscodnachostDropdown$" category!="All"
-          | dedup category keepevents=false 
-          | eventstats sum(totalCount) as Total
-          | eval perc=round((totalCount/Total)*100, 2)
-          | eval category=category." (".perc."%)"
-          | table category totalCount</query>
+| dedup category keepevents=false 
+| eventstats sum(totalCount) as Total
+| eval perc=round((totalCount/Total)*100, 2)
+| eval category=category." (".perc."%)"
+| table category totalCount</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -222,7 +202,7 @@
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="True" ComplianceDetail="False" 
           | chart values(CompliantDeviceCount) as t by _time
-          | chart avg(t) as amount by _time
+          | timechart avg(t) as amount
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -303,6 +283,209 @@
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
       </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>All Clients Health Score</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
+          | chart values(scoreValue) as t by _time
+          | timechart avg(t) as scoreValue
+          | where isnotnull(scoreValue)</query>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xdc4e41","0xdc4e41","0xf1813f","0xf8be34","0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0,25,50,75,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Wired Clients Health Score</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
+          | chart values(scoreValue) as t by _time
+          | timechart avg(t) as scoreValue
+          | where isnotnull(scoreValue)</query>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xdc4e41","0xdc4e41","0xf1813f","0xf8be34","0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0,25,50,75,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Wireless Clients Health Score</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
+          | chart values(scoreValue) as t by _time
+          | timechart avg(t) as scoreValue
+          | where isnotnull(scoreValue)</query>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xdc4e41","0xdc4e41","0xf1813f","0xf8be34","0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0,25,50,75,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>All Clients Count</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL" 
+          | chart values(clientCount) as t by _time
+          | timechart avg(t) as clientCount
+          | where isnotnull(clientCount)</query>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xdc4e41","0xdc4e41","0xf1813f","0xf8be34","0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0,25,50,75,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Wired Clients Count</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
+          | chart values(clientCount) as t by _time
+          | timechart avg(t) as clientCount
+          | where isnotnull(clientCount)</query>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xdc4e41","0xdc4e41","0xf1813f","0xf8be34","0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0,25,50,75,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Wireless Clients Count</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
+          | chart values(clientCount) as t by _time
+          | timechart avg(t) as clientCount
+          | where isnotnull(clientCount)</query>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">114</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xdc4e41","0xdc4e41","0xf1813f","0xf8be34","0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0,25,50,75,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
     </panel>
   </row>
 </form>

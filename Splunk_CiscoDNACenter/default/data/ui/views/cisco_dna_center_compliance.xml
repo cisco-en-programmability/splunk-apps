@@ -27,7 +27,7 @@
         <search>
           <query>sourcetype="cisco:dnac:compliance" cisco_dnac_host="$ciscodnachostDropdown$" ComplianceCount="True" ComplianceDetail="False" 
           | chart values(CompliantDeviceCount) as t by _time
-          | chart avg(t) as amount by _time
+          | timechart avg(t) as amount
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
