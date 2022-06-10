@@ -28,7 +28,7 @@
           <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$"
           | where HasFabric="True"
           | chart values(SiteNameHierarchy) as t by _time
-          | chart count(t) as amount by _time
+          | timechart count(t) as amount
           | appendpipe [stats count | where count=0 | rename count as "amount"]
 </query>
           <earliest>$timeRangePicker5.earliest$</earliest>
@@ -63,7 +63,7 @@
           <query>sourcetype="cisco:dnac:fabricsite" cisco_dnac_host="$ciscodnachostDropdown$"
           | where HasFabric="False"
           | chart values(SiteNameHierarchy) as t by _time
-          | chart count(t) as amount by _time
+          | timechart count(t) as amount
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
           <earliest>$timeRangePicker5.earliest$</earliest>
           <latest>$timeRangePicker5.latest$</latest>
