@@ -1,14 +1,14 @@
 
-from splunk_aoblib.rest_migration import ConfigMigrationHandler
-from splunktaucclib.rest_handler import admin_external, util
+import splunk_ta_cisco_dnacenter_declare
+
 from splunktaucclib.rest_handler.endpoint import (
-    DataInputModel,
-    RestModel,
     field,
     validator,
+    RestModel,
+    DataInputModel,
 )
-
-import splunk_ta_cisco_dnacenter_declare
+from splunktaucclib.rest_handler import admin_external, util
+from splunk_aoblib.rest_migration import ConfigMigrationHandler
 
 util.remove_http_proxy_env_vars()
 
