@@ -1,14 +1,14 @@
 
-import splunk_ta_cisco_dnacenter_declare
-
+from splunk_aoblib.rest_migration import ConfigMigrationHandler
+from splunktaucclib.rest_handler import admin_external, util
 from splunktaucclib.rest_handler.endpoint import (
+    DataInputModel,
+    RestModel,
     field,
     validator,
-    RestModel,
-    DataInputModel,
 )
-from splunktaucclib.rest_handler import admin_external, util
-from splunk_aoblib.rest_migration import ConfigMigrationHandler
+
+import splunk_ta_cisco_dnacenter_declare
 
 util.remove_http_proxy_env_vars()
 
@@ -20,7 +20,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=validator.Pattern(
-            regex=r"""^\-[1-9]\d*$|^\d*$""", 
+            regex=r"""^9\d\d$|^[1-9]\d\d\d\d*$|^\-1$""", 
         )
     ), 
     field.RestField(
