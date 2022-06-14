@@ -2,7 +2,6 @@
 Cisco DNA Center App for Splunk
 ===============================
 
-* **App Homepage:** https://splunkbase.splunk.com/app/
 * **Authors:** - Cisco Systems
 
 ### Description ###
@@ -19,54 +18,86 @@ capabilities to deliver an advanced security reporting and analysis tool.
 
 ### Dashboards contents ###
 
+- Cisco DNA Center Overview
+    * Average Network Health Score
+    * Average Client Health Score
+    * Total Number of Active Issues
+    * Device Reachability Type Percentages
+    * Network Device Type Count by Category
+    * Number of Compliant Devices
+    * Percentage of Compliant Devices by Type
+    * All Clients Health Score
+    * Wired Clients Health Score
+    * Wireless Clients Health Score
+    * All Clients Count
+    * Wired Clients Count
+    * Wireless Clients Count
 - Cisco DNA Center Client Health
     * The health scores for all, for wired and for wireless devices in different graphs.
 - Cisco DNA Center Compliance
-    * The number of compliance devices
-    * The number of compliance devices by status over time
-    * The percentage of compliance devices by status
-    * The number of compliance devices by type over time
-    * The percentage of compliance devices by type
-    * A compliance table summary
+    * Number of Compliant Devices
+    * Device Compliance Status Percentages
+    * Percentage of Compliant Devices with the Specified Status
+    * Percentage of Compliant Devices
+    * Percentage of Compliant Devices by Type
+    * Percentage of Compliant Devices by Type
+    * Device Compliance Table
 - Cisco DNA Center Device Health
-    * The number of devices managed
-    * The number of devices by family
-    * The number of devices by role
-    * The device's reachability status
-    * The device's health, memory, and CPU utilization.
-- Cisco DNA Center Fabric Device
-    * The number of devices part of fabrics
-- Cisco DNA Center Fabric Site
-    * The number of fabrics
-- Cisco DNA Center Image Health
-    * The number of software images by state
-    * The number of software images used by devices
+    * Percentages for:
+        - Device Manageability Type
+        - Device Reachability Type
+        - Device Family
+        - Device Role
+        - Device Series
+    * Number of:
+        - Managed Devices
+        - Unmanaged Devices
+        - Managed With Errors Devices
+        - Switches and Hubs
+        - Wireless Controllers
+        - Routers
+        - APs
+        - Access Devices
+        - Core Devices
+        - Distribution Devices
+        - Border Router Devices
+        - Reachable Devices
+        - Unreachable Devices
+    * Device Health Table
 - Cisco DNA Center Issues
-    * The number of issues received total
-    * The number of issues by severity
-    * The number of issues by priority
-    * The number of issues by issue name
-    * The number of issues by category
-    * The number of issues by entity
-    * Top 5 Issues
-    * Top 5 devices impacted
+    * Number of Issues by Priority
+    * Number of Issues by Severity
+    * Number of Issues by Category
+    * Number of Issues by Entity
+    * Number of Issues by Name
+    * Total Number of Active Issues
+    * Issue Count by Severity
+    * Issue Count by Priority
+    * Table of Top 10 Issues
+    * Table of Top 10 Impacted Devices
 - Cisco DNA Center Network Health
-    * The network device health
+    * Overall Network Health Score
+    * Access Switches Health Score
+    * Distribution Switches Health Score
+    * Wireless LAN Controller Health Score
+    * Router Health Score
+    * Total - number of devices
+    * Access Switches Total
+    * Distribution Switches Total
+    * Wireless LAN Controller Total
+    * Router Total
+    * Network Device Type Count by Category
 - Cisco DNA Center Security Advisories
-    * The number of security advisories by category
-    * The number of critical security advisories
-    * The number of high security advisories
-    * The number of medium security advisories
-    * The security advisories filtered table
-- Cisco DNA Center Sensors
-    * The number of sensor devices by status
-    * The number of sensor devices by type
-    * The number of sensor devices by location
-    * The number of sensor devices by backhaul type
+    * Critical Count
+    * High Count
+    * Medium Count
+    * Security Advisories Count by Category
+    * Security Advisories by Category
+    * Security Advisories Count by Subcategory
+    * Security Advisories by Subcategory
+    * Security Advisories with Devices
 
 ### Documentation ###
-
-Documentation for this add-on is located at: https://cisco-en-programmability.github.io/splunk-apps/
 
 **Release Notes:** https://github.com/cisco-en-programmability/splunk-apps/releases
 

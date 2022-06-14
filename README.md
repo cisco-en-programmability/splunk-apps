@@ -9,18 +9,16 @@
 
 - Cisco DNA Center (>= 2.2.3.3)
 
-### 📖 Documentation
-
-https://cisco-en-programmability.github.io/splunk-apps/
-
 ### ⬇️ Download
 
-- [Splunk App on SplunkBase](https://splunkbase.splunk.com/app/)
-- [Splunk Add-on on SplunkBase](https://splunkbase.splunk.com/app/)
+- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0/Splunk_CiscoDNACenter-1.0.0.spl)
+- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0/Splunk-TA-cisco-dnacenter-1.0.0.spl)
+
+We are working to submit the add-on and app on SplunkBase.
 
 ### 💬 Support
 
-- [Ask a Question](https://answers.splunk.com/answers/ask.html?appid= )
+- [Ask a Question](https://github.com/cisco-en-programmability/splunk-apps/issues)
 - [Report a bug](https://github.com/cisco-en-programmability/splunk-apps/issues)
 
 ### 🐛 Bugs / Issues / Feature Requests
@@ -30,8 +28,8 @@ We welcome community contributions to them. If you find problems, need an enhanc
 
 ### 📚 App and Add-on READMEs
 
-- [Splunk App README](Splunk_CiscoDNACenter/README.md)
-- [Splunk Add-on README](Splunk-TA-cisco-dnacenter/README.md)
+- [Splunk App README](https://github.com/cisco-en-programmability/splunk-apps/blob/main/Splunk_CiscoDNACenter/README.md)
+- [Splunk Add-on README](https://github.com/cisco-en-programmability/splunk-apps/blob/main/Splunk-TA-cisco-dnacenter/README.md)
 
 ### 📂 File structure of this repo
 
