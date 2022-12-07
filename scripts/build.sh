@@ -122,6 +122,8 @@ fi
 find ${APP} -type f -name ".*" -exec rm {} \;
 find ${APP} -type d -name ".*" -exec rm -rf {} \;
 find ${APP} -type f -name "*.pyc" -exec rm {} \;
+find ${APP} -type f -name ".DS_Store" -exec rm {} \;
+
 
 if [[ -d "${APP}/bin" ]]; then
   find "${APP}/bin" -type f -name "*.py" -exec chmod +x {} 2> /dev/null \;
