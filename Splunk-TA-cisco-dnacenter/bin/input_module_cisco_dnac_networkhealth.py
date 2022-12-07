@@ -120,6 +120,11 @@ def validate_input(helper, definition):
     cisco_dna_center_account = definition.parameters.get(
         "cisco_dna_center_account", None
     )
+    # review: check cisco_dna_center_host
+    if not isinstance(cisco_dna_center_host, str):
+        raise TypeError("URL must be string")
+    if not cisco_dna_center_host.startswith("https"):
+        raise ValueError("URL must be HTTPS")
     pass
 
 

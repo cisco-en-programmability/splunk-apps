@@ -158,6 +158,8 @@ class Authentication(object):
         super(Authentication, self).__init__()
 
         self._base_url = str(base_url)
+        assert self._base_url.startswith("https"), "URL must be HTTPS"
+
         self._single_request_timeout = 60
         self._verify = verify
         self._request_kwargs = {
@@ -220,6 +222,10 @@ class DNACenterAPI(object):
         # Step 1, basic properties
         self._username = username
         self._password = password
+
+        # check base url
+        assert base_url.startswith("https"), "URL must be HTTPS"
+
         # Step 2, Create authentication
         self._authentication = Authentication(base_url, verify)
         # Step 3, Call requests to get auth token
@@ -262,6 +268,8 @@ class RestSession(object):
         super(RestSession, self).__init__()
 
         self._base_url = str(base_url)
+        assert self._base_url.startswith("https"), "URL must be HTTPS"
+
         self._get_access_token = get_access_token
         self._access_token = str(access_token)
         self._single_request_timeout = 60
