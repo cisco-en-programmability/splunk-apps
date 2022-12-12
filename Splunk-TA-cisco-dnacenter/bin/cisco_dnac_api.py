@@ -189,6 +189,7 @@ class Authentication(object):
         """
         temp_url = "/dna/system/api/v1/auth/token"
         self._endpoint_url = urllib.parse.urljoin(self._base_url, temp_url)
+        assert self._endpoint_url.startswith("https"), "URL must be HTTPS"
 
         # API request
         response = requests.post(
