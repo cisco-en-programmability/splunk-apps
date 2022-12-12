@@ -157,8 +157,8 @@ class Authentication(object):
     def __init__(self, base_url, verify=True):
         super(Authentication, self).__init__()
 
+        assert str(base_url).startswith("https"), "URL must be HTTPS"
         self._base_url = str(base_url)
-        assert self._base_url.startswith("https"), "URL must be HTTPS"
 
         self._single_request_timeout = 60
         self._verify = verify
@@ -357,6 +357,7 @@ class RestSession(object):
                         abs_url, method, _headers=self.headers, **kwargs
                     )
                 )
+                assert abs_url.startswith("https"), "URL must be HTTPS"
                 response = self._req_session.request(method, abs_url, **kwargs)
             except IOError as e:
                 if e.errno == errno.EPIPE:
@@ -364,11 +365,14 @@ class RestSession(object):
                     try:
                         c += 1
                         self._helper.log_debug("Attempt {0}".format(c))
+                        assert abs_url.startswith("https"), "URL must be HTTPS"
                         response = self._req_session.request(method, abs_url, **kwargs)
                     except Exception as e:
                         raise e
                 else:
                     raise e
+            except AssertionError as e:
+                raise e
             try:
                 # Check the response code for error conditions
                 assert response.status_code < 400
