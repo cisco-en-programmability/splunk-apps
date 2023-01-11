@@ -20,7 +20,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=validator.Pattern(
-            regex=r"""^3\d\d$|^[1-9]\d\d\d\d*$|^\-1$""", 
+            regex=r"""^[3-9]\d\d$|^[1-9]\d\d\d\d*$|^\-1$""", 
         )
     ), 
     field.RestField(
