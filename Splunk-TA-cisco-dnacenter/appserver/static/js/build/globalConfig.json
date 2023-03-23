@@ -633,7 +633,7 @@
                             "validators": [
                                 {
                                     "type": "regex",
-                                    "pattern": "^3[6-9]\\d\\d$|^[1-9]\\d\\d\\d\\d\\d*$|^\\-1$",
+                                    "pattern": "^[3-9][6-9]\\d\\d$|^[1-9]\\d\\d\\d\\d\\d*$|^\\-1$",
                                     "errorMsg": "Interval must be an integer greater than or equal to 3600."
                                 }
                             ]
