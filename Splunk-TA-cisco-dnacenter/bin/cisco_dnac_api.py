@@ -154,7 +154,7 @@ def pprint_response_info(response):
 
 
 class Authentication(object):
-    def __init__(self, base_url, verify=True):
+    def __init__(self, base_url, verify=True, helper=None):
         super(Authentication, self).__init__()
 
         assert str(base_url).startswith("https"), "URL must be HTTPS"
@@ -166,6 +166,7 @@ class Authentication(object):
             "timeout": self._single_request_timeout,
             "verify": verify,
         }
+        self._helper = helper
 
         if verify is False:
             requests.packages.urllib3.disable_warnings()
@@ -199,7 +200,10 @@ class Authentication(object):
             **self._request_kwargs
         )
 
-        assert response.status_code in [200, 201, 202, 204, 206]
+        if response.status_code not in [200, 201, 202, 204, 206]:
+            self._helper.log_debug(pprint_response_info(response))
+            raise Exception("Authentication error")
+
         json_data = extract_and_parse_json(response)
 
         # Return a access_token object created from the response JSON data
@@ -228,7 +232,7 @@ class DNACenterAPI(object):
         assert base_url.startswith("https"), "URL must be HTTPS"
 
         # Step 2, Create authentication
-        self._authentication = Authentication(base_url, verify)
+        self._authentication = Authentication(base_url, verify, helper=helper)
         # Step 3, Call requests to get auth token
         self.session = RestSession(
             base_url,
