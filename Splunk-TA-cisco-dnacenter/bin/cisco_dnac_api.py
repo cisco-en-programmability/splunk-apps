@@ -121,14 +121,16 @@ def pprint_request_info(url, method, _headers, **kwargs):
 
             format_str = "{}\n\t{}:\n{}"
             debug_print = format_str.format(debug_print, key, value)
-    return debug_print
+    return debug_print.replace('\n', '\\n')
 
 
-def pprint_response_info(response):
-    debug_print = "\nResponse" "\n\tStatus: {} - {}" "\n\tHeaders: \n{}"
-    headers = response.headers
-    headers = "\n".join(["\t\t{}: {}".format(a, b) for a, b in headers.items()])
+def pprint_response_info(response, is_success, show_headers=False):
+    headers = None
     body = None
+    success_txt = 'Success' if is_success else 'Error'
+    if show_headers:
+        headers = response.headers
+        headers = "\n".join(["\t\t{}: {}".format(a, b) for a, b in headers.items()])
     file_resp_headers = ["Content-Disposition", "fileName"]
 
     if "application/json" in response.headers.get("Content-Type"):
@@ -144,13 +146,18 @@ def pprint_response_info(response):
     else:
         body = response.text or response.content
 
-    debug_print = debug_print.format(response.status_code, response.reason, headers)
+    if show_headers:
+        debug_print = '\n{} Response\n\tStatus: {} - {}\n\tHeaders: \n{}'
+        debug_print = debug_print.format(success_txt, response.status_code, response.reason, headers)
+    else:
+        debug_print = '\n{} Response\n\tStatus: {} - {}'
+        debug_print = debug_print.format(success_txt, response.status_code, response.reason)
 
     if body is not None:
         format_str = "{}\n\t{}:\n{}"
         debug_print = format_str.format(debug_print, "Body", body)
 
-    return debug_print
+    return debug_print.replace('\n', '\\n')
 
 
 class Authentication(object):
@@ -201,8 +208,8 @@ class Authentication(object):
         )
 
         if response.status_code not in [200, 201, 202, 204, 206]:
-            self._helper.log_debug(pprint_response_info(response))
-            raise Exception("Authentication error")
+            self._helper.log_debug(pprint_response_info(response, is_success=False, show_headers=True))
+            raise Exception("Authentication error: {error}".format(error=pprint_response_info(response, is_success=False, show_headers=True)))
 
         json_data = extract_and_parse_json(response)
 
@@ -386,17 +393,17 @@ class RestSession(object):
                     time.sleep(response.retry_after)
                     continue
                 if response.status_code == 401 and custom_refresh < 1:
-                    self._helper.log_debug(pprint_response_info(response))
+                    self._helper.log_debug(pprint_response_info(response, is_success=False, show_headers=False))
                     self._helper.log_debug("Refreshing access token")
                     self.refresh_token()
                     self._helper.log_debug("Refreshed access token")
                     return self.request(method, url, 1, **kwargs)
                 else:
                     # Re-raise the error
-                    self._helper.log_debug(pprint_response_info(response))
+                    self._helper.log_debug(pprint_response_info(response, is_success=False, show_headers=False))
                     raise
             else:
-                self._helper.log_debug(pprint_response_info(response))
+                self._helper.log_debug(pprint_response_info(response, is_success=True, show_headers=False))
                 return response
 
     @property
