@@ -153,10 +153,12 @@ fi
 
 if [ "$APP" == "Splunk_CiscoDNACenter" ]; then
   log_debug "Merging local.meta and removing file"
-  # cat "${APP}/metadata/default.meta" "${APP}/metadata/local.meta" > "${APP}/metadata/merged.meta"
-  # mv "${APP}/metadata/merged.meta" "${APP}/metadata/default.meta"
-  rm "${APP}/metadata/local.meta"
-  # chmod 600 "${APP}/metadata/default.meta"
+  if [ -e "${APP}/metadata/local.meta" ]; then
+    # cat "${APP}/metadata/default.meta" "${APP}/metadata/local.meta" > "${APP}/metadata/merged.meta"
+    # mv "${APP}/metadata/merged.meta" "${APP}/metadata/default.meta"
+    rm "${APP}/metadata/local.meta"
+    # chmod 600 "${APP}/metadata/default.meta"
+  fi
 fi
 
 # Re-compress to tar file and clean up
