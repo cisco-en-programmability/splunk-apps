@@ -225,116 +225,10 @@
   </row>
   <row>
     <panel>
-      <title>Wired Clients Health Scores by Type</title>
+      <title>Average Client Health Score</title>
       <chart>
         <search>
-          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType!="ALL" 
-          | dedup scoreType keepevents=false 
-          | table scoreType, scoreValue
-
-          | eventstats sum(scoreValue) as Total
-          | eval perc=round((scoreValue/Total)*100, 2)
-          | eval scoreType=scoreType." (".perc."%)"
-          | table scoreType scoreValue</query>
-          <earliest>$timeRangePicker2.earliest$</earliest>
-          <latest>$timeRangePicker2.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">pie</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-    <panel>
-      <title>Wireless Clients Health Scores by Type</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType!="ALL"
-          | dedup scoreType keepevents=false
-          | table scoreType, scoreValue
-
-          | eventstats sum(scoreValue) as Total
-          | eval perc=round((scoreValue/Total)*100, 2)
-          | eval scoreType=scoreType." (".perc."%)"
-          | table scoreType scoreValue</query>
-          <earliest>$timeRangePicker2.earliest$</earliest>
-          <latest>$timeRangePicker2.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">pie</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">standard</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Average of Wired Client Health Scores</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRED" scoreType!="ALL"
+          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
           | timechart avg(scoreValue) by scoreType
           </query>
           <earliest>$timeRangePicker2.earliest$</earliest>
@@ -343,91 +237,12 @@
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">collapsed</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">connect</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">1</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
         <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
-    <panel>
-      <title>Average of Wireless Client Health Scores</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="WIRELESS" scoreType!="ALL"
-          | timechart avg(scoreValue) by scoreType
-          </query>
-          <earliest>$timeRangePicker2.earliest$</earliest>
-          <latest>$timeRangePicker2.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
-        </search>
-        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">visible</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisX.abbreviation">none</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisY.abbreviation">none</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.abbreviation">none</option>
-        <option name="charting.axisY2.enabled">0</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.nullValueMode">connect</option>
-        <option name="charting.chart.showDataLabels">none</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.stackMode">default</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.drilldown">none</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.mode">seriesCompare</option>
-        <option name="charting.legend.placement">right</option>
-        <option name="charting.lineWidth">2</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-        <option name="charting.axisTitleX.visibility">collapsed</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
     <panel>
       <title>Average of Wired Client Health Score</title>
       <chart>
@@ -465,27 +280,7 @@
           <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisTitleX.visibility">collapsed</option>
-        <option name="charting.chart">area</option>
-        <option name="charting.drilldown">none</option>
-        <option name="refresh.display">progressbar</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Average Client Health Score</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:dnac:clienthealth" cisco_dnac_host="$ciscodnachostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
-          | timechart avg(scoreValue) by scoreType
-          </query>
-          <earliest>$timeRangePicker2.earliest$</earliest>
-          <latest>$timeRangePicker2.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
-        </search>
-        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisY.maximumNumber">100</option>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
         <option name="refresh.display">progressbar</option>
