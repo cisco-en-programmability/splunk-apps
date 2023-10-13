@@ -143,6 +143,10 @@
                     {
                         "field": "index",
                         "label": "Index"
+                    },
+                    {
+                        "field": "disabled",
+                        "label": "Status"
                     }
                 ],
                 "moreInfo": [
@@ -157,6 +161,10 @@
                     {
                         "field": "index",
                         "label": "Index"
+                    },
+                    {
+                        "field": "disabled",
+                        "label": "Status"
                     },
                     {
                         "field": "cisco_dna_center_host",
