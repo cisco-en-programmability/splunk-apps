@@ -390,7 +390,7 @@ class RestSession(object):
                 assert response.status_code < 400
             except Exception:
                 if response.status_code == 429:
-                    time.sleep(response.retry_after)
+                    time.sleep(max(1, int(response.headers.get('Retry-After', 15))))
                     continue
                 if response.status_code == 401 and custom_refresh < 1:
                     self._helper.log_debug(pprint_response_info(response, is_success=False, show_headers=False))
