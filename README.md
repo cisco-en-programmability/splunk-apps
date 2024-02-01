@@ -11,8 +11,8 @@
 
 ### ⬇️ Download
 
-- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.6/cisco-dna-center-app_102.tgz)
-- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.6/cisco-dna-center-add-on_105.tgz)
+- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.7/cisco-dna-center-app_102.tgz)
+- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.7/cisco-dna-center-add-on_106.tgz)
 
 The add-on and app are on SplunkBase!
 
