@@ -2,7 +2,7 @@
     "meta": {
         "name": "Splunk-TA-cisco-dnacenter",
         "displayName": "Cisco DNA Center Add-on",
-        "version": "1.0.0",
+        "version": "1.0.5",
         "restRoot": "Splunk_TA_cisco_dnacenter",
         "schemaVersion": "0.0.3"
     },
