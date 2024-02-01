@@ -337,41 +337,16 @@ def collect_events(helper, ew):
     [overall_compliance_details, overall_compliance] = get_compliance_and_device_details(helper, dnac)
 
     for item in overall_compliance_details:
-        key = "{0}_{1}_{2}_{3}".format(
-            opt_cisco_dna_center_host,
-            item.get("ComplianceDeviceID") or "N/A",
-            item.get("ComplianceComplianceType") or "N/A",
-            item.get("IpAddress") or "N/A",
-        )
-        state = helper.get_check_point(key)
         item["cisco_dnac_host"] = opt_cisco_dna_center_host
         item["ComplianceDetail"] = "True"
         item["ComplianceCount"] = "False"
-        if state is None:
-            helper.save_check_point(key, item)
-            r_json.append(item)
-        elif is_different(helper, state, item):
-            helper.save_check_point(key, item)
-            r_json.append(item)
-        # helper.delete_check_point(key)
+        r_json.append(item)
 
     for item in overall_compliance:
-        key = "{0}_{1}_{2}".format(
-            opt_cisco_dna_center_host,
-            item.get("ComplianceDeviceID") or "N/A",
-            item.get("IpAddress") or "N/A",
-        )
-        state = helper.get_check_point(key)
         item["cisco_dnac_host"] = opt_cisco_dna_center_host
         item["ComplianceDetail"] = "False"
         item["ComplianceCount"] = "False"
-        if state is None:
-            helper.save_check_point(key, item)
-            r_json.append(item)
-        elif is_different(helper, state, item):
-            helper.save_check_point(key, item)
-            r_json.append(item)
-        # helper.delete_check_point(key)
+        r_json.append(item)
 
     # To create a splunk event
     event = helper.new_event(

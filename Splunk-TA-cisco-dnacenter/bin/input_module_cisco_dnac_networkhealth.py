@@ -31,13 +31,12 @@ def get_epoch_current_time():
     return "{0}".format(int(epoch))
 
 
-def get_overall_network_health(dnac):
+def get_overall_network_health(dnac, epoch_time):
     """
     This function will retrieve the network health
     :param dnac: Cisco DNAC SDK api
     :return: network health response
     """
-    epoch_time = get_epoch_current_time()
     network_health_fn = None
     # Select function
     if hasattr(dnac, "topology") and hasattr(
@@ -56,7 +55,7 @@ def get_overall_network_health(dnac):
     return network_health_response
 
 
-def filter_health_data(network_health_response):
+def filter_health_data(network_health_response, epoch_time):
     """
     This function will filter data to get the overall network data.
     :param network_health_response: network health response
@@ -87,6 +86,8 @@ def filter_health_data(network_health_response):
                     if tmp[i]:
                         overall_health[i] = tmp[i]
                 health_distribution.append(overall_health)
+    for i in health_distribution:
+        i["time"] = epoch_time
     return health_distribution
 
 
@@ -150,22 +151,15 @@ def collect_events(helper, ew):
     )
 
     r_json = []
+    epoch_time = get_epoch_current_time()
     # get the overall network health
-    overall_network_health = get_overall_network_health(dnac)
+    overall_network_health = get_overall_network_health(dnac, epoch_time)
     # simplify gathered information
-    network_health_summary = filter_health_data(overall_network_health)
+    network_health_summary = filter_health_data(overall_network_health, epoch_time)
 
     for item in network_health_summary:
-        key = "{0}_{1}".format(opt_cisco_dna_center_host, item.get("category") or "N/A")
-        state = helper.get_check_point(key)
         item["cisco_dnac_host"] = opt_cisco_dna_center_host
-        if state is None:
-            helper.save_check_point(key, item)
-            r_json.append(item)
-        elif is_different(helper, state, item):
-            helper.save_check_point(key, item)
-            r_json.append(item)
-        # helper.delete_check_point(key)
+        r_json.append(item)
 
     # To create a splunk event
     event = helper.new_event(

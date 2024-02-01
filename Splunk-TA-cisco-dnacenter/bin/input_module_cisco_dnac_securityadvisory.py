@@ -231,6 +231,7 @@ def collect_events(helper, ew):
         stack = traceback.format_exc()
         helper.log_error(stack)
 
+
     for item in security_advisories:
         key = "{0}_{1}_{2}".format(
             opt_cisco_dna_center_host,

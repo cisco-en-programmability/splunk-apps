@@ -340,16 +340,8 @@ def collect_events(helper, ew):
 
     r_json = []
     for item in overall_device_health:
-        key = "{0}_{1}".format(opt_cisco_dna_center_host, item["IpAddress"])
-        state = helper.get_check_point(key)
         item["cisco_dnac_host"] = opt_cisco_dna_center_host
-        if state is None:
-            helper.save_check_point(key, item)
-            r_json.append(item)
-        elif is_different(helper, state, item):
-            helper.save_check_point(key, item)
-            r_json.append(item)
-        # helper.delete_check_point(key)
+        r_json.append(item)
 
     # To create a splunk event
     event = helper.new_event(
