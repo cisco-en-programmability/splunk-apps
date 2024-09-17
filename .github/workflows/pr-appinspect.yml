@@ -14,14 +14,14 @@ jobs:
     steps:
       # Checkout unsafe code
       - name: Checkout PR
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           path: pr
           persist-credentials: false
       # Checkout safe code
       - name: Checkout build scripts
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: tools
       # Replace build script in unsafe code with scripts from safe code
@@ -34,7 +34,7 @@ jobs:
         working-directory: pr
         run: scripts/build.sh -a addon
       - name: Save Add-on Build Artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: "! cancelled()"
         with:
           name: Splunk-TA-cisco-dnacenter-${{ github.run_id }}
@@ -46,7 +46,7 @@ jobs:
           SPLUNK_USER: ${{ secrets.SPLUNK_USER }}
           SPLUNK_PASS: ${{ secrets.SPLUNK_PASS }}
       - name: Save report
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: "! cancelled()"
         with:
           name: Report-Splunk-TA-cisco-dnacenter-${{ github.run_id }}.html
@@ -59,13 +59,13 @@ jobs:
       contents: read
     steps:
       - name: Checkout PR
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           path: pr
           persist-credentials: false
       - name: Checkout build scripts
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: tools
       - name: Setup build scripts
@@ -77,7 +77,7 @@ jobs:
         working-directory: pr
         run: scripts/build.sh -a app
       - name: Save App Build Artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: "! cancelled()"
         with:
           name: Splunk_CiscoDNACenter-${{ github.run_id }}
@@ -89,7 +89,7 @@ jobs:
           SPLUNK_USER: ${{ secrets.SPLUNK_USER }}
           SPLUNK_PASS: ${{ secrets.SPLUNK_PASS }}
       - name: Save report
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: "! cancelled()"
         with:
           name: Report-Splunk_CiscoDNACenter-${{ github.run_id }}.html
