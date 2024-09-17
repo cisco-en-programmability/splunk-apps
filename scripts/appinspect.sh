@@ -12,6 +12,8 @@ set -e
 
 command -v jq >/dev/null 2>&1 || (echo >&2 "The program 'jq' is required, please install it on your system"; exit 1)
 
+echo "Get curl version: $(curl --version)"
+
 if [ -z "$SPLUNK_USER" ] || [ -z "$SPLUNK_PASS" ]; then
     echo "Required environment variables: SPLUNK_USER, SPLUNK_PASS"
     exit 1
@@ -52,7 +54,7 @@ get_token () {
     log_info "Authenticating to AppInspect API"
     if ! response=$(curl -Ss -X GET \
         -u "$SPLUNK_USER:$SPLUNK_PASS" \
-        --url "https://api.splunk.com/2.0/rest/login/splunk")
+        --url "https://api.splunk.com/2.0/rest/login/splunk" -k)
     then
         log_error "Error during token API call: $response"
         exit 2
@@ -70,7 +72,7 @@ submit_for_validation () {
      -H "Authorization: bearer ${token}" \
      -H "Cache-Control: no-cache" \
      -F "app_package=@\"${app_path}\"" \
-     --url "https://appinspect.splunk.com/v1/app/validate")
+     --url "https://appinspect.splunk.com/v1/app/validate" -k)
     then
         log_error "Error during submit API call: $response"
         exit 2
@@ -86,7 +88,7 @@ check_status () {
     log_debug "Checking status"
     if ! response=$(curl -Ss -X GET \
         -H "Authorization: bearer ${token}" \
-        --url "https://appinspect.splunk.com/v1/app/validate/status/${request_id}")
+        --url "https://appinspect.splunk.com/v1/app/validate/status/${request_id}" -k)
     then
         log_error "Error during check status API call: $response"
         exit 2
@@ -110,7 +112,7 @@ get_report () {
          -H "Authorization: bearer ${token}" \
          -H "Cache-Control: no-cache" \
          -H "Content-Type: ${contenttype}" \
-         --url "https://appinspect.splunk.com/v1/app/report/${request_id}")
+         --url "https://appinspect.splunk.com/v1/app/report/${request_id}" -k)
     then
         log_error "Error during get report API call: $response"
         exit 2
