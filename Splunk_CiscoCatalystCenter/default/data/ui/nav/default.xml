@@ -1,0 +1,21 @@
+<nav search_view="search" color="#FFFFFF">
+
+  <collection label="Cisco Catalyst Center">
+    <a href="/app/Splunk-TA-cisco-catalyst-center">Configuration</a>
+    <divider />
+  </collection>
+  
+  <collection label="Dashboards">
+    <view name="overview" default="true"/>
+    <divider />
+    <view name="client_health" />
+    <view name="compliance" />
+    <view name="device_health" />
+    <view name="issue" />
+    <view name="network_health" />
+    <view name="security_advisory" />
+  </collection>
+
+  <view name="search"/>
+
+</nav>
