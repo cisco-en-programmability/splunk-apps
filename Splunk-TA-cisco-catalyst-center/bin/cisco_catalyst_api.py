@@ -845,6 +845,53 @@ class Devices(object):
             json_data = self._session.get(endpoint_full_url, params=_params)
 
         return object_factory(json_data)
+    
+    def get_site_assigned_network_device(self,
+                                         id,
+                                         headers=None,
+                                         **request_parameters):
+        """Get site assigned network device. The items in the list are arranged in an order that corresponds with their
+        internal identifiers. .
+
+        Args:
+            id(str): id path parameter. Network Device Id. .
+            headers(dict): Dictionary of HTTP Headers to send with the Request
+                .
+            **request_parameters: Additional request parameters (provides
+                support for parameters that may be added in the future).
+
+        Returns:
+            MyDict: JSON response. Access the object's properties by using
+            the dot notation or the bracket notation.
+
+        Raises:
+            TypeError: If the parameter types are incorrect.
+            MalformedRequest: If the request body created is invalid.
+            ApiError: If the DNA Center cloud returns an error.
+        """
+        _params = {}
+        _params.update(request_parameters)
+        _params = dict_from_items_with_values(_params)
+
+        path_params = {
+            'id': id,
+        }
+
+        with_custom_headers = False
+        _headers = self._session.headers or {}
+        if headers:
+            _headers.update(dict_of_str(headers))
+            with_custom_headers = True
+
+        e_url = ('/dna/intent/api/v1/networkDevices/{id}/assignedToSite')
+        endpoint_full_url = apply_path_params(e_url, path_params)
+        if with_custom_headers:
+            json_data = self._session.get(endpoint_full_url, params=_params,
+                                          headers=_headers)
+        else:
+            json_data = self._session.get(endpoint_full_url, params=_params)
+
+        return object_factory(json_data)
 
 
 class Issues(object):

@@ -7,6 +7,7 @@ import sys
 import time
 import datetime
 import utils
+import re
 
 import cisco_catalyst_api as api
 
@@ -57,8 +58,8 @@ def get_device_health(catalyst, input_interval):
     while do_request_next:
         try:
             health_response = catalyst.devices.devices(
-                # start_time=epoch_previous_time,
-                # end_time=epoch_current_time,
+                start_time=epoch_previous_time,
+                end_time=epoch_current_time,
                 limit=limit,
                 offset=offset,
             )
@@ -267,29 +268,6 @@ def filter_health_data(health_devices, devices_items):
     return health_summary_response
 
 
-def is_different(helper, state, item):
-    if not isinstance(state, dict):
-        helper.log_debug("is_different. The state is not a dictionary.")
-        return True
-    if not isinstance(item, dict):
-        helper.log_debug("is_different. The item is not a dictionary.")
-        return True
-    keys = set(state.keys())
-    keys = keys.union(set(item.keys()))
-    properties = list(keys)
-    for property_ in properties:
-        if state.get(property_) != item.get(property_):
-            helper.log_debug(
-                "is_different. The state and item have different values for property '{0}', values are {1} and {2}.".format(
-                    property_,
-                    state.get(property_),
-                    item.get(property_),
-                )
-            )
-            return True
-    return False
-
-
 def validate_input(helper, definition):
     """Implement your own validation logic to validate the input stanza configurations"""
     # This example accesses the modular input variable
@@ -300,13 +278,20 @@ def validate_input(helper, definition):
     # review: check cisco_catalyst_center_host
     if not isinstance(cisco_catalyst_center_host, str):
         raise TypeError("URL must be string")
-    if not cisco_catalyst_center_host.startswith("https"):
-        raise ValueError("URL must be HTTPS")
+    regex = re.compile(
+        r'^(https:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$|^(?:\d{1,3}\.){3}\d{1,3}$'
+    )
+    if not regex.match(cisco_catalyst_center_host):
+        raise ValueError("URL does not match the required pattern")
     pass
 
 
 def collect_events(helper, ew):
     opt_cisco_catalyst_center_host = helper.get_arg("cisco_catalyst_center_host")
+    if opt_cisco_catalyst_center_host:
+        opt_cisco_catalyst_center_host = opt_cisco_catalyst_center_host.strip()
+        if not opt_cisco_catalyst_center_host.startswith("https://"):
+            opt_cisco_catalyst_center_host = "https://" + opt_cisco_catalyst_center_host
     opt_cisco_catalyst_center_account = helper.get_arg("cisco_catalyst_center_account")
 
     account_username = opt_cisco_catalyst_center_account.get("username", None)
@@ -322,6 +307,8 @@ def collect_events(helper, ew):
     try:
         input_interval = int(helper.get_arg("interval"))
     except ValueError as e:
+        input_interval = 900
+    if input_interval < 900:
         input_interval = 900
 
     catalyst = api.CatalystCenterAPI(

@@ -14,7 +14,7 @@
       <fieldForValue>cisco_catalyst_host</fieldForValue>
       <search>
         <query>sourcetype="cisco:catalyst:clienthealth" | dedup cisco_catalyst_host keepevents=false | table cisco_catalyst_host</query>
-        <earliest>-24h@h</earliest>
+        <earliest>$timeRangePicker2.earliest$</earliest>
         <latest>now</latest>
       </search>
       <selectFirstChoice>true</selectFirstChoice>

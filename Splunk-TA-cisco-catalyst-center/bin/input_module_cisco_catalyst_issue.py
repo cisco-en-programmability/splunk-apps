@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import utils
+import re
 
 import cisco_catalyst_api as api
 
@@ -281,13 +282,20 @@ def validate_input(helper, definition):
     # review: check cisco_catalyst_center_host
     if not isinstance(cisco_catalyst_center_host, str):
         raise TypeError("URL must be string")
-    if not cisco_catalyst_center_host.startswith("https"):
-        raise ValueError("URL must be HTTPS")
+    regex = re.compile(
+        r'^(https:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$|^(?:\d{1,3}\.){3}\d{1,3}$'
+    )
+    if not regex.match(cisco_catalyst_center_host):
+        raise ValueError("URL does not match the required pattern")
     pass
 
 
 def collect_events(helper, ew):
     opt_cisco_catalyst_center_host = helper.get_arg("cisco_catalyst_center_host")
+    if opt_cisco_catalyst_center_host:
+        opt_cisco_catalyst_center_host = opt_cisco_catalyst_center_host.strip()
+        if not opt_cisco_catalyst_center_host.startswith("https://"):
+            opt_cisco_catalyst_center_host = "https://" + opt_cisco_catalyst_center_host
     opt_cisco_catalyst_center_account = helper.get_arg("cisco_catalyst_center_account")
 
     account_username = opt_cisco_catalyst_center_account.get("username", None)

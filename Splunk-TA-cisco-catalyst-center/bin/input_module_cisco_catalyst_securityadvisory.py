@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import utils
+import re
 
 import cisco_catalyst_api as api
 
@@ -23,10 +24,11 @@ def use_single_instance_mode():
 '''
 
 
-def get_important_device_values(device_item):
+def get_important_device_values(device_item, site_info):
     """
     This function will simplify the device data for Splunk searches
     :param device_item: device data
+    :param site_info: site data
     :return: new device response
     """
     response = {}
@@ -73,6 +75,7 @@ def get_important_device_values(device_item):
     response["DevicePlatform"] = device_item.get("platformId") or ""
     response["DeviceSupportType"] = device_item.get("deviceSupportLevel") or ""
     response["DeviceAssociatedWLCIP"] = device_item.get("associatedWlcIp") or ""
+    response["Site"] = site_info.get("siteNameHierarchy") or "N/A"
     return response
 
 
@@ -134,18 +137,22 @@ def get_devices_per_advisory(catalyst):
                     for device_id in advisory_device.response:
                         # Manage device info ...
                         device_info = {}
+                        site_info = {}
                         # ... if already present, reuse
                         if devices_retrieved.get(device_id):
                             device_info = dict(devices_retrieved[device_id])
+                            site_info = dict(devices_retrieved.get(device_id + "_site", {}))
                         else:  # ... if not retrieve and save it
                             device_info = catalyst.devices.get_device_by_id(id=device_id)
+                            site_info = catalyst.devices.get_site_assigned_network_device(id=device_id)
                             devices_retrieved[device_id] = device_info
+                            devices_retrieved[device_id + "_site"] = site_info
                         if isinstance(device_info, dict) and device_info.get(
                             "response"
                         ):
                             response_device = dict(response)
                             response_device.update(
-                                get_important_device_values(device_info["response"])
+                                get_important_device_values(device_info["response"], site_info.get("response", {}))
                             )
                             response_device.update({"Summary": "False"})
                             responses.append(response_device)
@@ -164,13 +171,20 @@ def validate_input(helper, definition):
     # review: check cisco_catalyst_center_host
     if not isinstance(cisco_catalyst_center_host, str):
         raise TypeError("URL must be string")
-    if not cisco_catalyst_center_host.startswith("https"):
-        raise ValueError("URL must be HTTPS")
+    regex = re.compile(
+        r'^(https:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$|^(?:\d{1,3}\.){3}\d{1,3}$'
+    )
+    if not regex.match(cisco_catalyst_center_host):
+        raise ValueError("URL does not match the required pattern")
     pass
 
 
 def collect_events(helper, ew):
     opt_cisco_catalyst_center_host = helper.get_arg("cisco_catalyst_center_host")
+    if opt_cisco_catalyst_center_host:
+        opt_cisco_catalyst_center_host = opt_cisco_catalyst_center_host.strip()
+        if not opt_cisco_catalyst_center_host.startswith("https://"):
+            opt_cisco_catalyst_center_host = "https://" + opt_cisco_catalyst_center_host
     opt_cisco_catalyst_center_account = helper.get_arg("cisco_catalyst_center_account")
 
     account_username = opt_cisco_catalyst_center_account.get("username", None)

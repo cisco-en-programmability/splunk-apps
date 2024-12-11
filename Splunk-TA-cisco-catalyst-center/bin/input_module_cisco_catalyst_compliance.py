@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import utils
+import re
 
 import cisco_catalyst_api as api
 
@@ -23,10 +24,11 @@ def use_single_instance_mode():
 '''
 
 
-def get_important_device_values(device_item):
+def get_important_device_values(device_item, site_info):
     """
     This function will simplify the device data for Splunk searches
     :param device_item: device data
+    :param site_info: site data
     :return: new device response
     """
     response = {}
@@ -73,6 +75,7 @@ def get_important_device_values(device_item):
     response["Platform"] = device_item.get("platformId") or ""
     response["SupportType"] = device_item.get("deviceSupportLevel") or ""
     response["AssociatedWLCIP"] = device_item.get("associatedWlcIp") or ""
+    response["Site"] = site_info.get("siteNameHierarchy") or "N/A"
     return response
 
 
@@ -123,9 +126,11 @@ def simplified_complaince_status_page(
         device_key = simplified_complaince["ComplianceDeviceID"]
         # Manage device info ...
         device_info = {}
+        site_info = {}
         # ... if already present, reuse
         if devices_retrieved.get(device_key):
             device_info = dict(devices_retrieved[device_key])
+            site_info = dict(devices_retrieved[device_key + "_site"])
         else:  # ... if not retrieve and save it
             helper.log_debug(
                 "Getting the device data from the compliance device id {0}".format(
@@ -133,10 +138,12 @@ def simplified_complaince_status_page(
                 )
             )
             device_info = catalyst.devices.get_device_by_id(id=device_key)
+            site_info = catalyst.devices.get_site_assigned_network_device(id=device_key)
             devices_retrieved[device_key] = device_info
+            devices_retrieved[device_key + "_site"] = site_info
         if isinstance(device_info, dict) and device_info.get("response"):
             simplified_complaince.update(
-                get_important_device_values(device_info["response"])
+                get_important_device_values(device_info["response"], site_info["response"])
             )
             helper.log_debug(
                 "Saved the device data from the compliance device id {0}".format(
@@ -161,20 +168,24 @@ def simplified_complaince_detail_page(
         device_key = simplified_complaince["ComplianceDeviceID"]
         # Manage device info ...
         device_info = {}
+        site_info = {}
         # ... if already present, reuse
         if devices_retrieved.get(device_key):
             device_info = dict(devices_retrieved[device_key])
-        else:  # ... if not retrieve and save it
+            site_info = dict(devices_retrieved[device_key + "_site"])
+        else: # ... if not retrieve and save it
             helper.log_debug(
                 "Getting the device data from the compliance device id {0}".format(
                     device_key
                 )
             )
             device_info = catalyst.devices.get_device_by_id(id=device_key)
+            site_info = catalyst.devices.get_site_assigned_network_device(id=device_key)
             devices_retrieved[device_key] = device_info
+            devices_retrieved[device_key + "_site"] = site_info
         if isinstance(device_info, dict) and device_info.get("response"):
             simplified_complaince.update(
-                get_important_device_values(device_info["response"])
+                get_important_device_values(device_info["response"], site_info["response"])
             )
             helper.log_debug(
                 "Saved the device data from the compliance device id {0}".format(
@@ -250,30 +261,7 @@ def get_compliance_and_device_details(helper, catalyst):
             do_request_next = False
             break
         offset = offset + limit
-    return [ compliances_details_response, compliances_response]
-
-
-def is_different(helper, state, item):
-    if not isinstance(state, dict):
-        helper.log_debug("is_different. The state is not a dictionary.")
-        return True
-    if not isinstance(item, dict):
-        helper.log_debug("is_different. The item is not a dictionary.")
-        return True
-    keys = set(state.keys())
-    keys = keys.union(set(item.keys()))
-    properties = list(keys)
-    for property_ in properties:
-        if state.get(property_) != item.get(property_):
-            helper.log_debug(
-                "is_different. The state and item have different values for property '{0}', values are {1} and {2}.".format(
-                    property_,
-                    state.get(property_),
-                    item.get(property_),
-                )
-            )
-            return True
-    return False
+    return [compliances_details_response, compliances_response]
 
 
 def validate_input(helper, definition):
@@ -286,13 +274,20 @@ def validate_input(helper, definition):
     # review: check cisco_catalyst_center_host
     if not isinstance(cisco_catalyst_center_host, str):
         raise TypeError("URL must be string")
-    if not cisco_catalyst_center_host.startswith("https"):
-        raise ValueError("URL must be HTTPS")
+    regex = re.compile(
+        r'^(https:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$|^(?:\d{1,3}\.){3}\d{1,3}$'
+    )
+    if not regex.match(cisco_catalyst_center_host):
+        raise ValueError("URL does not match the required pattern")
     pass
 
 
 def collect_events(helper, ew):
     opt_cisco_catalyst_center_host = helper.get_arg("cisco_catalyst_center_host")
+    if opt_cisco_catalyst_center_host:
+        opt_cisco_catalyst_center_host = opt_cisco_catalyst_center_host.strip()
+        if not opt_cisco_catalyst_center_host.startswith("https://"):
+            opt_cisco_catalyst_center_host = "https://" + opt_cisco_catalyst_center_host
     opt_cisco_catalyst_center_account = helper.get_arg("cisco_catalyst_center_account")
 
     account_username = opt_cisco_catalyst_center_account.get("username", None)

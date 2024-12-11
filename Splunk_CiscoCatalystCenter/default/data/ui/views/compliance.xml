@@ -1,6 +1,6 @@
 <form version="1.1">
   <label>Compliance</label>
-  <fieldset submitButton="false" autoRun="true">
+  <fieldset submitButton="true" autoRun="true">
     <input type="time" token="timeRangePicker6" searchWhenChanged="true">
       <label>Time Range</label>
       <default>
@@ -14,10 +14,14 @@
       <fieldForValue>cisco_catalyst_host</fieldForValue>
       <search>
         <query>sourcetype="cisco:catalyst:compliance" | dedup cisco_catalyst_host keepevents=false | table cisco_catalyst_host</query>
-        <earliest>-24h@h</earliest>
+        <earliest>$timeRangePicker6.earliest$</earliest>
         <latest>now</latest>
       </search>
       <selectFirstChoice>true</selectFirstChoice>
+    </input>
+    <input type="text" token="siteFilter" searchWhenChanged="true">
+      <label>Site</label>
+      <default></default>
     </input>
   </fieldset>
   <row>
@@ -60,11 +64,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
+          | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
           | dedup ComplianceDeviceID keepevents=false 
           | eventstats dc(ComplianceDeviceID) as total 
           | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
           | dedup ComplianceStatus keepevents=false 
           | eval percentage=round((subtotal/total)*100, 2)
+          | eval ComplianceStatus=replace(ComplianceStatus, "_", " ")
           | table ComplianceStatus, percentage
 
           | eval ComplianceStatus=ComplianceStatus." (".percentage."%)"
@@ -130,6 +136,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
+          | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
           | dedup ComplianceDeviceID keepevents=false 
           | eventstats dc(ComplianceDeviceID) as total 
           | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
@@ -251,6 +258,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True" ComplianceComplianceType="$complianceTypeDropdown3$" 
+          | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
           | eventstats dc(ComplianceDeviceID) as total by ComplianceComplianceType
           | search ComplianceStatus="COMPLIANT"
           | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType
@@ -308,12 +316,15 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ComplianceCount="False" ComplianceDetail="True" 
- | eventstats dc(ComplianceDeviceID) as total 
- | search ComplianceStatus="COMPLIANT"
- | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType 
- | dedup ComplianceComplianceType keepevents=false 
- | eval percentage=round((subtotal/total)*100, 2)
- | table ComplianceComplianceType, percentage</query>
+          | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | eventstats dc(ComplianceDeviceID) as total 
+          | search ComplianceStatus="COMPLIANT"
+          | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType 
+          | dedup ComplianceComplianceType keepevents=false 
+          | rename ComplianceComplianceType as "Compliance Type"
+          | eval "Compliance Type"=replace("Compliance Type", "_", " ")
+          | eval percentage=round((subtotal/total)*100, 2)
+          | table "Compliance Type", percentage</query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -369,7 +380,7 @@
         <fieldForValue>DeviceName</fieldForValue>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup DeviceName keepevents=false | table DeviceName</query>
-          <earliest>-24h@h</earliest>
+          <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>now</latest>
         </search>
         <default>*</default>
@@ -382,7 +393,7 @@
         <fieldForValue>IpAddress</fieldForValue>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup IpAddress keepevents=false | table IpAddress</query>
-          <earliest>-24h@h</earliest>
+          <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>now</latest>
         </search>
         <default>*</default>
@@ -420,19 +431,24 @@
       <table>
         <search>
           <query>
-            sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True" ComplianceComplianceType="$complianceTypeDropdown$" ComplianceStatus="$complianceTypeStatusDropdown$" IpAddress="$deviceIpAddressDropdown$" DeviceName="$deviceHostNameDropdown$"
-            | dedup ComplianceDeviceID, ComplianceComplianceType keepevents=false 
-            | table ComplianceDeviceID, DeviceName, DeviceRole, IpAddress, MACAddress, Manageability, Reachability, ComplianceComplianceType, ComplianceState, ComplianceStatus, ComplianceLastSyncTime, ComplianceLastUpdateTime
-            | join left=L right=R where L.ComplianceDeviceID=R.ComplianceDeviceID type=inner [
-                search
-                sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="False" IpAddress="$deviceIpAddressDropdown$" DeviceName="$deviceHostNameDropdown$"
-                | dedup ComplianceDeviceID keepevents=false
-                | table ComplianceDeviceID, IpAddress, ComplianceStatus
-              ]
-            | rename L.DeviceName as "Device Name", L.DeviceRole as "Device Role", L.IpAddress as "IP Address", L.MACAddress as "MAC Address", L.Manageability as Manageability, L.Reachability as Reachability, R.ComplianceStatus as "Compliance Device Status", L.ComplianceComplianceType as "Compliance Type", L.ComplianceStatus as "Compliance Type Status", L.ComplianceState as "Compliance State", L.ComplianceLastSyncTime as "Compliance Last Sync Time", L.ComplianceLastUpdateTime as "Compliance Last Update Time"
-            | eval "Compliance Last Sync"=strftime('Compliance Last Sync Time'/1000, "%Y-%m-%d %H:%M:%S")
-            | eval "Compliance Last Update"=strftime('Compliance Last Update Time'/1000, "%Y-%m-%d %H:%M:%S")
-            | table "Device Name", "Device Role", "IP Address", "MAC Address", Manageability, Reachability, "Compliance Device Status", "Compliance Type", "Compliance Type Status", "Compliance State", "Compliance Last Sync", "Compliance Last Update"
+              sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True" ComplianceComplianceType="$complianceTypeDropdown$" ComplianceStatus="$complianceTypeStatusDropdown$" IpAddress="$deviceIpAddressDropdown$" DeviceName="$deviceHostNameDropdown$"
+              | dedup ComplianceDeviceID, ComplianceComplianceType keepevents=false
+              | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+              | table ComplianceDeviceID, DeviceName, DeviceRole, IpAddress, MACAddress, Manageability, Reachability, ComplianceComplianceType, ComplianceState, ComplianceStatus, ComplianceLastSyncTime, ComplianceLastUpdateTime, Site
+              | join left=L right=R where L.ComplianceDeviceID=R.ComplianceDeviceID type=inner [
+                  search
+                  sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="False" IpAddress="$deviceIpAddressDropdown$" DeviceName="$deviceHostNameDropdown$"
+                  | dedup ComplianceDeviceID keepevents=false
+                  | table ComplianceDeviceID, IpAddress, ComplianceStatus
+                ]
+              | rename L.DeviceName as "Device Name", L.DeviceRole as "Device Role", L.IpAddress as "IP Address", L.MACAddress as "MACAddress", L.Manageability as Manageability, L.Reachability as Reachability, R.ComplianceStatus as "Compliance Device Status", L.ComplianceComplianceType as "Compliance Type", L.ComplianceStatus as "Compliance Type Status", L.ComplianceState as "Compliance State", L.ComplianceLastSyncTime as "Compliance Last Sync Time", L.ComplianceLastUpdateTime as "Compliance Last Update Time", L.ComplianceDeviceID as ComplianceDevice, L.Site as Site
+              | eval "Compliance Last Sync"=strftime('Compliance Last Sync Time'/1000, "%Y-%m-%d %H:%M:%S")
+              | eval "Compliance Last Update"=strftime('Compliance Last Update Time'/1000, "%Y-%m-%d %H:%M:%S")
+              | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
+              | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+ComplianceDevice
+              | eval URL2="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+MACAddress
+              | rename MACAddress as "MAC Address"
+              | table "Device Name", "Device Role", "IP Address", "MAC Address", Manageability, Reachability, "Compliance Device Status", "Compliance Type", "Compliance Type Status", "Compliance State", "Compliance Last Sync", "Compliance Last Update", ComplianceDevice, URL, URL2, Site
           </query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>$timeRangePicker6.latest$</latest>
@@ -442,12 +458,22 @@
         </search>
         <option name="count">20</option>
         <option name="dataOverlayMode">none</option>
-        <option name="drilldown">none</option>
+        <option name="drilldown">cell</option>
         <option name="percentagesRow">false</option>
         <option name="refresh.display">progressbar</option>
         <option name="rowNumbers">false</option>
         <option name="totalsRow">false</option>
         <option name="wrap">true</option>
+        <fields>"Device Name", "Device Role", "IP Address", "MAC Address", Manageability, Reachability, "Compliance Device Status", "Compliance Type", "Compliance Type Status", "Compliance State", "Compliance Last Sync", "Compliance Last Update", Site</fields>
+        <drilldown>
+          <condition field="Device Name">
+            <link target="_blank">$row.URL|n$</link>
+          </condition>
+          <condition field="MAC Address">
+            <link target="_blank">$row.URL2|n$</link>
+          </condition>
+          <condition field="*"/>
+        </drilldown>
       </table>
     </panel>
   </row>

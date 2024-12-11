@@ -9,6 +9,7 @@
     <view name="overview" default="true"/>
     <divider />
     <view name="client_health" />
+    <view name="client_summary" />
     <view name="compliance" />
     <view name="device_health" />
     <view name="issue" />

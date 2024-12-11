@@ -27,3 +27,8 @@ python.version = python3
 cisco_catalyst_center_host = 
 cisco_catalyst_center_account =
 python.version = python3
+
+[cisco_catalyst_client://<name>]
+cisco_catalyst_center_host = 
+cisco_catalyst_center_account = 
+python.version = python3

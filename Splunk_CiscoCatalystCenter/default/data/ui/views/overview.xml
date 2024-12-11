@@ -1,6 +1,6 @@
 <form version="1.1">
   <label>Overview</label>
-  <fieldset submitButton="false" autoRun="true">
+  <fieldset submitButton="true" autoRun="true">
     <input type="time" token="timeRangePicker2" searchWhenChanged="true">
       <label>Time Range</label>
       <default>
@@ -18,6 +18,10 @@
         <latest>now</latest>
       </search>
       <selectFirstChoice>true</selectFirstChoice>
+    </input>
+    <input type="text" token="siteFilter" searchWhenChanged="true">
+      <label>Site</label>
+      <default></default>
     </input>
   </fieldset>
   <row>
@@ -74,6 +78,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | eventstats sum(IssueCount) as subtotal by _time
           | dedup _time keepevents=false
           | chart avg(subtotal) as Active by _time</query>
@@ -97,13 +102,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
-| dedup IpAddress keepevents=false
-| stats dc(IpAddress) as amount by Reachability
-
-| eventstats sum(amount) as Total
-| eval perc=round((amount/Total)*100, 2)
-| eval Reachability=Reachability." (".perc."%)"
-| table Reachability amount</query>
+            | dedup IpAddress keepevents=false
+            | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+            | stats dc(IpAddress) as amount by Reachability
+            | eventstats sum(amount) as Total
+            | eval perc=round((amount/Total)*100, 2)
+            | eval Reachability=Reachability." (".perc."%)"
+            | table Reachability amount</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -151,11 +156,11 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category!="All"
-| dedup category keepevents=false 
-| eventstats sum(totalCount) as Total
-| eval perc=round((totalCount/Total)*100, 2)
-| eval category=category." (".perc."%)"
-| table category totalCount</query>
+            | dedup category keepevents=false 
+            | eventstats sum(totalCount) as Total
+            | eval perc=round((totalCount/Total)*100, 2)
+            | eval category=category." (".perc."%)"
+            | table category totalCount</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -235,12 +240,13 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ComplianceCount="False" ComplianceDetail="True" 
- | eventstats dc(ComplianceDeviceID) as total 
- | search ComplianceStatus="COMPLIANT"
- | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType 
- | dedup ComplianceComplianceType keepevents=false 
- | eval percentage=round((subtotal/total)*100, 2)
- | table ComplianceComplianceType, percentage</query>
+            | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+            | eventstats dc(ComplianceDeviceID) as total 
+            | search ComplianceStatus="COMPLIANT"
+            | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType 
+            | dedup ComplianceComplianceType keepevents=false 
+            | eval percentage=round((subtotal/total)*100, 2)
+            | table ComplianceComplianceType, percentage</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -484,6 +490,74 @@
         <option name="trendDisplayMode">absolute</option>
         <option name="unitPosition">after</option>
         <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Total Number of Clients</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup ClientID keepevents=false
+          | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | stats dc(ClientID) as total_clients</query>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Sessions</title>
+      <single>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup ClientMACAddress ClientLastUpdatedTime keepevents=false
+          | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | stats count as total_sessionss</query>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>

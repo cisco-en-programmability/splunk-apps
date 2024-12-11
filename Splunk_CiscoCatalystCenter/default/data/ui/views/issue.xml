@@ -1,6 +1,6 @@
 <form version="1.1">
   <label>Issues</label>
-  <fieldset submitButton="false" autoRun="true">
+  <fieldset submitButton="true" autoRun="true">
     <input type="time" token="timeRangePicker9" searchWhenChanged="true">
       <label>Time Range</label>
       <default>
@@ -14,7 +14,7 @@
       <fieldForValue>cisco_catalyst_host</fieldForValue>
       <search>
         <query>sourcetype="cisco:catalyst:issue" | dedup cisco_catalyst_host keepevents=false | table cisco_catalyst_host</query>
-        <earliest>-24h@h</earliest>
+        <earliest>$timeRangePicker9.earliest$</earliest>
         <latest>now</latest>
       </search>
       <selectFirstChoice>true</selectFirstChoice>
@@ -44,10 +44,8 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-          | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificPriority
-
           | eventstats sum(amount) as Total
           | eval perc=round((amount/Total)*100, 2)
           | eval IssueSpecificPriority=IssueSpecificPriority." (".perc."%)"
@@ -99,8 +97,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-          | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificSeverity
 
           | eventstats sum(amount) as Total
@@ -154,8 +151,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-          | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificCategory
 
           | eventstats sum(amount) as Total
@@ -209,8 +205,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-          | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificEntity
 
           | eventstats sum(amount) as Total
@@ -264,8 +259,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-          | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificName
 
           | eventstats sum(amount) as Total
@@ -320,8 +314,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
-          | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-          | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | eventstats sum(IssueCount) as subtotal by _time
           | dedup _time keepevents=false
           | chart avg(subtotal) as Active by _time
@@ -348,8 +341,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
-          | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-          | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity
           | dedup _time, IssueSpecificSeverity keepevents=false
           | chart avg(subtotal) by _time, IssueSpecificSeverity cont=false</query>
@@ -401,8 +393,7 @@
       <chart>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
-          | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-          | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificPriority
           | dedup _time, IssueSpecificPriority keepevents=false
           | chart avg(subtotal) by _time, IssueSpecificPriority cont=false</query>
@@ -454,16 +445,22 @@
           <query>
             sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$"
             | dedup IssueID keepevents=false
-            | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-            | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+            | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
             | eventstats sum(IssueCount) as IssueCountSpecific, list(IssueName) as IssueNames, list(IssueStatus) as IssueStatuses, list(DeviceName) as DeviceNames, list(DeviceIpAddress) as DeviceIpAddresses, list(DeviceMACAddress) as DeviceMACAddresses, list(DeviceFamily) as DeviceFamilies, list(DeviceRole) as DeviceRoles by IssueSpecificName
             | dedup IssueSpecificName keepevents=false
             | eval IssueLastOccurredTime=strftime(IssueSpecificTimestamp/1000, "%Y-%m-%d %H:%M:%S")
             | sort limit=10 +str(IssueSpecificPriority), -num(IssueCountSpecific), +str(IssueSpecificName)
             | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
             | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/issueDetails?issueId="+IssueID
-            | rename IssueSpecificName as "Issue Name", IssueSpecificPriority as "Priority", IssueCountSpecific as "Count", IssueSpecificSeverity as "Severity", IssueSpecificSummary as "Summary", IssueNames as "Names", IssueLastOccurredTime as "Last Occurred", IssueStatuses as "Status", DeviceNames as "Device Name", DeviceIpAddresses as "IP Address", DeviceMACAddresses as "MAC Address", DeviceFamilies as "Family", DeviceRoles as "Role", SiteNameHierarchy as "Site"
-            | table "Issue Name", "Priority", "Count", "Severity", "Summary", "Names", "Last Occurred", "Status", "Device Name", "IP Address", "MAC Address", "Family", "Role", IssueID, ciscocatalysthostip, URL, Site</query>
+            | mvexpand IssueNames
+            | mvexpand IssueStatuses
+            | mvexpand DeviceNames
+            | mvexpand DeviceIpAddresses
+            | mvexpand DeviceMACAddresses
+            | mvexpand DeviceFamilies
+            | mvexpand DeviceRoles
+            | rename IssueSpecificName as "Issue Type", IssueSpecificPriority as "Priority", IssueCountSpecific as "Count", IssueSpecificSeverity as "Severity",  IssueSpecificDescription as "Descriptions", IssueNames as "Names", IssueLastOccurredTime as "Last Occurred", IssueStatuses as "Status", DeviceNames as "Device Name", DeviceIpAddresses as "IP Address", DeviceMACAddresses as "MAC Address", DeviceFamilies as "Family", DeviceRoles as "Role", SiteNameHierarchy as "Site"
+            | table "Issue Type", "Priority", "Count", "Severity", "Descriptions", "Names", "Last Occurred", "Status", "Device Name", "IP Address", "MAC Address", "Family", "Role", IssueID, ciscocatalysthostip, URL, Site</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -473,9 +470,9 @@
         <option name="drilldown">none</option>
         <option name="refresh.display">progressbar</option>
         <option name="drilldown">cell</option>
-        <fields>"Issue Name", "Priority", "Count", "Severity", "Summary", "Names", "Last Occurred", "Status", "Device Name", "IP Address", "MAC Address", "Family", "Role", "Site"</fields>
+        <fields>"Issue Type", "Priority", "Count", "Severity", "Last Occurred", "Names", "Descriptions", "Status", "Device Name", "IP Address", "MAC Address", "Family", "Role", "Site"</fields>
         <drilldown>
-          <condition field="Issue Name">
+          <condition field="Names">
             <link target="_blank">$row.URL|n$</link>
           </condition>
           <condition field="*"/>
@@ -491,15 +488,15 @@
           <query>
             sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
             | dedup IssueID keepevents=false
-            | eval apply_filter = if(len("$siteFilter$")=0 OR "$siteFilter$"="", 0, 1)
-            | where (apply_filter=0) OR (lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%"))
+            | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
             | eventstats sum(IssueCount) as IssueCountDevice, dc(IssueID) as IssueIDAmount, list(IssueSpecificName) as IssueSpecificNames, list(IssueSpecificPriority) as IssueSpecificPriorities, list(IssueSpecificSeverity) as IssueSpecificSeverities by DeviceID
             | dedup DeviceID keepevents=false
             | sort limit=10 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName)
             | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
             | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
+            | eval URL2="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+DeviceMACAddress
             | rename DeviceName as "Device Name", IssueCountDevice as "Count", DeviceIpAddress as "IP Address", DeviceMACAddress as "MAC Address", DeviceFamily as "Family", DeviceRole as "Role", IssueIDAmount as "Issue Count", IssueSpecificNames as "Issue Name", IssueSpecificPriorities as "Priority", IssueSpecificSeverities as "Severity", SiteNameHierarchy as "Site"
-            | table "Device Name", "Count", "IP Address", "MAC Address", "Family", "Role", "Issue Count", "Issue Name", "Priority", "Severity", DeviceID, ciscocatalysthostip, URL, Site</query>
+            | table "Device Name", "Count", "IP Address", "MAC Address", "Family", "Role", "Issue Count", "Issue Name", "Priority", "Severity", DeviceID, ciscocatalysthostip, URL, Site, URL2</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -519,6 +516,9 @@
         <drilldown>
           <condition field="Device Name">
             <link target="_blank">$row.URL|n$</link>
+          </condition>
+          <condition field="MAC Address">
+            <link target="_blank">$row.URL2|n$</link>
           </condition>
           <condition field="*"/>
         </drilldown>
