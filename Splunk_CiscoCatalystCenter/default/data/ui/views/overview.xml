@@ -1,5 +1,6 @@
 <form version="1.1">
   <label>Overview</label>
+  <description>This dashboard provides an overview of various metrics and statistics in the Cisco Catalyst network.</description>
   <fieldset submitButton="true" autoRun="true">
     <input type="time" token="timeRangePicker2" searchWhenChanged="true">
       <label>Time Range</label>
@@ -21,13 +22,14 @@
     </input>
     <input type="text" token="siteFilter" searchWhenChanged="true">
       <label>Site</label>
-      <default></default>
+      <default>Global</default>
     </input>
   </fieldset>
   <row>
     <panel>
       <title>Average Network Health Score</title>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="All"
           | chart values(healthScore) as t by _time
@@ -53,6 +55,7 @@
     <panel>
       <title>Average Client Health Score</title>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
           | timechart avg(scoreValue) by scoreType
@@ -76,6 +79,7 @@
     <panel>
       <title>Total Number of Active Issues</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
           | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
@@ -100,6 +104,7 @@
     <panel>
       <title>Device Reachability Type Percentages</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup IpAddress keepevents=false
@@ -154,6 +159,7 @@
     <panel>
       <title>Network Device Type Count by Category</title>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category!="All"
             | dedup category keepevents=false 
@@ -204,6 +210,7 @@
     <panel>
       <title>Number of Compliant Devices</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="True" ComplianceDetail="False" 
           | chart values(CompliantDeviceCount) as t by _time
@@ -238,6 +245,7 @@
     <panel>
       <title>Percentage of Compliant Devices by Type</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ComplianceCount="False" ComplianceDetail="True" 
             | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
@@ -295,6 +303,7 @@
     <panel>
       <title>All Clients Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
           | chart values(scoreValue) as t by _time
@@ -328,6 +337,7 @@
     <panel>
       <title>Wired Clients Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
           | chart values(scoreValue) as t by _time
@@ -361,6 +371,7 @@
     <panel>
       <title>Wireless Clients Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
           | chart values(scoreValue) as t by _time
@@ -396,6 +407,7 @@
     <panel>
       <title>All Clients Count</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="ALL" scoreType="ALL" 
           | chart values(clientCount) as t by _time
@@ -429,6 +441,7 @@
     <panel>
       <title>Wired Clients Count</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
           | chart values(clientCount) as t by _time
@@ -462,6 +475,7 @@
     <panel>
       <title>Wireless Clients Count</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
           | chart values(clientCount) as t by _time
@@ -498,6 +512,7 @@
     <panel>
       <title>Total Number of Clients</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientID keepevents=false
@@ -531,6 +546,7 @@
     <panel>
       <title>Number of Sessions</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientMACAddress ClientLastUpdatedTime keepevents=false
