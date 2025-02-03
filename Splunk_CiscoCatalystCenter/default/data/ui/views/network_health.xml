@@ -1,5 +1,6 @@
 <form version="1.1">
   <label>Network Health</label>
+  <description>This dashboard provides an overview of the health status of the network in the Cisco Catalyst environment. Site: Global</description>
   <fieldset submitButton="false" autoRun="true">
     <input type="time" token="timeRangePicker" searchWhenChanged="true">
       <label>Time Range</label>
