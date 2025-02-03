@@ -1,6 +1,7 @@
 <form version="1.1">
   <label>Security Advisory</label>
-  <fieldset submitButton="true" autoRun="true">
+  <description>This dashboard provides an overview of security advisories detected in the Cisco Catalyst network.</description>
+  <fieldset submitButton="false" autoRun="true">
     <input type="time" token="timeRangePicker7" searchWhenChanged="true">
       <label>Time Range</label>
       <default>
@@ -19,15 +20,12 @@
       </search>
       <selectFirstChoice>true</selectFirstChoice>
     </input>
-    <input type="text" token="siteFilter" searchWhenChanged="true">
-      <label>Site</label>
-      <default></default>
-    </input>
   </fieldset>
   <row>
     <panel>
       <title>Critical Count</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="True"  SubCategory="Total" Category="CRITICAL"
           | chart avg(Amount) by _time</query>
@@ -59,6 +57,7 @@
     <panel>
       <title>High Count</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="True" SubCategory="Total" Category="HIGH"
           | chart avg(Amount) by _time</query>
@@ -89,6 +88,7 @@
     <panel>
       <title>Medium Count</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="True" SubCategory="Total" Category="MEDIUM"
           | chart avg(Amount) by _time</query>
@@ -122,6 +122,7 @@
     <panel>
       <title>Security Advisories Count by Category</title>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="True"  SubCategory="Total"
           | dedup Category keepevents=false
@@ -169,6 +170,7 @@
     <panel>
       <title>Security Advisories by Category</title>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="True" SubCategory="Total"
           | chart avg(Amount) as amount by _time, Category</query>
@@ -229,11 +231,11 @@
         <selectFirstChoice>true</selectFirstChoice>
       </input>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="True" SubCategory!="Total" Category="$categoryDropdown$"
           | dedup SubCategory keepevents=false
           | chart sum(Amount) as amount by SubCategory
-
           | eventstats sum(amount) as Total
           | eval perc=round((amount/Total)*100, 2)
           | eval SubCategory=SubCategory." (".perc."%)"
@@ -290,6 +292,7 @@
         <selectFirstChoice>true</selectFirstChoice>
       </input>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="True" SubCategory!="Total" Category="$categoryDropdown2$"
           | chart avg(Amount) as amount by _time, SubCategory</query>
@@ -339,7 +342,7 @@
     <panel>
       <title>Security Advisories with Devices</title>
       <input type="dropdown" token="deviceHostNameDropdown" searchWhenChanged="true">
-        <label>Device Host Name</label>
+        <label>Device Name</label>
         <choice value="*">All</choice>
         <initialValue>*</initialValue>
         <fieldForLabel>DeviceName</fieldForLabel>
@@ -375,17 +378,22 @@
         </search>
         <default>*</default>
       </input>
+      <input type="text" token="siteFilter" searchWhenChanged="true">
+        <label>Site</label>
+        <default>Global</default>
+      </input>
       <table>
+        <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="False" DeviceIpAddress="$ipAddressDropdown$" AdvisoryID="$advisoryIDDropdown$"
+          <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="False" DeviceName="$deviceHostNameDropdown$" DeviceIpAddress="$ipAddressDropdown$" AdvisoryID="$advisoryIDDropdown$"
           | dedup AdvisoryID keepevents=false
           | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
           | eval DeviceUptime = tostring(DeviceUptimeSeconds, "duration")
           | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
           | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
           | eval URL2="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+DeviceMACAddress
-          | rename AdvisoryID as "Advisory ID", AdvisoryCvesStr as "Advisory CVEs", AdvisoryDefaultDetectionType as "Advisory Default Detection Type", AdvisoryDetectionType as "Advisory Detection Type", AdvisoryPublicationUrl as "Advisory Publication URL", AdvisorySir as "Advisory SIR", DeviceIpAddress as "Device IP Address", DeviceName as "Device Name", DeviceMACAddress as "Device MAC Address", DeviceSerialNumber as "Device Serial Number", DeviceFamily as "Device Family", DevicePlatform as "Device Platform", DeviceSeries as "Device Series", DeviceUptime as "Device Uptime"
-          | table DeviceID, "Device Name", "Device IP Address", "Advisory ID", "Advisory CVEs", "Advisory Default Detection Type", "Advisory Detection Type", "Advisory Publication URL", "Advisory SIR", "Device MAC Address", "Device Serial Number", "Device Family", "Device Platform", "Device Series", "Device Uptime", URL, URL2, Site</query>
+          | rename AdvisoryID as "Advisory ID", AdvisoryCvesStr as "Advisory CVEs", AdvisoryDefaultDetectionType as "Advisory Default Detection Type", AdvisoryDetectionType as "Advisory Detection Type", AdvisoryPublicationUrl as "Advisory Publication URL", AdvisorySir as "Advisory SIR", DeviceIpAddress as "IP Address", DeviceName as "Device Name", DeviceMACAddress as "Device MAC Address", DeviceSerialNumber as "Device Serial Number", DeviceFamily as "Device Family", DevicePlatform as "Device Platform", DeviceSeries as "Device Series", DeviceUptime as "Device Uptime"
+          | table DeviceID, "Device Name", "IP Address", "Advisory ID", "Advisory CVEs", "Advisory Default Detection Type", "Advisory Detection Type", "Advisory Publication URL", "Advisory SIR", "Device MAC Address", "Device Serial Number", "Device Family", "Device Platform", "Device Series", "Device Uptime", URL, URL2, Site</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>$timeRangePicker7.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -400,7 +408,7 @@
         <option name="totalsRow">false</option>
         <option name="wrap">true</option>
         <option name="drilldown">cell</option>
-        <fields>"Device Name", "Device IP Address", "Advisory ID", "Advisory CVEs", "Advisory Default Detection Type", "Advisory Detection Type", "Advisory Publication URL", "Advisory SIR", "Device MAC Address", "Device Serial Number", "Device Family", "Device Platform", "Device Series", "Device Uptime", Site</fields>
+        <fields>"Device Name", "IP Address", "Advisory ID", "Advisory CVEs", "Advisory Default Detection Type", "Advisory Detection Type", "Advisory Publication URL", "Advisory SIR", "Device MAC Address", "Device Serial Number", "Device Family", "Device Platform", "Device Series", "Device Uptime", Site</fields>
         <drilldown>
           <condition field="Device Name">
             <link target="_blank">$row.URL|n$</link>
