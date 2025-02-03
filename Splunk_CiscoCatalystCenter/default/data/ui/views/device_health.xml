@@ -1,5 +1,6 @@
 <form version="1.1">
   <label>Device Health</label>
+  <description>This dashboard provides an overview of the health status of devices in the Cisco Catalyst network.</description>
   <fieldset submitButton="true" autoRun="true">
     <input type="time" token="timeRangePicker3">
       <label>Time Range</label>
@@ -21,13 +22,14 @@
     </input>
     <input type="text" token="siteFilter" searchWhenChanged="true">
       <label>Site</label>
-      <default></default>
+      <default>Global</default>
     </input>
   </fieldset>
   <row>
     <panel>
       <title>Device Manageability Type Percentages</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -81,6 +83,7 @@
     <panel>
       <title>Device Reachability Type Percentages</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -134,6 +137,7 @@
     <panel>
       <title>Device Family Percentages</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -187,6 +191,7 @@
     <panel>
       <title>Device Role Percentages</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
@@ -239,6 +244,7 @@
     <panel>
       <title>Device Series Percentages</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -294,6 +300,7 @@
     <panel>
       <title>Number of Managed Devices</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -329,6 +336,7 @@
     <panel>
       <title>Number of Unmanaged Devices</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -364,6 +372,7 @@
     <panel>
       <title>Number of Managed With Errors Devices</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -401,6 +410,7 @@
     <panel>
       <title>Number of Switches and Hubs</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -436,6 +446,7 @@
     <panel>
       <title>Number of Wireless Controllers</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -471,6 +482,7 @@
     <panel>
       <title>Number of Routers</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -506,6 +518,7 @@
     <panel>
       <title>Number of APs</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -543,6 +556,7 @@
     <panel>
       <title>Number of Access Devices</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -578,6 +592,7 @@
     <panel>
       <title>Number of Core Devices</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -613,6 +628,7 @@
     <panel>
       <title>Number of Distribution Devices</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -648,6 +664,7 @@
     <panel>
       <title>Number of Border Router Devices</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -685,6 +702,7 @@
     <panel>
       <title>Number of Reachable Devices</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
@@ -710,6 +728,7 @@
     <panel>
       <title>Number of Unreachable Devices</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
@@ -737,7 +756,7 @@
     <panel>
       <title>Device Health Table</title>
       <input type="dropdown" token="deviceHostNameDropdown" searchWhenChanged="true">
-        <label>Device Host Name</label>
+        <label>Device Name</label>
         <choice value="*">All</choice>
         <initialValue>*</initialValue>
         <fieldForLabel>DeviceName</fieldForLabel>
@@ -767,6 +786,7 @@
         <initialValue>*</initialValue>
       </input>
       <table>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
@@ -776,8 +796,9 @@
           | search DeviceName="$deviceHostNameDropdown$"
           | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
           | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
+          | eval URL2="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+MACAddress
           | rename DeviceName as "Device Name", IpAddress as "IP Address", DeviceFamily as "Device Family", Reachability as Reachability, ReachabilityFailureReason as "Reachability Failure Reason", ManageErrors as "Manage Errors", Manageability as Manageability, MACAddress as "MAC Address", DeviceRole as "Device Role", ImageVersion as "Image Version", Uptime as Uptime, UptimeSeconds as "Uptime Seconds", LastUpdated as "Last Updated", LastUpdateTime as "Last Update Time", SerialNumber as "Serial Number", DeviceSeries as "Device Series", Platform as Platform, SupportType as "Support Type", AssociatedWLCIP as "Associated WLC IP", HealthScore as "Health Score", IssueCount as "Issue Count", Site as Site, CPUUtilization as "CPU Utilization", CPUHealth as "CPU Health", MemoryUtilization as "Memory Utilization", MemoryUtilizationHealth as "Memory Utilization Health", InterfaceLinkErrHealth as "Interface Link Error Health", InterDeviceLinkAvailHealth as "Inter-Device Link Availability Health"
-          | table "Device Name", "IP Address", "Device Family", Reachability, "Reachability Failure Reason", "Manage Errors", Manageability, "MAC Address", "Device Role", "Image Version", Uptime, "Last Updated", "Serial Number", "Device Series", Platform, "Support Type", "Associated WLC IP", "Health Score", "Issue Count", Site, "CPU Utilization", "CPU Health", "Memory Utilization", "Memory Utilization Health", "Interface Link Error Health", "Inter-Device Link Availability Health", DeviceID, ciscocatalysthostip, URL</query>
+          | table "Device Name", "IP Address", "Device Family", Reachability, "Reachability Failure Reason", "Manage Errors", Manageability, "MAC Address", "Device Role", "Image Version", Uptime, "Last Updated", "Serial Number", "Device Series", Platform, "Support Type", "Associated WLC IP", "Health Score", "Issue Count", Site, "CPU Utilization", "CPU Health", "Memory Utilization", "Memory Utilization Health", "Interface Link Error Health", "Inter-Device Link Availability Health", DeviceID, ciscocatalysthostip, URL, URL2</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
           <latest>$timeRangePicker3.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -797,7 +818,67 @@
           <condition field="Device Name">
             <link target="_blank">$row.URL|n$</link>
           </condition>
-          <condition field="*"/>
+          <condition field="MAC Address">
+            <link target="_blank">$row.URL2|n$</link>
+          </condition>
+          <condition field="*"></condition>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Top Ten Interface Utilization</title>
+      <input type="dropdown" token="deviceHostNameDropdown2" searchWhenChanged="true">
+        <label>Device Name</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>DeviceName</fieldForLabel>
+        <fieldForValue>DeviceName</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" HasInterfaceStats="True" | dedup DeviceName keepevents=false | table DeviceName</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+            <default>*</default>
+        </input>
+      <table>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" HasInterfaceStats="True"
+            | dedup ID keepevents=false
+            | search DeviceName="$deviceHostNameDropdown2$"
+            | join type=left DeviceID [search sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" HasInterfaceStats="False" | dedup DeviceID | table DeviceID Site]
+            | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+            | eval TotalUtilization = RxRate + TxRate
+            | sort -TotalUtilization
+            | head 10
+            | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
+            | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
+            | rename DeviceName as "Device Name", Name as "Interface" RxRate as "Rx Rate (bps)", TxRate as "Tx Rate (bps)", Speed as "Speed (kbps)", RxUtilization as "Rx Utilization (%)", TxUtilization as "Tx Utilization (%)"
+            | table "Device Name", "Interface", "Rx Rate (bps)", "Tx Rate (bps)", "Speed (kbps)", "Rx Utilization (%)", "Tx Utilization (%)", DeviceID, Site, URL
+          </query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <fields>"Device Name", "Interface", "Rx Rate (bps)", "Tx Rate (bps)", "Speed (kbps)", "Rx Utilization (%)", "Tx Utilization (%)"</fields>
+        <drilldown>
+          <condition field="Device Name">
+            <link target="_blank">$row.URL|n$</link>
+          </condition>
+          <condition field="*"></condition>
         </drilldown>
       </table>
     </panel>
