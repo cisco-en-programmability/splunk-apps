@@ -32,6 +32,7 @@ def get_important_device_values(device_item, site_info):
     :return: new device response
     """
     response = {}
+    response["DeviceID"] = device_item.get("id") or ""
     response["DeviceName"] = device_item.get("hostname") or "N/A"
     response["DeviceIpAddress"] = (
         device_item.get("managementIpAddress") or device_item.get("ipAddress") or ""
