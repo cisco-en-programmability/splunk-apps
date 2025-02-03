@@ -1,5 +1,6 @@
 <form version="1.1">
   <label>Client Health</label>
+  <description>This dashboard provides an overview of the health status of clients connected to the Cisco Catalyst network. Site: Global</description>
   <fieldset submitButton="false" autoRun="true">
     <input type="time" token="timeRangePicker2" searchWhenChanged="true">
       <label>Time Range</label>
