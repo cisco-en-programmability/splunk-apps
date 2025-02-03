@@ -893,6 +893,80 @@ class Devices(object):
 
         return object_factory(json_data)
 
+    def get_device_interface_stats_info(self,
+                                        device_id,
+                                        endTime=None,
+                                        query=None,
+                                        startTime=None,
+                                        headers=None,
+                                        payload=None,
+                                        active_validation=True,
+                                        **request_parameters):
+        """This API returns the Interface Stats for the given Device Id. Please refer to the Feature tab for the Request
+        Body usage and the API filtering support. .
+
+        Args:
+            endTime(integer): Devices's UTC epoch timestamp in milliseconds .
+            query(object): Devices's query.
+            startTime(integer): Devices's UTC epoch timestamp in milliseconds .
+            device_id(str): deviceId path parameter. Network Device Id .
+            headers(dict): Dictionary of HTTP Headers to send with the Request
+                .
+            payload(dict): A JSON serializable Python object to send in the
+                body of the Request.
+            active_validation(bool): Enable/Disable payload validation.
+                Defaults to True.
+            **request_parameters: Additional request parameters (provides
+                support for parameters that may be added in the future).
+
+        Returns:
+            MyDict: JSON response. Access the object's properties by using
+            the dot notation or the bracket notation.
+
+        Raises:
+            TypeError: If the parameter types are incorrect.
+            MalformedRequest: If the request body created is invalid.
+            ApiError: If the Catalyst Center cloud returns an error.
+        Documentation Link:
+            https://developer.cisco.com/docs/dna-center/#!get-device-interface-stats-info-v2
+        """
+        _params = {}
+        _params.update(request_parameters)
+        _params = dict_from_items_with_values(_params)
+
+        path_params = {
+            'deviceId': device_id,
+        }
+        _payload = {
+            'startTime':
+                startTime,
+            'endTime':
+                endTime,
+            'query':
+                query,
+        }
+        _payload.update(payload or {})
+        _payload = dict_from_items_with_values(_payload)
+
+        with_custom_headers = False
+        _headers = self._session.headers or {}
+        if headers:
+            _headers.update(dict_of_str(headers))
+            with_custom_headers = True
+
+        e_url = ('/dna/intent/api/v2/networkDevices/{deviceId}/interfaces/'
+                 + 'query')
+        endpoint_full_url = apply_path_params(e_url, path_params)
+        if with_custom_headers:
+            json_data = self._session.post(endpoint_full_url, params=_params,
+                                           json=_payload,
+                                           headers=_headers)
+        else:
+            json_data = self._session.post(endpoint_full_url, params=_params,
+                                           json=_payload)
+
+        return object_factory(json_data)
+
 
 class Issues(object):
     def __init__(self, session):
