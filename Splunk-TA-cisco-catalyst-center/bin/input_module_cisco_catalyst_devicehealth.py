@@ -106,6 +106,42 @@ def get_devices(catalyst):
     return devices_responses
 
 
+def get_device_interface_stats_info(catalyst, device_id):
+    """
+    This function will retrieve the device interface stats info
+    :param catalyst: Cisco Catalyst SDK api
+    :return: devices response
+    """
+    limit = 1000
+    offset = 0
+
+    query = {
+        "page": {
+            "limit": limit,
+            "offset": offset,
+        }
+    }
+    interface_stats_responses = []
+    do_request_next = True
+    while do_request_next:
+        try:
+            device_interface_stats_response = catalyst.devices.get_device_interface_stats_info(
+                device_id=device_id, query=query)
+            if device_interface_stats_response and device_interface_stats_response.response:
+                interface_stats_responses.extend(device_interface_stats_response.response)
+                if len(device_interface_stats_response.response) < limit:
+                    do_request_next = False
+                    break
+            else:
+                do_request_next = False
+                break
+        except Exception as e:
+            do_request_next = False
+            break
+        offset = offset + limit
+        query["page"]["offset"] = offset
+    return interface_stats_responses
+
 def get_important_device_values(device_item):
     """
     This function will simplify the device data for Splunk searches
@@ -241,6 +277,57 @@ def get_health_device_values(health_device):
     # response['Reachability'] = health_device.get('reachabilityHealth') or ''
     return response
 
+def get_device_interface_stats_info_values(interface_stats, device_name):
+    """
+    This function will simplify the device interface stats info for Splunk searches
+    :param interface_stats: device interface stats info
+    :return: new device interface stats info response
+    """
+    values = interface_stats.get("values", {})
+    response = {"HasInterfaceStats": "True"}
+    response["ID"] = interface_stats.get("id") or ""
+    response["DeviceID"] = values.get("deviceId") or ""
+    response["DeviceName"] = device_name
+    response["Name"] = values.get("name") or ""
+    response["RxRate"] = values.get("rxRate") or ""
+    response["TxRate"] = values.get("txRate") or ""
+    response["Speed"] = values.get("speed") or ""
+    response["RxUtilization"] = values.get("rxUtilization") or ""
+    response["TxUtilization"] = values.get("txUtilization") or ""
+    # response["AdminStatus"] = values.get("adminStatus") or ""
+    # response["DeviceId"] = values.get("deviceId") or ""
+    # response["DuplexConfig"] = values.get("duplexConfig") or ""
+    # response["DuplexOper"] = values.get("duplexOper") or ""
+    # response["InterfaceId"] = values.get("interfaceId") or ""
+    # response["InterfaceType"] = values.get("interfaceType") or ""
+    # response["InstanceId"] = values.get("instanceUuid") or ""
+    # response["Ipv4Address"] = values.get("ipv4Address") or ""
+    # response["Ipv6AddressList"] = values.get("ipv6AddressList") or []
+    # response["IsL3Interface"] = values.get("isL3Interface") or ""
+    # response["IsWan"] = values.get("isWan") or ""
+    # response["MacAddr"] = values.get("macAddr") or ""
+    # response["MediaType"] = values.get("mediaType") or ""
+    # response["Name"] = values.get("name") or ""
+    # response["OperStatus"] = values.get("operStatus") or ""
+    # response["PeerStackMember"] = values.get("peerStackMember") or ""
+    # response["PeerStackPort"] = values.get("peerStackPort") or ""
+    # response["PortChannelId"] = values.get("portChannelId") or ""
+    # response["PortMode"] = values.get("portMode") or ""
+    # response["PortType"] = values.get("portType") or ""
+    # response["Description"] = values.get("description") or ""
+    # response["RxDiscards"] = values.get("rxDiscards") or ""
+    # response["RxError"] = values.get("rxError") or ""
+    # response["RxRate"] = values.get("rxRate") or ""
+    # response["RxUtilization"] = values.get("rxUtilization") or ""
+    # response["Speed"] = values.get("speed") or ""
+    # response["StackPortType"] = values.get("stackPortType") or ""
+    # response["Timestamp"] = values.get("timestamp") or ""
+    # response["TxDiscards"] = values.get("txDiscards") or ""
+    # response["TxError"] = values.get("txError") or ""
+    # response["TxRate"] = values.get("txRate") or ""
+    # response["TxUtilization"] = values.get("txUtilization") or ""
+    # response["VlanId"] = values.get("vlanId") or ""
+    return response
 
 def filter_health_data(health_devices, devices_items):
     """
@@ -266,6 +353,19 @@ def filter_health_data(health_devices, devices_items):
             device_dict[ip_address_key].update({"HasHealthReport": "False"})
     health_summary_response = list(device_dict.values())
     return health_summary_response
+
+def filter_interface_stats_info(catalyst, devices_items):
+    devices_interface_stats_info = []
+    devices_interface_dict = {}
+    for device_item in devices_items:
+        device_id = device_item.get("id")
+        device_name = device_item.get("hostname") or "N/A"
+        interface_stats_info = get_device_interface_stats_info(catalyst, device_id)
+        for data in interface_stats_info:
+            id = data.get("id")
+            devices_interface_dict[id] = dict(get_device_interface_stats_info_values(data, device_name))    
+    devices_interface_stats_info = list(devices_interface_dict.values())
+    return devices_interface_stats_info
 
 
 def validate_input(helper, definition):
@@ -327,9 +427,16 @@ def collect_events(helper, ew):
     devices_items = get_devices(catalyst)
     # merge and simplify gathered information
     overall_device_health = filter_health_data(health_devices, devices_items)
+    # get device interface stats info
+    overall_device_interface_stats_info = filter_interface_stats_info(catalyst, devices_items)
 
     r_json = []
     for item in overall_device_health:
+        item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
+        item["HasInterfaceStats"] = "False"
+        r_json.append(item)
+        
+    for item in overall_device_interface_stats_info:
         item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
         r_json.append(item)
 
