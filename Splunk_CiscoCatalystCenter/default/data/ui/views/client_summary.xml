@@ -1,5 +1,6 @@
 <form version="1.1">
   <label>Client Summary</label>
+  <description>This dashboard provides a summary of client activity and statistics in the Cisco Catalyst network.</description>
   <fieldset submitButton="true" autoRun="true">
     <input type="time" token="timeRangePickerClient" searchWhenChanged="true">
       <label>Time Range</label>
@@ -21,13 +22,14 @@
     </input>
     <input type="text" token="siteFilter" searchWhenChanged="true">
       <label>Site</label>
-      <default></default>
+      <default>Global</default>
     </input>
   </fieldset>
   <row>
     <panel>
       <title>Client Count</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientMACAddress keepevents=false
@@ -61,6 +63,7 @@
     <panel>
       <title>Session Count</title>
       <single>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientMACAddress ClientLastUpdatedTime keepevents=false
@@ -96,6 +99,7 @@
     <panel>
       <title>Client Count by OS Type</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
@@ -123,6 +127,7 @@
     <panel>
       <title>Client Count by Device Type</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
@@ -176,6 +181,7 @@
     <panel>
       <title>Client Count by Band</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
@@ -203,6 +209,7 @@
     <panel>
       <title>Distributed Client Traffic by Band</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
@@ -232,6 +239,7 @@
     <panel>
       <title>Distributed Client Sessions by Band</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
@@ -264,6 +272,7 @@
     <panel>
       <title>Client Count by Protocols</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
@@ -291,6 +300,7 @@
     <panel>
       <title>Distributed Client Traffic by Protocol</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
@@ -320,6 +330,7 @@
     <panel>
       <title>Distributed Client Sessions by Protocol</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
@@ -391,6 +402,7 @@
         <default>*</default>
       </input>
       <table>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" ClientIPv4Address="$clientIpAddressDropdown$" ClientName="$clientNameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
           | stats latest(*) as * by ClientID
@@ -469,6 +481,7 @@
         <default>*</default>
       </input>
       <table>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ClientIPv4Address="$clientIpAddressDropdown$" ClientName="$clientNameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
           | stats latest(*) as * by ClientID
