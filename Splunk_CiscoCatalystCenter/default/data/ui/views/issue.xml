@@ -1,5 +1,6 @@
 <form version="1.1">
   <label>Issues</label>
+  <description>This dashboard provides an overview of issues detected in the Cisco Catalyst network.</description>
   <fieldset submitButton="true" autoRun="true">
     <input type="time" token="timeRangePicker9" searchWhenChanged="true">
       <label>Time Range</label>
@@ -34,13 +35,14 @@
     </input>
     <input type="text" token="siteFilter" searchWhenChanged="true">
       <label>Site</label>
-      <default></default>
+      <default>Global</default>
     </input>
   </fieldset>
   <row>
     <panel>
       <title>Number of Issues by Priority</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
@@ -94,6 +96,7 @@
     <panel>
       <title>Number of Issues by Severity</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
@@ -148,6 +151,7 @@
     <panel>
       <title>Number of Issues by Category</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
@@ -202,6 +206,7 @@
     <panel>
       <title>Number of Issues by Entity</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
@@ -256,6 +261,7 @@
     <panel>
       <title>Number of Issues by Name</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
@@ -312,6 +318,7 @@
     <panel>
       <title>Total Number of Active Issues</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
           | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
@@ -325,35 +332,9 @@
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
-        <option name="charting.axisTitleX.visibility">collapsed</option>
-        <option name="charting.chart">area</option>
-        <option name="charting.drilldown">none</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="trellis.enabled">0</option>
-        <option name="trellis.scales.shared">1</option>
-        <option name="trellis.size">medium</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Issue Count by Severity</title>
-      <chart>
-        <search>
-          <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
-          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
-          | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity
-          | dedup _time, IssueSpecificSeverity keepevents=false
-          | chart avg(subtotal) by _time, IssueSpecificSeverity cont=false</query>
-          <earliest>$timeRangePicker9.earliest$</earliest>
-          <latest>$timeRangePicker9.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
-        </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
         <option name="charting.axisTitleY.visibility">visible</option>
         <option name="charting.axisTitleY2.visibility">visible</option>
         <option name="charting.axisX.abbreviation">none</option>
@@ -383,7 +364,58 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Issue Count by Severity</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
+          | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity
+          | dedup _time, IssueSpecificSeverity keepevents=false
+          | chart avg(subtotal) by _time, IssueSpecificSeverity cont=false</query>
+          <earliest>$timeRangePicker9.earliest$</earliest>
+          <latest>$timeRangePicker9.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
         <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
       </chart>
     </panel>
   </row>
@@ -391,6 +423,7 @@
     <panel>
       <title>Issue Count by Priority</title>
       <chart>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | where "$siteFilter$"="" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
@@ -403,7 +436,7 @@
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
         <option name="charting.axisTitleY.visibility">visible</option>
         <option name="charting.axisTitleY2.visibility">visible</option>
         <option name="charting.axisX.abbreviation">none</option>
@@ -433,7 +466,6 @@
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
-        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
   </row>
@@ -441,6 +473,7 @@
     <panel>
       <title>Table of Top 10 Issues</title>
       <table>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$"
@@ -452,30 +485,22 @@
             | sort limit=10 +str(IssueSpecificPriority), -num(IssueCountSpecific), +str(IssueSpecificName)
             | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
             | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/issueDetails?issueId="+IssueID
-            | mvexpand IssueNames
-            | mvexpand IssueStatuses
-            | mvexpand DeviceNames
-            | mvexpand DeviceIpAddresses
-            | mvexpand DeviceMACAddresses
-            | mvexpand DeviceFamilies
-            | mvexpand DeviceRoles
-            | rename IssueSpecificName as "Issue Type", IssueSpecificPriority as "Priority", IssueCountSpecific as "Count", IssueSpecificSeverity as "Severity",  IssueSpecificDescription as "Descriptions", IssueNames as "Names", IssueLastOccurredTime as "Last Occurred", IssueStatuses as "Status", DeviceNames as "Device Name", DeviceIpAddresses as "IP Address", DeviceMACAddresses as "MAC Address", DeviceFamilies as "Family", DeviceRoles as "Role", SiteNameHierarchy as "Site"
-            | table "Issue Type", "Priority", "Count", "Severity", "Descriptions", "Names", "Last Occurred", "Status", "Device Name", "IP Address", "MAC Address", "Family", "Role", IssueID, ciscocatalysthostip, URL, Site</query>
+            | rename IssueSpecificName as "Issue Type", IssueSpecificPriority as "Priority", IssueCountSpecific as "Count", IssueSpecificSeverity as "Severity", IssueNames as "Names", IssueLastOccurredTime as "Last Occurred", IssueStatuses as "Status", DeviceNames as "Device Name", DeviceIpAddresses as "IP Address", DeviceMACAddresses as "MAC Address", DeviceFamilies as "Family", DeviceRoles as "Role", SiteNameHierarchy as "Site"
+            | table "Issue Type", "Priority", "Count", "Severity", "Names", "Last Occurred", "Status", "Device Name", "IP Address", "MAC Address", "Family", "Role", IssueID, ciscocatalysthostip, URL, Site</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
-        <option name="drilldown">none</option>
         <option name="refresh.display">progressbar</option>
         <option name="drilldown">cell</option>
-        <fields>"Issue Type", "Priority", "Count", "Severity", "Last Occurred", "Names", "Descriptions", "Status", "Device Name", "IP Address", "MAC Address", "Family", "Role", "Site"</fields>
+        <fields>["Issue Type","Priority","Count","Severity","Last Occurred","Names","Status","Device Name","IP Address","MAC Address","Family","Role","Site"]</fields>
         <drilldown>
           <condition field="Names">
             <link target="_blank">$row.URL|n$</link>
           </condition>
-          <condition field="*"/>
+          <condition field="*"></condition>
         </drilldown>
       </table>
     </panel>
@@ -484,6 +509,7 @@
     <panel>
       <title>Table of Top 10 Impacted Devices</title>
       <table>
+        <title>Site: $siteFilter$</title>
         <search>
           <query>
             sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
@@ -505,7 +531,6 @@
         </search>
         <option name="count">20</option>
         <option name="dataOverlayMode">none</option>
-        <option name="drilldown">none</option>
         <option name="percentagesRow">false</option>
         <option name="refresh.display">progressbar</option>
         <option name="rowNumbers">false</option>
@@ -520,7 +545,7 @@
           <condition field="MAC Address">
             <link target="_blank">$row.URL2|n$</link>
           </condition>
-          <condition field="*"/>
+          <condition field="*"></condition>
         </drilldown>
       </table>
     </panel>
