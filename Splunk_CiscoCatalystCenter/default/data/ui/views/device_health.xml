@@ -852,6 +852,7 @@
             | join type=left DeviceID [search sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" HasInterfaceStats="False" | dedup DeviceID | table DeviceID Site]
             | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
             | eval TotalUtilization = RxRate + TxRate
+            | where TotalUtilization > 0
             | sort -TotalUtilization
             | head 10
             | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
