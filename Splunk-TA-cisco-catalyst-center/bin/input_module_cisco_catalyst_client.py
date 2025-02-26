@@ -23,21 +23,22 @@ def use_single_instance_mode():
 '''
 
 
-def get_epoch_current_previous_times(interval_seconds):
-    """
-    This function will return the epoch time for the {timestamp} and a previous epoch time
-    :return: epoch time (now) including msec, epoch time (previous) including msec
-    """
-    # REVIEW: It is recommended that this time matches the Splunk's data input interval
-    now = datetime.datetime.now()
-    rounded = now - datetime.timedelta(
-        seconds=now.second % interval_seconds + interval_seconds
-        if interval_seconds > 0
-        else now.second
-    )
-    now = now.replace(microsecond=0)
-    rounded = rounded.replace(microsecond=0)
-    return (int(now.timestamp() * 1000), int(rounded.timestamp() * 1000))
+## This feature is commented due to discrepancies between the Splunk and Cat Lab time zones.
+# def get_epoch_current_previous_times(interval_seconds):
+#     """
+#     This function will return the epoch time for the {timestamp} and a previous epoch time
+#     :return: epoch time (now) including msec, epoch time (previous) including msec
+#     """
+#     # REVIEW: It is recommended that this time matches the Splunk's data input interval
+#     now = datetime.datetime.now()
+#     rounded = now - datetime.timedelta(
+#         seconds=now.second % interval_seconds + interval_seconds
+#         if interval_seconds > 0
+#         else now.second
+#     )
+#     now = now.replace(microsecond=0)
+#     rounded = rounded.replace(microsecond=0)
+#     return (int(now.timestamp() * 1000), int(rounded.timestamp() * 1000))
 
 
 def get_client(catalyst, input_interval):
@@ -47,9 +48,9 @@ def get_client(catalyst, input_interval):
     :param input_interval: interval in seconds
     :return: client details response
     """
-    (epoch_current_time, epoch_previous_time) = get_epoch_current_previous_times(
-        input_interval
-    )
+    # (epoch_current_time, epoch_previous_time) = get_epoch_current_previous_times(
+    #     input_interval
+    # )
     limit = 20
     offset = 1
     client_responses = []
@@ -57,8 +58,6 @@ def get_client(catalyst, input_interval):
     while do_request_next:
         try:
             client_response = catalyst.clients.get_clients(
-                start_time=epoch_previous_time,
-                end_time=epoch_current_time,
                 limit=limit,
                 offset=offset,
             )
