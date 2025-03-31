@@ -15,7 +15,7 @@
       <fieldForValue>cisco_catalyst_host</fieldForValue>
       <search>
         <query>sourcetype="cisco:catalyst:networkhealth" | stats values(cisco_catalyst_host) AS cisco_catalyst_host | mvexpand cisco_catalyst_host</query>
-        <earliest>-24h@h</earliest>
+        <earliest>$timeRangePicker.earliest$</earliest>
         <latest>now</latest>
       </search>
       <selectFirstChoice>true</selectFirstChoice>
