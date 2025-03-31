@@ -14,8 +14,8 @@
       <fieldForLabel>cisco_catalyst_host</fieldForLabel>
       <fieldForValue>cisco_catalyst_host</fieldForValue>
       <search>
-        <query>sourcetype="cisco:catalyst:*" | dedup cisco_catalyst_host keepevents=false | table cisco_catalyst_host</query>
-        <earliest>-24h@h</earliest>
+        <query>sourcetype="cisco:catalyst:*" | stats values(cisco_catalyst_host) AS cisco_catalyst_host | mvexpand cisco_catalyst_host</query>
+        <earliest>$timeRangePicker2.earliest$</earliest>
         <latest>now</latest>
       </search>
       <selectFirstChoice>true</selectFirstChoice>
