@@ -35,7 +35,7 @@ def use_single_instance_mode():
 #     return "{0}".format(int(epoch))
 
 
-def get_overall_network_health(catalyst, epoch_time):
+def get_overall_network_health(catalyst):
     """
     This function will retrieve the network health
     :param catalyst: Cisco Catalyst SDK api
@@ -55,11 +55,11 @@ def get_overall_network_health(catalyst, epoch_time):
     if network_health_fn is None:
         return None
 
-    network_health_response = network_health_fn(epoch_time)
+    network_health_response = network_health_fn()
     return network_health_response
 
 
-def filter_health_data(network_health_response, epoch_time):
+def filter_health_data(network_health_response):
     """
     This function will filter data to get the overall network data.
     :param network_health_response: network health response
@@ -90,8 +90,6 @@ def filter_health_data(network_health_response, epoch_time):
                     if tmp[i]:
                         overall_health[i] = tmp[i]
                 health_distribution.append(overall_health)
-    for i in health_distribution:
-        i["time"] = epoch_time
     return health_distribution
 
 
@@ -142,9 +140,9 @@ def collect_events(helper, ew):
     r_json = []
     # epoch_time = get_epoch_current_time()
     # get the overall network health
-    overall_network_health = get_overall_network_health(catalyst, "")
+    overall_network_health = get_overall_network_health(catalyst)
     # simplify gathered information
-    network_health_summary = filter_health_data(overall_network_health, "")
+    network_health_summary = filter_health_data(overall_network_health)
 
     for index, item in enumerate(network_health_summary):
         item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host

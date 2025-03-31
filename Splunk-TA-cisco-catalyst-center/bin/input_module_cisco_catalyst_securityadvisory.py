@@ -238,20 +238,17 @@ def collect_events(helper, ew):
         stack = traceback.format_exc()
         helper.log_error(stack)
 
-    for item in advisories_summary:
+    for index, item in enumerate(advisories_summary):
         item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
-        r_json.append(item)
-
-    for index, item in enumerate(r_json):
-        done_flag = (index == len(r_json) - 1)
+        done_flag = (index == len(advisories_summary) - 1)
         event = helper.new_event(
-        json.dumps(item),
-        time=None,
-        host=None,
-        index=None,
-        source=None,
-        sourcetype=None,
-        done=done_flag,
-        unbroken=False,
+            json.dumps(item),
+            time=None,
+            host=None,
+            index=None,
+            source=None,
+            sourcetype=None,
+            done=done_flag,
+            unbroken=False,
         )
         ew.write_event(event)

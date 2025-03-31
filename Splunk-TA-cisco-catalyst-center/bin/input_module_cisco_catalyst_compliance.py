@@ -334,18 +334,17 @@ def collect_events(helper, ew):
     [overall_compliance_details, overall_compliance] = get_compliance_and_device_details(helper, catalyst)
 
     for item in overall_compliance_details:
-        item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
         item["ComplianceDetail"] = "True"
         item["ComplianceCount"] = "False"
         r_json.append(item)
 
     for item in overall_compliance:
-        item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
         item["ComplianceDetail"] = "False"
         item["ComplianceCount"] = "False"
         r_json.append(item)
 
     for index, item in enumerate(r_json):
+        item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
         done_flag = (index == len(r_json) - 1)
         event = helper.new_event(
             json.dumps(item),

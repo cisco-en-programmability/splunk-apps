@@ -432,15 +432,14 @@ def collect_events(helper, ew):
 
     r_json = []
     for item in overall_device_health:
-        item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
         item["HasInterfaceStats"] = "False"
         r_json.append(item)
-        
+    
     for item in overall_device_interface_stats_info:
-        item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
         r_json.append(item)
 
     for index, item in enumerate(r_json):
+        item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
         done_flag = (index == len(r_json) - 1)
         event = helper.new_event(
             json.dumps(item),
