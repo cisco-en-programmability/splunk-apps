@@ -33,7 +33,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientMACAddress keepevents=false
-          | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | stats count as total_clients</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>$timeRangePickerClient.latest$</latest>
@@ -67,7 +67,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientMACAddress ClientLastUpdatedTime keepevents=false
-          | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | stats count as total_sessionss</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>$timeRangePickerClient.latest$</latest>
@@ -104,7 +104,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats count by ClientOSType
             | rename ClientOSType as "OS Type"
             | eval "OS Type" = 'OS Type' . " (" . count . ")"
@@ -132,7 +132,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats count by ClientDeviceType
             | rename ClientDeviceType as "Device Type"
           </query>
@@ -186,7 +186,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats count by ClientConnectionBand
             | rename ClientConnectionBand as "Band"
             | eval "Band" = 'Band' . " (" . count . ")"
@@ -214,7 +214,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats sum(ClientTrafficUsage) as usage by ClientConnectionBand
             | eventstats sum(usage) as TotalUsage
             | eval percentage = round((usage/TotalUsage)*100, 2)
@@ -244,7 +244,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats sum(ClientConnectionSessionDuration) as total_session_duration by ClientConnectionBand
             | eventstats sum(total_session_duration) as TotalSessionDuration
             | eval hours = round(total_session_duration / 3600, 2)
@@ -277,7 +277,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats count by ClientConnectionProtocol
             | rename ClientConnectionProtocol as "Protocol"
             | eval "Protocol" = 'Protocol' . " (" . count . ")"
@@ -305,7 +305,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats sum(ClientTrafficUsage) as usage by ClientConnectionProtocol
             | eventstats sum(usage) as TotalUsage
             | eval percentage = round((usage/TotalUsage)*100, 2)
@@ -335,7 +335,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats sum(ClientConnectionSessionDuration) as total_session_duration by ClientConnectionProtocol
             | eventstats sum(total_session_duration) as TotalSessionDuration
             | eval hours = round(total_session_duration / 3600, 2)
@@ -406,7 +406,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" ClientIPv4Address="$clientIpAddressDropdown$" ClientName="$clientNameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
           | stats latest(*) as * by ClientID
-          | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | where ClientTrafficUsage > 0
           | sort -ClientTrafficUsage
           | head 10
@@ -485,7 +485,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ClientIPv4Address="$clientIpAddressDropdown$" ClientName="$clientNameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
           | stats latest(*) as * by ClientID
-          | where "$siteFilter$"="" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | eval total_errors = ClientTrafficRXLinkErrorPercentage + ClientTrafficTXLinkErrorPercentage + ClientTrafficRXRetries
           | where total_errors > 0
           | sort -ClientTrafficRXLinkErrorPercentage

@@ -67,7 +67,7 @@
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
-          | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
           | dedup ComplianceDeviceID keepevents=false 
           | eventstats dc(ComplianceDeviceID) as total 
           | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
@@ -135,7 +135,7 @@
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
-          | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
           | dedup ComplianceDeviceID keepevents=false 
           | eventstats dc(ComplianceDeviceID) as total 
           | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
@@ -263,7 +263,7 @@
         <search>
           <query>
             sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True" ComplianceComplianceType="$complianceTypeDropdown3$" 
-            | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
             | eventstats dc(ComplianceDeviceID) as total by ComplianceComplianceType
             | eventstats dc(eval(if(ComplianceStatus="COMPLIANT", ComplianceDeviceID, null))) as subtotal by ComplianceComplianceType
             | eval percentage=round((subtotal/total)*100, 2)
@@ -322,7 +322,7 @@
         <search>
             <query>
                 sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True"
-                | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+                | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
                 | eventstats dc(ComplianceDeviceID) as total
                 | eventstats dc(eval(if(ComplianceStatus="COMPLIANT", ComplianceDeviceID, null))) as subtotal by ComplianceComplianceType
                 | dedup ComplianceComplianceType keepevents=false
@@ -439,7 +439,7 @@
           <query>
               sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True" ComplianceComplianceType="$complianceTypeDropdown$" ComplianceStatus="$complianceTypeStatusDropdown$" IpAddress="$deviceIpAddressDropdown$" DeviceName="$deviceHostNameDropdown$"
               | dedup ComplianceDeviceID, ComplianceComplianceType keepevents=false
-              | where "$siteFilter$"="" OR lower(Site) LIKE lower("%$siteFilter$%")
+              | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
               | table ComplianceDeviceID, DeviceName, DeviceRole, IpAddress, MACAddress, Manageability, Reachability, ComplianceComplianceType, ComplianceState, ComplianceStatus, ComplianceLastSyncTime, ComplianceLastUpdateTime, Site
               | join left=L right=R where L.ComplianceDeviceID=R.ComplianceDeviceID type=inner [
                   search
