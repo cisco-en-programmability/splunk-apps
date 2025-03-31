@@ -428,7 +428,7 @@ class Clients(object):
         super(Clients, self).__init__()
         self._session = session
 
-    def get_overall_client_health(self, timestamp):
+    def get_overall_client_health(self, timestamp=None):
         _params = {
             "timestamp": timestamp,
         }
