@@ -197,19 +197,17 @@ def collect_events(helper, ew):
     # simplify gathered information
     response = filter_client_data(overall_client)
 
-    for item in response:
+    for index, item in enumerate(response):
         item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
-        r_json.append(item)
-
-    # To create a splunk event
-    event = helper.new_event(
-        json.dumps(r_json),
-        time=None,
-        host=None,
-        index=None,
-        source=None,
-        sourcetype=None,
-        done=True,
-        unbroken=True,
-    )
-    ew.write_event(event)
+        done_flag = (index == len(response) - 1)
+        event = helper.new_event(
+            json.dumps(item),
+            time=None,
+            host=None,
+            index=None,
+            source=None,
+            sourcetype=None,
+            done=done_flag,
+            unbroken=False,
+        )
+        ew.write_event(event)

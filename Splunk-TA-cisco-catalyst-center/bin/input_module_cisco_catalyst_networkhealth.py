@@ -24,13 +24,15 @@ def use_single_instance_mode():
 '''
 
 
-def get_epoch_current_time():
-    """
-    This function will return the epoch time for the {timestamp}
-    :return: epoch time including msec
-    """
-    epoch = time.time() * 1000
-    return "{0}".format(int(epoch))
+## timestamp
+# def get_epoch_current_time():
+#     """
+#     This function will return the epoch time for the {timestamp} from 10 minutes ago.
+#     :return: epoch time including msec
+#     """
+#     # Subtract 10 minutes (600 seconds) from current time.
+#     epoch = (time.time() - 600) * 1000
+#     return "{0}".format(int(epoch))
 
 
 def get_overall_network_health(catalyst, epoch_time):
@@ -138,25 +140,23 @@ def collect_events(helper, ew):
     )
 
     r_json = []
-    epoch_time = get_epoch_current_time()
+    # epoch_time = get_epoch_current_time()
     # get the overall network health
-    overall_network_health = get_overall_network_health(catalyst, epoch_time)
+    overall_network_health = get_overall_network_health(catalyst, "")
     # simplify gathered information
-    network_health_summary = filter_health_data(overall_network_health, epoch_time)
+    network_health_summary = filter_health_data(overall_network_health, "")
 
-    for item in network_health_summary:
+    for index, item in enumerate(network_health_summary):
         item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
-        r_json.append(item)
-
-    # To create a splunk event
-    event = helper.new_event(
-        json.dumps(r_json),
-        time=None,
-        host=None,
-        index=None,
-        source=None,
-        sourcetype=None,
-        done=True,
-        unbroken=True,
-    )
-    ew.write_event(event)
+        done_flag = (index == len(network_health_summary) - 1)
+        event = helper.new_event(
+            json.dumps(item),
+            time=None,
+            host=None,
+            index=None,
+            source=None,
+            sourcetype=None,
+            done=done_flag,
+            unbroken=False,
+        )
+        ew.write_event(event)

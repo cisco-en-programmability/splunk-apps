@@ -345,15 +345,16 @@ def collect_events(helper, ew):
         item["ComplianceCount"] = "False"
         r_json.append(item)
 
-    # To create a splunk event
-    event = helper.new_event(
-        json.dumps(r_json),
-        time=None,
-        host=None,
-        index=None,
-        source=None,
-        sourcetype=None,
-        done=True,
-        unbroken=True,
-    )
-    ew.write_event(event)
+    for index, item in enumerate(r_json):
+        done_flag = (index == len(r_json) - 1)
+        event = helper.new_event(
+            json.dumps(item),
+            time=None,
+            host=None,
+            index=None,
+            source=None,
+            sourcetype=None,
+            done=done_flag,
+            unbroken=False,
+        )
+        ew.write_event(event)

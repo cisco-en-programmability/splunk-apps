@@ -24,22 +24,21 @@ def use_single_instance_mode():
 '''
 
 
-## This feature is commented due to discrepancies between the Splunk and Cat Lab time zones.
-# def get_epoch_current_previous_times(interval_seconds):
-#     """
-#     This function will return the epoch time for the {timestamp} and a previous epoch time
-#     :return: epoch time (now) including msec, epoch time (previous) including msec
-#     """
-#     # REVIEW: It is recommended that this time matches the Splunk's data input interval
-#     now = datetime.datetime.now()
-#     rounded = now - datetime.timedelta(
-#         seconds=now.second % interval_seconds + interval_seconds
-#         if interval_seconds > 0
-#         else now.second
-#     )
-#     now = now.replace(microsecond=0)
-#     rounded = rounded.replace(microsecond=0)
-#     return (int(now.timestamp() * 1000), int(rounded.timestamp() * 1000))
+def get_epoch_current_previous_times(interval_seconds):
+    """
+    This function will return the epoch time for the {timestamp} and a previous epoch time
+    :return: epoch time (now) including msec, epoch time (previous) including msec
+    """
+    # REVIEW: It is recommended that this time matches the Splunk's data input interval
+    now = datetime.datetime.now()
+    rounded = now - datetime.timedelta(
+        seconds=now.second % interval_seconds + interval_seconds
+        if interval_seconds > 0
+        else now.second
+    )
+    now = now.replace(microsecond=0)
+    rounded = rounded.replace(microsecond=0)
+    return (int(now.timestamp() * 1000), int(rounded.timestamp() * 1000))
 
 
 def get_device_health(catalyst, input_interval):
@@ -49,9 +48,9 @@ def get_device_health(catalyst, input_interval):
     :param input_interval: interval in seconds
     :return: device health response
     """
-    # (epoch_current_time, epoch_previous_time) = get_epoch_current_previous_times(
-    #     input_interval
-    # )
+    (epoch_current_time, epoch_previous_time) = get_epoch_current_previous_times(
+        input_interval
+    )
     limit = 20
     offset = 1
     devices_responses = []
@@ -59,6 +58,8 @@ def get_device_health(catalyst, input_interval):
     while do_request_next:
         try:
             health_response = catalyst.devices.devices(
+                start_time=epoch_previous_time,
+                end_time=epoch_current_time,
                 limit=limit,
                 offset=offset,
             )
@@ -439,15 +440,16 @@ def collect_events(helper, ew):
         item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
         r_json.append(item)
 
-    # To create a splunk event
-    event = helper.new_event(
-        json.dumps(r_json),
-        time=None,
-        host=None,
-        index=None,
-        source=None,
-        sourcetype=None,
-        done=True,
-        unbroken=True,
-    )
-    ew.write_event(event)
+    for index, item in enumerate(r_json):
+        done_flag = (index == len(r_json) - 1)
+        event = helper.new_event(
+            json.dumps(item),
+            time=None,
+            host=None,
+            index=None,
+            source=None,
+            sourcetype=None,
+            done=done_flag,
+            unbroken=False,
+        )
+        ew.write_event(event)

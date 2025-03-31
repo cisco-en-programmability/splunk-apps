@@ -23,14 +23,15 @@ def use_single_instance_mode():
     return True
 '''
 
-
-def get_epoch_current_time():
-    """
-    This function will return the epoch time for the {timestamp}
-    :return: epoch time including msec
-    """
-    epoch = time.time() * 1000
-    return "{0}".format(int(epoch))
+## timestamp
+# def get_epoch_current_time():
+#     """
+#     This function will return the epoch time for the {timestamp} from 10 minutes ago.
+#     :return: epoch time including msec
+#     """
+#     # Subtract 10 minutes (600 seconds) from current time.
+#     epoch = (time.time() - 600) * 1000
+#     return "{0}".format(int(epoch))
 
 
 def get_client_health(catalyst):
@@ -39,8 +40,9 @@ def get_client_health(catalyst):
     :param catalyst: Cisco Catalyst SDK api
     :return: client health response
     """
-    epoch_time = get_epoch_current_time()
-    health_response = catalyst.clients.get_overall_client_health(timestamp=epoch_time)
+    # epoch_time = get_epoch_current_time()
+    # health_response = catalyst.clients.get_overall_client_health(timestamp=epoch_time)
+    health_response = catalyst.clients.get_overall_client_health()
     return health_response
 
 
@@ -145,19 +147,17 @@ def collect_events(helper, ew):
     # simplify gathered information
     response = filter_health_data(overall_client_health)
 
-    for item in response:
+    for index, item in enumerate(response):
         item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
-        r_json.append(item)
-
-    # To create a splunk event
-    event = helper.new_event(
-        json.dumps(r_json),
-        time=None,
-        host=None,
-        index=None,
-        source=None,
-        sourcetype=None,
-        done=True,
-        unbroken=True,
-    )
-    ew.write_event(event)
+        done_flag = (index == len(response) - 1)
+        event = helper.new_event(
+            json.dumps(item),
+            time=None,
+            host=None,
+            index=None,
+            source=None,
+            sourcetype=None,
+            done=done_flag,
+            unbroken=False,
+        )
+        ew.write_event(event)

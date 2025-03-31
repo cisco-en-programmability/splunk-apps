@@ -23,6 +23,15 @@ def use_single_instance_mode():
     return True
 '''
 
+def get_epoch_current_time():
+    """
+    This function will return the epoch time for the timestamp from 29 days and 23 hours ago.
+    :return: epoch time including msec
+    """
+    # Subtract 29 days and 23 hours (2,588,400 seconds) from current time.
+    epoch = (time.time() - 2588400) * 1000
+    return "{0}".format(int(epoch))
+
 
 def get_important_device_values(device_item):
     """
@@ -137,7 +146,7 @@ def get_issues(helper, catalyst, **kwargs):
     issue_info = {}
     site_info = {}
     device_info = {}
-    wait_seconds_for_issue_details_requests = 15
+    wait_seconds_for_issue_details_requests = 0.6 # API support 100 requests per minute
     if issues_response and issues_response.response:
         last_index = len(issues_response.response) - 1
         for index, issue_item in enumerate(issues_response.response):
@@ -323,8 +332,9 @@ def collect_events(helper, ew):
     overall_issues_active = []
     overall_issues_ignored = []
     overall_issues_resolved = []
+    star_time = get_epoch_current_time()
     try:
-        overall_issues_active = get_issues(helper, catalyst, issue_status="ACTIVE")
+        overall_issues_active = get_issues(helper, catalyst, issue_status="ACTIVE", start_time=star_time)
     except Exception as e:
         import traceback
         helper.log_error(traceback.format_exc())
@@ -348,19 +358,18 @@ def collect_events(helper, ew):
     overall_issues = (
         overall_issues_active + overall_issues_ignored + overall_issues_resolved
     )
-    for item in overall_issues:
-        item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
-        r_json.append(item)
 
-    # To create a splunk event
-    event = helper.new_event(
-        json.dumps(r_json),
-        time=None,
-        host=None,
-        index=None,
-        source=None,
-        sourcetype=None,
-        done=True,
-        unbroken=True,
-    )
-    ew.write_event(event)
+    for index, item in enumerate(overall_issues):
+        item["cisco_catalyst_host"] = opt_cisco_catalyst_center_host
+        done_flag = (index == len(overall_issues) - 1)
+        event = helper.new_event(
+            json.dumps(item),
+            time=None,
+            host=None,
+            index=None,
+            source=None,
+            sourcetype=None,
+            done=done_flag,
+            unbroken=False,
+        )
+        ew.write_event(event)
