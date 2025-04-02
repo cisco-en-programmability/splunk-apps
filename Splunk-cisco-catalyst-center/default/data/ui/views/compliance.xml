@@ -125,11 +125,14 @@
         <default>COMPLIANT</default>
         <initialValue>COMPLIANT</initialValue>
         <choice value="COMPLIANT">COMPLIANT</choice>
-        <choice value="NON_COMPLIANT">NON COMPLIANT</choice>
+        <choice value="COMPLIANT_WARNING">COMPLIANT WARNING</choice>
         <choice value="IN_PROGRESS">IN PROGRESS</choice>
-        <choice value="NOT_AVAILABLE">NOT AVAILABLE</choice>
+        <choice value="REMEDIATION_IN_PROGRESS">REMEDIATION IN PROGRESS</choice>
+        <choice value="NON_COMPLIANT">NON COMPLIANT</choice>
         <choice value="NOT_APPLICABLE">NOT APPLICABLE</choice>
+        <choice value="NOT_AVAILABLE">NOT AVAILABLE</choice>
         <choice value="ERROR">ERROR</choice>
+        <choice value="ABORTED">ABORTED</choice>
       </input>
       <chart>
         <title>Site: $siteFilter$</title>
@@ -425,11 +428,14 @@
         <label>Compliance Type Status</label>
         <choice value="*">All</choice>
         <choice value="COMPLIANT">COMPLIANT</choice>
-        <choice value="NON_COMPLIANT">NON COMPLIANT</choice>
+        <choice value="COMPLIANT_WARNING">COMPLIANT WARNING</choice>
         <choice value="IN_PROGRESS">IN PROGRESS</choice>
-        <choice value="NOT_AVAILABLE">NOT AVAILABLE</choice>
+        <choice value="REMEDIATION_IN_PROGRESS">REMEDIATION IN PROGRESS</choice>
+        <choice value="NON_COMPLIANT">NON COMPLIANT</choice>
         <choice value="NOT_APPLICABLE">NOT APPLICABLE</choice>
+        <choice value="NOT_AVAILABLE">NOT AVAILABLE</choice>
         <choice value="ERROR">ERROR</choice>
+        <choice value="ABORTED">ABORTED</choice>
         <default>*</default>
         <initialValue>*</initialValue>
       </input>
