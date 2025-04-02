@@ -82,7 +82,7 @@
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
-          | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | eventstats sum(IssueCount) as subtotal by _time
           | dedup _time keepevents=false
           | chart avg(subtotal) as Active by _time</query>
@@ -108,7 +108,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup IpAddress keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
             | stats dc(IpAddress) as amount by Reachability
             | eventstats sum(amount) as Total
             | eval perc=round((amount/Total)*100, 2)
@@ -247,19 +247,24 @@
       <chart>
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ComplianceCount="False" ComplianceDetail="True" 
-            | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
-            | eventstats dc(ComplianceDeviceID) as total 
-            | search ComplianceStatus="COMPLIANT"
-            | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceComplianceType 
-            | dedup ComplianceComplianceType keepevents=false 
-            | eval percentage=round((subtotal/total)*100, 2)
-            | table ComplianceComplianceType, percentage</query>
-          <earliest>$timeRangePicker2.earliest$</earliest>
-          <latest>$timeRangePicker2.latest$</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
+            <query>
+                sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True"
+                | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+                | eventstats dc(ComplianceDeviceID) as total
+                | eventstats dc(eval(if(ComplianceStatus="COMPLIANT", ComplianceDeviceID, null))) as subtotal by ComplianceComplianceType
+                | dedup ComplianceComplianceType keepevents=false
+                | eval ComplianceComplianceType=replace(ComplianceComplianceType, "_", " ")
+                | eval percentage=round((subtotal/total)*100, 2)
+                | fillnull value=0 percentage
+                | sort order ComplianceComplianceType
+                | table ComplianceComplianceType, percentage
+                | rename ComplianceComplianceType as "Compliance Type"
+            </query>
+            <earliest>$timeRangePicker6.earliest$</earliest>
+            <latest>$timeRangePicker6.latest$</latest>
+            <sampleRatio>1</sampleRatio>
+            <refresh>10m</refresh>
+            <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -516,7 +521,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientID keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | stats dc(ClientID) as total_clients</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
@@ -550,7 +555,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientMACAddress ClientLastUpdatedTime keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | stats count as total_sessionss</query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>

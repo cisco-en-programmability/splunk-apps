@@ -25,6 +25,7 @@
     <panel>
       <title>All Clients Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
           | chart values(scoreValue) as t by _time
@@ -58,6 +59,7 @@
     <panel>
       <title>Wired Clients Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
           | chart values(scoreValue) as t by _time
@@ -91,6 +93,7 @@
     <panel>
       <title>Wireless Clients Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
           | chart values(scoreValue) as t by _time
@@ -126,6 +129,7 @@
     <panel>
       <title>All Clients Count</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="ALL" scoreType="ALL" 
           | chart values(clientCount) as t by _time
@@ -159,6 +163,7 @@
     <panel>
       <title>Wired Clients Count</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
           | chart values(clientCount) as t by _time
@@ -192,6 +197,7 @@
     <panel>
       <title>Wireless Clients Count</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
           | chart values(clientCount) as t by _time
@@ -228,6 +234,7 @@
     <panel>
       <title>Average Client Health Score</title>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="ALL" scoreType="ALL"
           | timechart avg(scoreValue) by scoreType
@@ -247,6 +254,7 @@
     <panel>
       <title>Average of Wired Client Health Score</title>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRED" scoreType="ALL"
           | timechart avg(scoreValue) by scoreType
@@ -257,19 +265,19 @@
           <refresh>10m</refresh>
           <refreshType>delay</refreshType>
         </search>
-        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
         <option name="charting.axisTitleY.visibility">visible</option>
         <option name="charting.axisTitleY2.visibility">visible</option>
         <option name="charting.chart">area</option>
         <option name="charting.drilldown">none</option>
         <option name="charting.legend.placement">right</option>
         <option name="refresh.display">progressbar</option>
-        <option name="charting.axisTitleX.visibility">collapsed</option>
       </chart>
     </panel>
     <panel>
       <title>Average of Wireless Client Health Score</title>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:clienthealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" siteId="global" clientType="WIRELESS" scoreType="ALL"
           | timechart avg(scoreValue) by scoreType

@@ -46,7 +46,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificPriority
           | eventstats sum(amount) as Total
           | eval perc=round((amount/Total)*100, 2)
@@ -100,7 +100,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificSeverity
 
           | eventstats sum(amount) as Total
@@ -155,7 +155,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificCategory
 
           | eventstats sum(amount) as Total
@@ -210,7 +210,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificEntity
 
           | eventstats sum(amount) as Total
@@ -265,7 +265,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
           | dedup IssueID keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | chart dc(IssueID) as amount cont=false by IssueSpecificName
 
           | eventstats sum(amount) as Total
@@ -321,7 +321,7 @@
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
-          | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | eventstats sum(IssueCount) as subtotal by _time
           | dedup _time keepevents=false
           | chart avg(subtotal) as Active by _time
@@ -374,7 +374,7 @@
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
-          | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity
           | dedup _time, IssueSpecificSeverity keepevents=false
           | chart avg(subtotal) by _time, IssueSpecificSeverity cont=false</query>
@@ -426,7 +426,7 @@
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
-          | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
           | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificPriority
           | dedup _time, IssueSpecificPriority keepevents=false
           | chart avg(subtotal) by _time, IssueSpecificPriority cont=false</query>
@@ -478,7 +478,7 @@
           <query>
             sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$" IssueStatus="$statusDropdown$"
             | dedup IssueID keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
             | eventstats sum(IssueCount) as IssueCountSpecific, list(IssueName) as IssueNames, list(IssueStatus) as IssueStatuses, list(DeviceName) as DeviceNames, list(DeviceIpAddress) as DeviceIpAddresses, list(DeviceMACAddress) as DeviceMACAddresses, list(DeviceFamily) as DeviceFamilies, list(DeviceRole) as DeviceRoles by IssueSpecificName
             | dedup IssueSpecificName keepevents=false
             | eval IssueLastOccurredTime=strftime(IssueSpecificTimestamp/1000, "%Y-%m-%d %H:%M:%S")
@@ -514,7 +514,7 @@
           <query>
             sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
             | dedup IssueID keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
             | eventstats sum(IssueCount) as IssueCountDevice, dc(IssueID) as IssueIDAmount, list(IssueSpecificName) as IssueSpecificNames, list(IssueSpecificPriority) as IssueSpecificPriorities, list(IssueSpecificSeverity) as IssueSpecificSeverities by DeviceID
             | dedup DeviceID keepevents=false
             | sort limit=10 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName)

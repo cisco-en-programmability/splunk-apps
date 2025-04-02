@@ -33,7 +33,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | stats dc(IpAddress) as amount by Manageability
 
           | eventstats sum(amount) as Total
@@ -87,7 +87,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | stats dc(IpAddress) as amount by Reachability
 
           | eventstats sum(amount) as Total
@@ -141,7 +141,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | stats dc(IpAddress) as amount by DeviceFamily
 
           | eventstats sum(amount) as Total
@@ -194,7 +194,7 @@
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | stats dc(IpAddress) as amount by DeviceRole
 
           | eventstats sum(amount) as Total
@@ -248,7 +248,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | chart dc(IpAddress) as amount by DeviceSeries
 
           | eventstats sum(amount) as Total
@@ -304,7 +304,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where Manageability="Managed"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -340,7 +340,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where Manageability="Unmanaged"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -376,7 +376,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where Manageability="Managed (With Errors)"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -414,7 +414,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where DeviceFamily="Switches and Hubs"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -450,7 +450,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where DeviceFamily="Wireless Controller"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -486,7 +486,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where DeviceFamily="Routers"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -522,7 +522,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where (DeviceFamily LIKE "%AP%")
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -560,7 +560,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where DeviceRole="ACCESS"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -596,7 +596,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where DeviceRole="CORE"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -632,7 +632,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where DeviceRole="DISTRIBUTION"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -668,7 +668,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where DeviceRole="BORDER ROUTER"
           | chart dc(IpAddress) as amount by _time
           | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
@@ -705,7 +705,7 @@
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where Reachability="Reachable"
           | chart dc(IpAddress) as amount by _time</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
@@ -731,7 +731,7 @@
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | where Reachability="Unreachable"
           | chart dc(IpAddress) as amount by _time</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
@@ -790,7 +790,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup IpAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | search Reachability="$reachabilityDropdown$"
           | search Manageability="$manageabilityDropdown$"
           | search DeviceName="$deviceHostNameDropdown$"
@@ -850,7 +850,7 @@
             | dedup ID keepevents=false
             | search DeviceName="$deviceHostNameDropdown2$"
             | join type=left DeviceID [search sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" HasInterfaceStats="False" | dedup DeviceID | table DeviceID Site]
-            | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
             | eval TotalUtilization = RxRate + TxRate
             | where TotalUtilization > 0
             | sort -TotalUtilization

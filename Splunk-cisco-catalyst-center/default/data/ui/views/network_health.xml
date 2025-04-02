@@ -25,6 +25,7 @@
     <panel>
       <title>Overall Network Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="All"
           | chart values(healthScore) as t by _time
@@ -59,6 +60,7 @@
     <panel>
       <title>Access Switches Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="Access"
           | chart avg(healthScore) as healthScore by _time
@@ -93,6 +95,7 @@
     <panel>
       <title>Distribution Switches Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="Distribution"
           | chart avg(healthScore) as healthScore by _time
@@ -126,6 +129,7 @@
     <panel>
       <title>Wireless LAN Controller Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="WLC"
           | chart avg(healthScore) as healthScore by _time
@@ -159,6 +163,7 @@
     <panel>
       <title>Router Health Score</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="Router"
           | chart avg(healthScore) as healthScore by _time
@@ -194,6 +199,7 @@
     <panel>
       <title>Total</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="All"
           | chart avg(totalCount) as totalCount by _time
@@ -227,6 +233,7 @@
     <panel>
       <title>Access Switches Total</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="Access"
           | chart avg(totalCount) as totalCount by _time
@@ -260,6 +267,7 @@
     <panel>
       <title>Distribution Switches Total</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="Distribution"
           | chart avg(totalCount) as totalCount by _time
@@ -293,6 +301,7 @@
     <panel>
       <title>Wireless LAN Controller Total</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="WLC"
           | chart avg(totalCount) as totalCount by _time
@@ -326,6 +335,7 @@
     <panel>
       <title>Router Total</title>
       <single>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category="Router"
           | chart avg(totalCount) as totalCount by _time
@@ -361,6 +371,7 @@
     <panel>
       <title>Network Device Type Count by Category</title>
       <chart>
+        <title>Site: Global</title>
         <search>
           <query>sourcetype="cisco:catalyst:networkhealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" category!="All"
           | dedup category keepevents=false 
