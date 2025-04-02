@@ -387,7 +387,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="False" DeviceName="$deviceHostNameDropdown$" DeviceIpAddress="$ipAddressDropdown$" AdvisoryID="$advisoryIDDropdown$"
           | dedup AdvisoryID keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
           | eval DeviceUptime = tostring(DeviceUptimeSeconds, "duration")
           | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
           | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
