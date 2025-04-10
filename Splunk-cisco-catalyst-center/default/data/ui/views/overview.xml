@@ -81,11 +81,14 @@
       <chart>
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
-          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
-          | eventstats sum(IssueCount) as subtotal by _time
-          | dedup _time keepevents=false
-          | chart avg(subtotal) as Active by _time</query>
+          <query>
+            sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
+            | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+            | eventstats sum(IssueCount) as subtotal by _time
+            | dedup _time keepevents=false
+            | chart avg(subtotal) as Active by _time
+            | fillnull value=0
+          </query>
           <earliest>$timeRangePicker2.earliest$</earliest>
           <latest>$timeRangePicker2.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -242,12 +245,14 @@
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
+  </row>
+  <row>
     <panel>
       <title>Percentage of Compliant Devices by Type</title>
       <chart>
         <title>Site: $siteFilter$</title>
         <search>
-            <query>
+          <query>
                 sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True"
                 | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
                 | eventstats dc(ComplianceDeviceID) as total
@@ -260,11 +265,11 @@
                 | table ComplianceComplianceType, percentage
                 | rename ComplianceComplianceType as "Compliance Type"
             </query>
-            <earliest>$timeRangePicker6.earliest$</earliest>
-            <latest>$timeRangePicker6.latest$</latest>
-            <sampleRatio>1</sampleRatio>
-            <refresh>10m</refresh>
-            <refreshType>delay</refreshType>
+          <earliest>$timeRangePicker2.earliest$</earliest>
+          <latest>$timeRangePicker2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
