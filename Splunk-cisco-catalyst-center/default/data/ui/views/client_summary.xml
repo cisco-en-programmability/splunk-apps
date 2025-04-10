@@ -33,7 +33,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientMACAddress keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | stats count as total_clients</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>$timeRangePickerClient.latest$</latest>
@@ -67,7 +67,7 @@
         <search>
           <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
           | dedup ClientMACAddress ClientLastUpdatedTime keepevents=false
-          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | stats count as total_sessionss</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>$timeRangePickerClient.latest$</latest>
@@ -104,7 +104,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats count by ClientOSType
             | rename ClientOSType as "OS Type"
             | eval "OS Type" = 'OS Type' . " (" . count . ")"
@@ -132,7 +132,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats count by ClientDeviceType
             | rename ClientDeviceType as "Device Type"
           </query>
@@ -186,7 +186,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats count by ClientConnectionBand
             | rename ClientConnectionBand as "Band"
             | eval "Band" = 'Band' . " (" . count . ")"
@@ -214,7 +214,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats sum(ClientTrafficUsage) as usage by ClientConnectionBand
             | eventstats sum(usage) as TotalUsage
             | eval percentage = round((usage/TotalUsage)*100, 2)
@@ -244,7 +244,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats sum(ClientConnectionSessionDuration) as total_session_duration by ClientConnectionBand
             | eventstats sum(total_session_duration) as TotalSessionDuration
             | eval hours = round(total_session_duration / 3600, 2)
@@ -277,7 +277,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats count by ClientConnectionProtocol
             | rename ClientConnectionProtocol as "Protocol"
             | eval "Protocol" = 'Protocol' . " (" . count . ")"
@@ -305,7 +305,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats sum(ClientTrafficUsage) as usage by ClientConnectionProtocol
             | eventstats sum(usage) as TotalUsage
             | eval percentage = round((usage/TotalUsage)*100, 2)
@@ -335,7 +335,7 @@
           <query>
             sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
             | dedup ClientMACAddress keepevents=false
-            | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
             | stats sum(ClientConnectionSessionDuration) as total_session_duration by ClientConnectionProtocol
             | eventstats sum(total_session_duration) as TotalSessionDuration
             | eval hours = round(total_session_duration / 3600, 2)
@@ -362,14 +362,14 @@
   <row>
     <panel>
       <title>Top 10 Clients by Received Transmission Usage</title>
-      <input type="dropdown" token="clientNameDropdown" searchWhenChanged="true">
-        <label>Name</label>
+      <input type="dropdown" token="clientUsernameDropdown" searchWhenChanged="true">
+        <label>Client Username</label>
         <choice value="*">All</choice>
         <initialValue>*</initialValue>
-        <fieldForLabel>ClientName</fieldForLabel>
-        <fieldForValue>ClientName</fieldForValue>
+        <fieldForLabel>ClientUsername</fieldForLabel>
+        <fieldForValue>ClientUsername</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientName keepevents=false | table ClientName</query>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientUsername keepevents=false | table ClientUsername</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>now</latest>
         </search>
@@ -404,16 +404,16 @@
       <table>
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" ClientIPv4Address="$clientIpAddressDropdown$" ClientName="$clientNameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" ClientIPv4Address="$clientIpAddressDropdown$" ClientUsername="$clientUsernameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
           | stats latest(*) as * by ClientID
-          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | where ClientTrafficUsage > 0
           | sort -ClientTrafficUsage
           | head 10
           | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
           | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+ClientMACAddress
-          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXBytes as "Bytes Received (RX)", ClientTrafficTXBytes as "Bytes Transmitted (TX)", ClientTrafficUsage as "Total Usage (Bytes)", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Name"
-          | table "Client ID", "Name", "IP Address", "MAC Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
+          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXBytes as "Bytes Received (RX)", ClientTrafficTXBytes as "Bytes Transmitted (TX)", ClientTrafficUsage as "Total Usage (Bytes)", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Name", ClientUsername as "Client Username"
+          | table "Client ID", "Client Username", "Name", "IP Address", "MAC Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>$timeRangePickerClient.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -428,7 +428,7 @@
         <option name="percentagesRow">false</option>
         <option name="rowNumbers">false</option>
         <option name="totalsRow">false</option>
-        <fields>"Name", "MAC Address", "IP Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
+        <fields>"Client ID", "Client Username", "Name", "MAC Address", "IP Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
         <drilldown>
           <condition field="MAC Address">
             <link target="_blank">$row.URL|n$</link>
@@ -441,14 +441,14 @@
   <row>
     <panel>
       <title>Top 10 Clients with Transmission Errors and Retries</title>
-      <input type="dropdown" token="clientNameDropdown" searchWhenChanged="true">
-        <label>Name</label>
+      <input type="dropdown" token="clientUsernameDropdown" searchWhenChanged="true">
+        <label>Client Username</label>
         <choice value="*">All</choice>
         <initialValue>*</initialValue>
-        <fieldForLabel>ClientName</fieldForLabel>
-        <fieldForValue>ClientName</fieldForValue>
+        <fieldForLabel>ClientUsername</fieldForLabel>
+        <fieldForValue>ClientUsername</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientName keepevents=false | table ClientName</query>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientUsername keepevents=false | table ClientUsername</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>now</latest>
         </search>
@@ -483,17 +483,17 @@
       <table>
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ClientIPv4Address="$clientIpAddressDropdown$" ClientName="$clientNameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ClientIPv4Address="$clientIpAddressDropdown$" ClientUsername="$clientUsernameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
           | stats latest(*) as * by ClientID
-          | where "$siteFilter$"=="Global"OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | eval total_errors = ClientTrafficRXLinkErrorPercentage + ClientTrafficTXLinkErrorPercentage + ClientTrafficRXRetries
           | where total_errors > 0
           | sort -ClientTrafficRXLinkErrorPercentage
           | head 10
           | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
           | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+ClientMACAddress
-          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXLinkErrorPercentage as "% Errors Received (RX)", ClientTrafficTXLinkErrorPercentage as "% Errors Transmitted (TX)", ClientTrafficRXRetries as "Retries Received (RX)", ClientTrafficRXRetryPercentage as "% Retries (RX)", ClientTrafficTXDrops as "TX Packets Lost", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Name"
-          | table "Client ID", "Name", "IP Address", "MAC Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
+          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXLinkErrorPercentage as "% Errors Received (RX)", ClientTrafficTXLinkErrorPercentage as "% Errors Transmitted (TX)", ClientTrafficRXRetries as "Retries Received (RX)", ClientTrafficRXRetryPercentage as "% Retries (RX)", ClientTrafficTXDrops as "TX Packets Lost", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Name", ClientUsername as "Client Username"
+          | table "Client ID", "Client Username", "Name", "IP Address", "MAC Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>$timeRangePickerClient.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -508,7 +508,7 @@
         <option name="percentagesRow">false</option>
         <option name="rowNumbers">false</option>
         <option name="totalsRow">false</option>
-        <fields>"Name", "MAC Address", "IP Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
+        <fields>"Client ID", "Client Username", "Name", "MAC Address", "IP Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
         <drilldown>
           <condition field="MAC Address">
             <link target="_blank">$row.URL|n$</link>
