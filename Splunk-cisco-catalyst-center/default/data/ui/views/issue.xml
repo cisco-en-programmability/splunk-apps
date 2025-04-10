@@ -320,11 +320,13 @@
       <chart>
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
-          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
-          | eventstats sum(IssueCount) as subtotal by _time
-          | dedup _time keepevents=false
-          | chart avg(subtotal) as Active by _time
+          <query>
+            sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="Active"
+            | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+            | eventstats sum(IssueCount) as subtotal by _time
+            | dedup _time keepevents=false
+            | chart avg(subtotal) as Active by _time
+            | fillnull value=0
           </query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
@@ -373,11 +375,14 @@
       <chart>
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
-          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
-          | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity
-          | dedup _time, IssueSpecificSeverity keepevents=false
-          | chart avg(subtotal) by _time, IssueSpecificSeverity cont=false</query>
+          <query>
+            sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
+            | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+            | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificSeverity
+            | dedup _time, IssueSpecificSeverity keepevents=false
+            | chart avg(subtotal) by _time, IssueSpecificSeverity cont=false
+            | fillnull value=0
+          </query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -425,11 +430,14 @@
       <chart>
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
-          | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
-          | eventstats sum(IssueCount) as subtotal by _time, IssueSpecificPriority
-          | dedup _time, IssueSpecificPriority keepevents=false
-          | chart avg(subtotal) by _time, IssueSpecificPriority cont=false</query>
+          <query>
+            sourcetype="cisco:catalyst:issue" cisco_catalyst_host="$ciscocatalysthostDropdown$" IssueStatus="$statusDropdown$"
+            | where "$siteFilter$"=="Global" OR lower(SiteNameHierarchy) LIKE lower("%$siteFilter$%")
+            | eventstats sum(IssueCount) AS subtotal BY _time IssueSpecificPriority
+            | dedup _time IssueSpecificPriority keepevents=false
+            | chart avg(subtotal) BY _time IssueSpecificPriority useother=f
+            | fillnull value=0
+          </query>
           <earliest>$timeRangePicker9.earliest$</earliest>
           <latest>$timeRangePicker9.latest$</latest>
           <sampleRatio>1</sampleRatio>
