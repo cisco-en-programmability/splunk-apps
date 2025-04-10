@@ -18,7 +18,7 @@ capabilities to deliver an advanced security reporting and analysis tool.
 
 ### Dashboards contents ###
 
-- Cisco Catalyst Center Overview
+- Overview
     * Average Network Health Score
     * Average Client Health Score
     * Total Number of Active Issues
@@ -32,9 +32,24 @@ capabilities to deliver an advanced security reporting and analysis tool.
     * All Clients Count
     * Wired Clients Count
     * Wireless Clients Count
-- Cisco Catalyst Center Client Health
+    * Total Number of Clients
+    * Number of Sessions
+- Client Health
     * The health scores for all, for wired and for wireless devices in different graphs.
-- Cisco Catalyst Center Compliance
+- Client Summary
+    * Client Count
+    * Session Count
+    * Client Count by OS Type
+    * Client Count by Device Type
+    * Client Count by Band
+    * Distributed Client Traffic by Band
+    * Distributed Client Sessions by Band
+    * Client Count by Protocols
+    * Distributed Client Traffic by Protocol
+    * Distributed Client Sessions by Protocol
+    * Top 10 Clients by Received Transmission Usage
+    * Top 10 Clients with Transmission Errors and Retries
+- Compliance
     * Number of Compliant Devices
     * Device Compliance Status Percentages
     * Percentage of Compliant Devices with the Specified Status
@@ -42,7 +57,7 @@ capabilities to deliver an advanced security reporting and analysis tool.
     * Percentage of Compliant Devices by Type
     * Percentage of Compliant Devices by Type
     * Device Compliance Table
-- Cisco Catalyst Center Device Health
+- Device Health
     * Percentages for:
         - Device Manageability Type
         - Device Reachability Type
@@ -64,7 +79,8 @@ capabilities to deliver an advanced security reporting and analysis tool.
         - Reachable Devices
         - Unreachable Devices
     * Device Health Table
-- Cisco Catalyst Center Issues
+    * Top Ten Interface Utilization
+- Issues
     * Number of Issues by Priority
     * Number of Issues by Severity
     * Number of Issues by Category
@@ -75,7 +91,7 @@ capabilities to deliver an advanced security reporting and analysis tool.
     * Issue Count by Priority
     * Table of Top 10 Issues
     * Table of Top 10 Impacted Devices
-- Cisco Catalyst Center Network Health
+- Network Health
     * Overall Network Health Score
     * Access Switches Health Score
     * Distribution Switches Health Score
@@ -87,7 +103,7 @@ capabilities to deliver an advanced security reporting and analysis tool.
     * Wireless LAN Controller Total
     * Router Total
     * Network Device Type Count by Category
-- Cisco Catalyst Center Security Advisories
+- Security Advisories
     * Critical Count
     * High Count
     * Medium Count
