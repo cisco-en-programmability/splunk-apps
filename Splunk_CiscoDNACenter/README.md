@@ -18,7 +18,7 @@ capabilities to deliver an advanced security reporting and analysis tool.
 
 ### Dashboards contents ###
 
-- Cisco DNA Center Overview
+- Cisco Catalyst Center Overview
     * Average Network Health Score
     * Average Client Health Score
     * Total Number of Active Issues
@@ -32,9 +32,9 @@ capabilities to deliver an advanced security reporting and analysis tool.
     * All Clients Count
     * Wired Clients Count
     * Wireless Clients Count
-- Cisco DNA Center Client Health
+- Cisco Catalyst Center Client Health
     * The health scores for all, for wired and for wireless devices in different graphs.
-- Cisco DNA Center Compliance
+- Cisco Catalyst Center Compliance
     * Number of Compliant Devices
     * Device Compliance Status Percentages
     * Percentage of Compliant Devices with the Specified Status
@@ -42,7 +42,7 @@ capabilities to deliver an advanced security reporting and analysis tool.
     * Percentage of Compliant Devices by Type
     * Percentage of Compliant Devices by Type
     * Device Compliance Table
-- Cisco DNA Center Device Health
+- Cisco Catalyst Center Device Health
     * Percentages for:
         - Device Manageability Type
         - Device Reachability Type
@@ -64,7 +64,7 @@ capabilities to deliver an advanced security reporting and analysis tool.
         - Reachable Devices
         - Unreachable Devices
     * Device Health Table
-- Cisco DNA Center Issues
+- Cisco Catalyst Center Issues
     * Number of Issues by Priority
     * Number of Issues by Severity
     * Number of Issues by Category
@@ -75,7 +75,7 @@ capabilities to deliver an advanced security reporting and analysis tool.
     * Issue Count by Priority
     * Table of Top 10 Issues
     * Table of Top 10 Impacted Devices
-- Cisco DNA Center Network Health
+- Cisco Catalyst Center Network Health
     * Overall Network Health Score
     * Access Switches Health Score
     * Distribution Switches Health Score
@@ -87,7 +87,7 @@ capabilities to deliver an advanced security reporting and analysis tool.
     * Wireless LAN Controller Total
     * Router Total
     * Network Device Type Count by Category
-- Cisco DNA Center Security Advisories
+- Cisco Catalyst Center Security Advisories
     * Critical Count
     * High Count
     * Medium Count
