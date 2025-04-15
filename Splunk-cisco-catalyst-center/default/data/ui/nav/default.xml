@@ -6,15 +6,15 @@
   </collection>
   
   <collection label="Dashboards">
-    <view name="overview" default="true"/>
+    <view name="overview" label="Overview" default="true"/>
     <divider />
-    <view name="client_health" />
-    <view name="client_summary" />
-    <view name="compliance" />
-    <view name="device_health" />
-    <view name="issue" />
-    <view name="network_health" />
-    <view name="security_advisory" />
+    <view name="client_health" label="Client Health"/>
+    <view name="client_summary" label="Client Summary"/>
+    <view name="compliance" label="Compliance"/>
+    <view name="device_health" label="Device Health"/>
+    <view name="issue" label="Issues"/>
+    <view name="network_health" label="Network Health"/>
+    <view name="security_advisory" label="Security Advisory"/>
   </collection>
 
   <view name="search"/>
