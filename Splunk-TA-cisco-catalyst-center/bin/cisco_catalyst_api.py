@@ -342,60 +342,72 @@ class RestSession(object):
             # url is already an absolute URL; return as is
             return url
 
-    def request(self, method, url, custom_refresh, **kwargs):
+    def request(self, method, url, custom_refresh=0, max_attempts=5, **kwargs):
         """Abstract base method for making requests to the Catalyst Center APIs."""
-        # Ensure the url is an absolute URL
+
+        # Ensure the URL is an absolute URL
         abs_url = self.abs_url(url)
 
         # Update request kwargs with session defaults
         kwargs.setdefault("timeout", self._single_request_timeout)
         kwargs.setdefault("verify", self._verify)
 
-        # Fixes requests inconsistent behavior with additional parameters
-        if not kwargs.get("json"):
-            kwargs.pop("json", None)
+        # Clean up kwargs for requests library consistency
+        kwargs.pop("json", None) if not kwargs.get("json") else None
+        kwargs.pop("data", None) if not kwargs.get("data") else None
 
-        if not kwargs.get("data"):
-            kwargs.pop("data", None)
-
-        c = custom_refresh
         attempt = 0
-        while True:
+        response = None  # Initialize response to avoid reference before assignment
+
+        while attempt < max_attempts:
             attempt += 1
             try:
                 self._helper.log_debug(f"Attempt {attempt}")
                 self._helper.log_debug(
-                    pprint_request_info(
-                        abs_url, method, _headers=self.headers, **kwargs
-                    )
+                    pprint_request_info(abs_url, method, _headers=self.headers, **kwargs)
                 )
-                assert abs_url.startswith("https"), "URL must be HTTPS"
+
+                # Assert HTTPS for security
+                if not abs_url.startswith("https"):
+                    raise AssertionError("URL must be HTTPS")
+
                 response = self._req_session.request(method, abs_url, **kwargs)
                 response.raise_for_status()
+
                 self._helper.log_debug(pprint_response_info(response, is_success=True, show_headers=False))
                 return response
+
             except requests.exceptions.RequestException as e:
-                if response is not None and response.status_code == 401 and c < 1:
+                status_code = getattr(response, "status_code", None)
+
+                if status_code == 401 and custom_refresh < 1:
                     self._helper.log_debug(pprint_response_info(response, is_success=False, show_headers=False))
                     self._helper.log_debug("Refreshing access token")
                     self.refresh_token()
                     kwargs["headers"]["X-Auth-Token"] = self._access_token
-                    c += 1
+                    custom_refresh += 1
                     continue
-                elif response is not None and response.status_code == 429:
+
+                elif status_code == 429:
                     retry_after = int(response.headers.get('Retry-After', 15))
                     self._helper.log_debug(f"Rate limited. Retrying after {retry_after} seconds.")
                     time.sleep(retry_after)
                     continue
+
                 else:
                     self._helper.log_debug(pprint_response_info(response, is_success=False, show_headers=False))
                     raise e
+
             except AssertionError as e:
                 self._helper.log_debug(f"Assertion error: {e}")
-                raise e
+                raise
+
             except Exception as e:
                 self._helper.log_debug(f"Unexpected error: {e}")
-                raise e
+                raise
+
+        # Final failure after retries exhausted
+        raise Exception(f"Max attempts reached ({max_attempts}) for request to {abs_url}")
 
     @property
     def headers(self):
