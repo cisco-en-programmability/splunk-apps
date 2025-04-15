@@ -1,5 +1,5 @@
 <form version="1.1">
-  <label>Cisco DNA Center Sensor Device</label>
+  <label>Cisco Catalyst Center Sensor Device</label>
   <fieldset submitButton="false" autoRun="true">
     <input type="time" token="timeRangePicker8" searchWhenChanged="true">
       <label>Time Range</label>
@@ -9,7 +9,7 @@
       </default>
     </input>
     <input type="dropdown" token="ciscodnachostDropdown" searchWhenChanged="true">
-      <label>Cisco DNA Center Host</label>
+      <label>Cisco Catalyst Center Host</label>
       <fieldForLabel>cisco_dnac_host</fieldForLabel>
       <fieldForValue>cisco_dnac_host</fieldForValue>
       <search>

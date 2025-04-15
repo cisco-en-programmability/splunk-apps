@@ -1,19 +1,19 @@
 <nav search_view="search" color="#FFFFFF">
 
-  <collection label="Cisco DNA Center">
+  <collection label="Cisco Catalyst Center">
     <a href="/app/Splunk-TA-cisco-dnacenter">Configuration</a>
     <divider />
   </collection>
   
   <collection label="Dashboards">
-    <view name="cisco_dna_center_overview" default="true"/>
+    <view name="cisco_dna_center_overview" label="Catalyst Center Overview" default="true"/>
     <divider />
-    <view name="cisco_dna_center_client_health" />
-    <view name="cisco_dna_center_compliance" />
-    <view name="cisco_dna_center_device_health" />
-    <view name="cisco_dna_center_issue" />
-    <view name="cisco_dna_center_network_health" />
-    <view name="cisco_dna_center_security_advisory" />
+    <view name="cisco_dna_center_client_health" label="Catalyst Center Client Health"/>
+    <view name="cisco_dna_center_compliance" label="Catalyst Center Compliance"/>
+    <view name="cisco_dna_center_device_health" label="Catalyst Center Device Health"/>
+    <view name="cisco_dna_center_issue" label="Catalyst Center Issues"/>
+    <view name="cisco_dna_center_network_health" label="Catalyst Center Network Health"/>
+    <view name="cisco_dna_center_security_advisory" label="Catalyst Center Security Advisory"/>
   </collection>
 
   <view name="search"/>
