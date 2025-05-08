@@ -480,7 +480,7 @@
   <row>
     <panel>
       <title>Table of Top 10 Issues</title>
-      <table>
+      <table id="tableURL">
         <title>Site: $siteFilter$</title>
         <search>
           <query>
@@ -516,7 +516,7 @@
   <row>
     <panel>
       <title>Table of Top 10 Impacted Devices</title>
-      <table>
+      <table id="tableURL2">
         <title>Site: $siteFilter$</title>
         <search>
           <query>
@@ -556,6 +556,35 @@
           <condition field="*"></condition>
         </drilldown>
       </table>
+    </panel>
+  </row>
+  <row depends="$alwaysHideCSSPanel$">
+    <panel>
+      <html>
+        <style>
+          #tableURL td[data-cell-index="5"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #tableURL td:not([data-cell-index="5"]){
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+          #tableURL2 td[data-cell-index="0"] a,
+          #tableURL2 td[data-cell-index="3"] a,{
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #tableURL2 td:not([data-cell-index="0"]):not([data-cell-index="3"]){
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+        </style>
+      </html>
     </panel>
   </row>
 </form>
