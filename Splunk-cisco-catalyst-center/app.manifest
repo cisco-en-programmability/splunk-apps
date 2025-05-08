@@ -4,7 +4,7 @@
     "title": "Cisco Catalyst Center",
     "id": {
       "group": null,
-      "name": "Splunk_CiscoCatalystCenter",
+      "name": "Splunk-cisco-catalyst-center",
       "version": "1.0.0"
     },
     "author": [
