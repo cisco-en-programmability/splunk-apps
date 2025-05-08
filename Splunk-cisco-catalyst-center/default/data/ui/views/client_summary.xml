@@ -363,7 +363,7 @@
     <panel>
       <title>Top 10 Clients by Received Transmission Usage</title>
       <input type="dropdown" token="clientUsernameDropdown" searchWhenChanged="true">
-        <label>Client Username</label>
+        <label>Username</label>
         <choice value="*">All</choice>
         <initialValue>*</initialValue>
         <fieldForLabel>ClientUsername</fieldForLabel>
@@ -375,7 +375,7 @@
         </search>
         <default>*</default>
       </input>
-      <input type="dropdown" token="clientMACAdressDropdown" searchWhenChanged="true">
+      <input type="dropdown" token="clientMACAddressDropdown" searchWhenChanged="true">
         <label>MAC Address</label>
         <choice value="*">All</choice>
         <initialValue>*</initialValue>
@@ -401,10 +401,10 @@
         </search>
         <default>*</default>
       </input>
-      <table>
+      <table id="macAddressTable1">
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" ClientIPv4Address="$clientIpAddressDropdown$" ClientUsername="$clientUsernameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" ClientIPv4Address="$clientIpAddressDropdown$" ClientUsername="$clientUsernameDropdown$" ClientMACAddress="$clientMACAddressDropdown$"
           | stats latest(*) as * by ClientID
           | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | where ClientTrafficUsage > 0
@@ -412,8 +412,8 @@
           | head 10
           | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
           | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+ClientMACAddress
-          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXBytes as "Bytes Received (RX)", ClientTrafficTXBytes as "Bytes Transmitted (TX)", ClientTrafficUsage as "Total Usage (Bytes)", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Name", ClientUsername as "Client Username"
-          | table "Client ID", "Client Username", "Name", "IP Address", "MAC Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
+          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXBytes as "Bytes Received (RX)", ClientTrafficTXBytes as "Bytes Transmitted (TX)", ClientTrafficUsage as "Total Usage (Bytes)", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Host Name", ClientUsername as "Username"
+          | table "Client ID", "Username", "Host Name", "IP Address", "MAC Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>$timeRangePickerClient.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -428,7 +428,7 @@
         <option name="percentagesRow">false</option>
         <option name="rowNumbers">false</option>
         <option name="totalsRow">false</option>
-        <fields>"Client ID", "Client Username", "Name", "MAC Address", "IP Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
+        <fields>"Client ID", "Username", "Host Name", "MAC Address", "IP Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
         <drilldown>
           <condition field="MAC Address">
             <link target="_blank">$row.URL|n$</link>
@@ -441,49 +441,61 @@
   <row>
     <panel>
       <title>Top 10 Clients with Transmission Errors and Retries</title>
-      <input type="dropdown" token="clientUsernameDropdown" searchWhenChanged="true">
-        <label>Client Username</label>
+      <input type="dropdown" token="clientUsernameDropdown2" searchWhenChanged="true" depends="$ciscocatalysthostDropdown$">
+        <label>Username</label>
         <choice value="*">All</choice>
         <initialValue>*</initialValue>
         <fieldForLabel>ClientUsername</fieldForLabel>
         <fieldForValue>ClientUsername</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientUsername keepevents=false | table ClientUsername</query>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(ClientUsername) AS ClientUsername
+          | mvexpand ClientUsername
+          | table ClientUsername
+          </query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>now</latest>
         </search>
         <default>*</default>
       </input>
-      <input type="dropdown" token="clientMACAdressDropdown" searchWhenChanged="true">
+      <input type="dropdown" token="clientMACAddressDropdown2" searchWhenChanged="true" depends="$ciscocatalysthostDropdown$">
         <label>MAC Address</label>
         <choice value="*">All</choice>
         <initialValue>*</initialValue>
         <fieldForLabel>ClientMACAddress</fieldForLabel>
         <fieldForValue>ClientMACAddress</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientMACAddress keepevents=false | table ClientMACAddress</query>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(ClientMACAddress) AS ClientMACAddress
+          | mvexpand ClientMACAddress
+          | table ClientMACAddress
+          </query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>now</latest>
         </search>
         <default>*</default>
       </input>
-      <input type="dropdown" token="clientIpAddressDropdown" searchWhenChanged="true">
+      <input type="dropdown" token="clientIpAddressDropdown2" searchWhenChanged="true" depends="$ciscocatalysthostDropdown$">
         <label>IP Address</label>
         <choice value="*">All</choice>
         <initialValue>*</initialValue>
         <fieldForLabel>ClientIPv4Address</fieldForLabel>
         <fieldForValue>ClientIPv4Address</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientIPv4Address keepevents=false | table ClientIPv4Address</query>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(ClientIPv4Address) AS ClientIPv4Address
+          | mvexpand ClientIPv4Address
+          | table ClientIPv4Address
+          </query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>now</latest>
         </search>
         <default>*</default>
       </input>
-      <table>
+      <table id="macAddressTable2">
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ClientIPv4Address="$clientIpAddressDropdown$" ClientUsername="$clientUsernameDropdown$" ClientMACAddress="$clientMACAdressDropdown$"
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ClientIPv4Address="$clientIpAddressDropdown2$" ClientUsername="$clientUsernameDropdown2$" ClientMACAddress="$clientMACAddressDropdown2$"
           | stats latest(*) as * by ClientID
           | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | eval total_errors = ClientTrafficRXLinkErrorPercentage + ClientTrafficTXLinkErrorPercentage + ClientTrafficRXRetries
@@ -492,8 +504,8 @@
           | head 10
           | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
           | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+ClientMACAddress
-          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXLinkErrorPercentage as "% Errors Received (RX)", ClientTrafficTXLinkErrorPercentage as "% Errors Transmitted (TX)", ClientTrafficRXRetries as "Retries Received (RX)", ClientTrafficRXRetryPercentage as "% Retries (RX)", ClientTrafficTXDrops as "TX Packets Lost", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Name", ClientUsername as "Client Username"
-          | table "Client ID", "Client Username", "Name", "IP Address", "MAC Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
+          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXLinkErrorPercentage as "% Errors Received (RX)", ClientTrafficTXLinkErrorPercentage as "% Errors Transmitted (TX)", ClientTrafficRXRetries as "Retries Received (RX)", ClientTrafficRXRetryPercentage as "% Retries (RX)", ClientTrafficTXDrops as "TX Packets Lost", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Host Name", ClientUsername as "Username"
+          | table "Client ID", "Username", "Host Name", "IP Address", "MAC Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
           <earliest>$timeRangePickerClient.earliest$</earliest>
           <latest>$timeRangePickerClient.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -508,7 +520,7 @@
         <option name="percentagesRow">false</option>
         <option name="rowNumbers">false</option>
         <option name="totalsRow">false</option>
-        <fields>"Client ID", "Client Username", "Name", "MAC Address", "IP Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
+        <fields>"Client ID", "Username", "Host Name", "MAC Address", "IP Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
         <drilldown>
           <condition field="MAC Address">
             <link target="_blank">$row.URL|n$</link>
@@ -516,6 +528,26 @@
           <condition field="*"/>
         </drilldown>
       </table>
+    </panel>
+  </row>
+  <row depends="$alwaysHideCSSPanel$">
+    <panel>
+      <html>
+        <style>
+          #macAddressTable1 td[data-cell-index="3"] a,
+          #macAddressTable2 td[data-cell-index="3"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #macAddressTable1 td:not([data-cell-index="3"]),
+          #macAddressTable2 td:not([data-cell-index="3"]) {
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+        </style>
+      </html>
     </panel>
   </row>
 </form>
