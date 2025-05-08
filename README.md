@@ -33,30 +33,30 @@ We welcome community contributions to them. If you find problems, need an enhanc
 
 ### 📚 App and Add-on READMEs
 
-- [Splunk App README](https://github.com/cisco-en-programmability/splunk-apps/blob/main/Splunk_CiscoDNACenter/README.md)
-- [Splunk Add-on README](https://github.com/cisco-en-programmability/splunk-apps/blob/main/Splunk-TA-cisco-dnacenter/README.md)
+- [Splunk App README](https://github.com/cisco-en-programmability/splunk-apps/blob/main/Splunk-cisco-catalyst-center/README.md)
+- [Splunk Add-on README](https://github.com/cisco-en-programmability/splunk-apps/blob/main/Splunk-TA-cisco-catalyst-center/README.md)
 
 ### 📂 File structure of this repo
 
-- **Splunk_CiscoDNACenter**: Official Splunk App
-- **Splunk-TA-cisco-dnacenter**: Official Splunk Add-on (TA)
+- **Splunk-cisco-catalyst-center**: Official Splunk App
+- **Splunk-TA-cisco-catalyst-center**: Official Splunk Add-on (TA)
 - **.github**: CI/CD workflows
 - **scripts**: Build and AppInspect validation scripts
 
 ### ⚙️ Build the package
 
-This builds a tarball named `Splunk_CiscoDNACenter.spl` and the renamed tarball `Splunk-TA-cisco-dnacenter.spl`.
+This builds a tarball named `Splunk-cisco-catalyst-center.spl` and the renamed tarball `Splunk-TA-cisco-catalyst-center.spl`.
 
 ```shell
 $ make addon v=1.0.0
-[2022-04-06 14:45:32 CST] [INFO] Building Splunk-TA-cisco-dnacenter version 1.0.0 build local from branch main 
+[2022-04-06 14:45:32 CST] [INFO] Building Splunk-TA-cisco-catalyst-center version 1.0.0 build local from branch main 
 [2022-04-06 14:45:34 CST] [INFO] Changing version from 1.0.0 to 1.0.0 build 1000 on channel default 
-[2022-04-06 14:45:34 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk-TA-cisco-dnacenter-1.0.0-main-local.spl
+[2022-04-06 14:45:34 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk-TA-cisco-catalyst-center-1.0.0-main-local.spl
 
 $ make app v=1.0.0
-[2022-04-06 14:45:53 CST] [INFO] Building Splunk_CiscoDNACenter version 1.0.0 build local from branch main 
+[2022-04-06 14:45:53 CST] [INFO] Building Splunk-cisco-catalyst-center version 1.0.0 build local from branch main 
 [2022-04-06 14:45:53 CST] [INFO] Changing version from 1.0.0 to 1.0.0 build 1000 on channel default 
-[2022-04-06 14:45:53 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk_CiscoDNACenter-1.0.0-main-local.spl 
+[2022-04-06 14:45:53 CST] [SUCCESS] SplunkBase package is ready at _build/Splunk-cisco-catalyst-center-1.0.0-main-local.spl 
 ```
 
 
@@ -65,9 +65,9 @@ $ make app v=1.0.0
 - Open Splunk
 - Visit the Apps management page
 - Click "Install App from file"
-- Choose the `Splunk-TA-cisco-dnacenter.spl` file and check the box next to "Upgrade app. Checking this will overwrite the app if it already exists."
+- Choose the `Splunk-TA-cisco-catalyst-center.spl` file and check the box next to "Upgrade app. Checking this will overwrite the app if it already exists."
 - Click the "Upload" button.
-- Repeat for the `Splunk_CiscoDNACenter.spl` file.
+- Repeat for the `Splunk-cisco-catalyst-center.spl` file.
 
 ### 🔑 License
 

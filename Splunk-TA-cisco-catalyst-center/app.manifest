@@ -5,7 +5,7 @@
     "id": {
       "group": null,
       "name": "Splunk-TA-cisco-catalyst-center",
-      "version": "1.0.6"
+      "version": "1.0.0"
     },
     "author": [
       {
