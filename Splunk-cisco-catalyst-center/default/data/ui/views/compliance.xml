@@ -390,7 +390,11 @@
         <fieldForLabel>DeviceName</fieldForLabel>
         <fieldForValue>DeviceName</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup DeviceName keepevents=false | table DeviceName</query>
+          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(DeviceName) AS DeviceName
+          | mvexpand DeviceName
+          | table DeviceName
+          </query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>now</latest>
         </search>
@@ -403,7 +407,11 @@
         <fieldForLabel>IpAddress</fieldForLabel>
         <fieldForValue>IpAddress</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup IpAddress keepevents=false | table IpAddress</query>
+          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(IpAddress) AS IpAddress
+          | mvexpand IpAddress
+          | table IpAddress
+          </query>
           <earliest>$timeRangePicker6.earliest$</earliest>
           <latest>now</latest>
         </search>
@@ -439,7 +447,7 @@
         <default>*</default>
         <initialValue>*</initialValue>
       </input>
-      <table>
+      <table id="tableURL">
         <title>Site: $siteFilter$</title>
         <search>
           <query>
@@ -487,6 +495,25 @@
           <condition field="*"/>
         </drilldown>
       </table>
+    </panel>
+  </row>
+    <row depends="$alwaysHideCSSPanel$">
+    <panel>
+      <html>
+        <style>
+          #tableURL td[data-cell-index="0"] a,
+          #tableURL td[data-cell-index="3"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #tableURL td:not([data-cell-index="0"]):not([data-cell-index="3"]){
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+        </style>
+      </html>
     </panel>
   </row>
 </form>
