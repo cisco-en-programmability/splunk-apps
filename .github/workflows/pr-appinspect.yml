@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: "! cancelled()"
         with:
-          name: Splunk-TA-cisco-dnacenter-${{ github.run_id }}
+          name: Splunk-TA-cisco-catalyst-center-${{ github.run_id }}
           path: pr/${{ steps.build-addon.outputs.path }}
       - name: AppInspect
         working-directory: pr
@@ -49,8 +49,8 @@ jobs:
         uses: actions/upload-artifact@v4
         if: "! cancelled()"
         with:
-          name: Report-Splunk-TA-cisco-dnacenter-${{ github.run_id }}.html
-          path: pr/_build/Splunk-TA-cisco-dnacenter-${{ github.run_id }}.html
+          name: Report-Splunk-TA-cisco-catalyst-center-${{ github.run_id }}.html
+          path: pr/_build/Splunk-TA-cisco-catalyst-center-${{ github.run_id }}.html
 
   appinspect-app:
     name: AppInspect (App)
@@ -80,7 +80,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: "! cancelled()"
         with:
-          name: Splunk_CiscoDNACenter-${{ github.run_id }}
+          name: Splunk-cisco-catalyst-center-${{ github.run_id }}
           path: pr/${{ steps.build-app.outputs.path }}
       - name: AppInspect
         working-directory: pr
@@ -92,5 +92,5 @@ jobs:
         uses: actions/upload-artifact@v4
         if: "! cancelled()"
         with:
-          name: Report-Splunk_CiscoDNACenter-${{ github.run_id }}.html
-          path: pr/_build/Splunk_CiscoDNACenter-${{ github.run_id }}.html
+          name: Report-Splunk-cisco-catalyst-center-${{ github.run_id }}.html
+          path: pr/_build/Splunk-cisco-catalyst-center-${{ github.run_id }}.html
