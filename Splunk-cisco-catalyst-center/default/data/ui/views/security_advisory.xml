@@ -348,7 +348,11 @@
         <fieldForLabel>DeviceName</fieldForLabel>
         <fieldForValue>DeviceName</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup DeviceName keepevents=false | table DeviceName</query>
+          <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(DeviceName) AS DeviceName
+          | mvexpand DeviceName
+          | table DeviceName
+          </query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>now</latest>
         </search>
@@ -360,7 +364,11 @@
         <fieldForLabel>DeviceIpAddress</fieldForLabel>
         <fieldForValue>DeviceIpAddress</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="False" | dedup DeviceIpAddress keepevents=false | table DeviceIpAddress</query>
+          <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="False"
+          | stats values(DeviceIpAddress) AS DeviceIpAddress
+          | mvexpand DeviceIpAddress
+          | table DeviceIpAddress
+          </query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>now</latest>
         </search>
@@ -372,7 +380,11 @@
         <fieldForLabel>AdvisoryID</fieldForLabel>
         <fieldForValue>AdvisoryID</fieldForValue>
         <search>
-          <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="False" | dedup AdvisoryID keepevents=false | table AdvisoryID</query>
+          <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="False"
+          | stats values(AdvisoryID) AS AdvisoryID
+          | mvexpand AdvisoryID
+          | table AdvisoryID
+          </query>
           <earliest>$timeRangePicker7.earliest$</earliest>
           <latest>now</latest>
         </search>
@@ -382,7 +394,7 @@
         <label>Site</label>
         <default>Global</default>
       </input>
-      <table>
+      <table id="tableURL">
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:securityadvisory" cisco_catalyst_host="$ciscocatalysthostDropdown$" Summary="False" DeviceName="$deviceHostNameDropdown$" DeviceIpAddress="$ipAddressDropdown$" AdvisoryID="$advisoryIDDropdown$"
@@ -422,6 +434,26 @@
           <condition field="*"/>
         </drilldown>
       </table>
+    </panel>
+  </row>
+  <row depends="$alwaysHideCSSPanel$">
+    <panel>
+      <html>
+        <style>
+          #tableURL td[data-cell-index="0"] a,
+          #tableURL td[data-cell-index="6"] a,
+          #tableURL td[data-cell-index="8"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #tableURL td:not([data-cell-index="0"]):not([data-cell-index="6"]):not([data-cell-index="8"]) {
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+        </style>
+      </html>
     </panel>
   </row>
 </form>
