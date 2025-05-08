@@ -785,7 +785,7 @@
         <default>*</default>
         <initialValue>*</initialValue>
       </input>
-      <table>
+      <table id="tableURL">
         <title>Site: $siteFilter$</title>
         <search>
           <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
@@ -842,7 +842,7 @@
         </search>
             <default>*</default>
         </input>
-      <table>
+      <table id="tableURL2">
         <title>Site: $siteFilter$</title>
         <search>
           <query>
@@ -882,6 +882,35 @@
           <condition field="*"></condition>
         </drilldown>
       </table>
+    </panel>
+  </row>
+  <row depends="$alwaysHideCSSPanel$">
+    <panel>
+      <html>
+        <style>
+          #tableURL td[data-cell-index="0"] a,
+          #tableURL td[data-cell-index="7"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #tableURL td:not([data-cell-index="0"]):not([data-cell-index="7"]){
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+          #tableURL2 td[data-cell-index="0"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #tableURL2 td:not([data-cell-index="0"]){
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+        </style>
+      </html>
     </panel>
   </row>
 </form>
