@@ -12,8 +12,8 @@ fi
 log_debug "DEBUG ENABLED"
 
 # App and Add-on Directories
-APP=Splunk_CiscoDNACenter
-ADDON=Splunk-TA-cisco-dnacenter
+APP=Splunk-cisco-catalyst-center
+ADDON=Splunk-TA-cisco-catalyst-center
 
 # Files where version needs to be bumped
 APPCONF=default/app.conf

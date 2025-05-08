@@ -124,15 +124,15 @@ get_report () {
     fi
 }
 
-APP='Splunk-TA-cisco-dnacenter'
+APP='Splunk-TA-cisco-catalyst-center'
 
 while getopts a:f:jrh FLAG; do
     case $FLAG in
         a)
         if [ "$OPTARG" == "app" ]; then
-            APP=Splunk_CiscoDNACenter
+            APP=Splunk-cisco-catalyst-center
         elif [ "$OPTARG" == "addon" ]; then
-            APP=Splunk-TA-cisco-dnacenter
+            APP=Splunk-TA-cisco-catalyst-center
         else
             log_error "Unknown argument: $OPTARG"
             exit 1
@@ -165,12 +165,23 @@ BUILD=$(get_build)
 log_debug "AppInspect ${APP} build ${BUILD} for SplunkBase"
 
 TOKEN=$(get_token)
-
+log_debug "File1 $FILENAME"
 if [ -z "$FILENAME" ]; then
     VERSION=$(get_version "$ROOT/$APP")
+    log_debug "ROOT $ROOT"
+    log_debug "APP $APP"
+    log_debug "VERSION $VERSION"
+    log_debug "BRANCH $BRANCH"
+    log_debug "BUILD $BUILD"
     FILENAME="${ROOT}/_build/$(get_build_filename "$APP" "$VERSION" "$BRANCH" "$BUILD")"
 fi 
 log_debug "File $FILENAME"
+log_debug "File to be submitted: $FILENAME"
+if [ ! -f "$FILENAME" ]; then
+  log_error "App package not found: $FILENAME"
+  exit 1
+fi
+
 
 REQUEST_ID=$(submit_for_validation "$FILENAME" "$TOKEN")
 log_debug "RequestID $REQUEST_ID"
