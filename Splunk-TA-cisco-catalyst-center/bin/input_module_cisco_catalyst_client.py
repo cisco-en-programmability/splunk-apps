@@ -91,7 +91,7 @@ def filter_client_data(client_response):
         client_item["ClientType"] = response_item.get("type") or ""
         client_item["ClientName"] = response_item.get("name") or "N/A"
         client_item["ClientUserID"] = response_item.get("userId") or ""
-        client_item["ClientUsername"] = response_item.get("username") or ""
+        client_item["ClientUsername"] = response_item.get("username") or "N/A"
         client_item["ClientIPv4Address"] = response_item.get("ipv4Address") or ""
         client_item["ClientOSType"] = response_item.get("osType") or "Unclassified"
         client_item["ClientDeviceType"] = response_item.get("deviceType") or "Unclassified"
@@ -167,7 +167,7 @@ def collect_events(helper, ew):
     account_username = opt_cisco_catalyst_center_account.get("username", None)
     account_password = opt_cisco_catalyst_center_account.get("password", None)
     account_name = opt_cisco_catalyst_center_account.get("name", None)
-    current_version = "2.2.3.3"
+    current_version = "v2.2.3.3"
     session_key = helper.context_meta['session_key']
     current_verify = utils.get_sslconfig(session_key, helper)
     current_debug = False
