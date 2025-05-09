@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# This script checks the App agains the app inspect API
-# It is intended to be used in a CI/CD pipline
+# This script checks the App against the AppInspect API
+# It is intended to be used in a CI/CD pipeline
 
 # Env Vars Required:
-# 
 # SPLUNK_USER
 # SPLUNK_PASS
 
@@ -39,12 +38,13 @@ print_usage () {
     echo ""
     echo "Usage:"
     echo ""
-    echo "appinspect.sh -a <APP NAME> [-f <FILENAME>] [-j] [-r]"
+    echo "appinspect.sh -a <APP NAME> [-f <FILENAME>] [-j] [-r] [-c]"
     echo ""
     echo "  -a What to inspect. Must be either 'app' or 'addon'."
     echo "  -f File to submit for inspection"
     echo "  -j Output a JSON report with details of all checks"
     echo "  -r Create an HTML report file with details of all checks"
+    echo "  -c Include cloud and future tags for Splunk Cloud vetting"
     echo ""
 }
 
@@ -68,12 +68,25 @@ submit_for_validation () {
     local token=$2
     local response
     log_info "Submitting app for validation"
-    if ! response=$(curl -Ss -X POST \
-     -H "Authorization: bearer ${token}" \
-     -H "Cache-Control: no-cache" \
-     -F "app_package=@\"${app_path}\"" \
-     --url "https://appinspect.splunk.com/v1/app/validate" -k)
-    then
+
+    if $CLOUD_VETTING; then
+        log_info "Including cloud and future tags in validation"
+        response=$(curl -Ss -X POST \
+            -H "Authorization: bearer ${token}" \
+            -H "Cache-Control: no-cache" \
+            -F "app_package=@\"${app_path}\"" \
+            -F "included_tags=cloud" \
+            -F "included_tags=future" \
+            --url "https://appinspect.splunk.com/v1/app/validate" -k)
+    else
+        response=$(curl -Ss -X POST \
+            -H "Authorization: bearer ${token}" \
+            -H "Cache-Control: no-cache" \
+            -F "app_package=@\"${app_path}\"" \
+            --url "https://appinspect.splunk.com/v1/app/validate" -k)
+    fi
+
+    if [ $? -ne 0 ] || [ -z "$response" ]; then
         log_error "Error during submit API call: $response"
         exit 2
     fi
@@ -125,8 +138,9 @@ get_report () {
 }
 
 APP='Splunk-TA-cisco-catalyst-center'
+CLOUD_VETTING=false
 
-while getopts a:f:jrh FLAG; do
+while getopts a:f:jrc FLAG; do
     case $FLAG in
         a)
         if [ "$OPTARG" == "app" ]; then
@@ -141,17 +155,20 @@ while getopts a:f:jrh FLAG; do
         f)
         FILENAME="$OPTARG"
         ;;
-        h)
-        print_usage
-        exit 0
-        ;;
         j)
         JSON_REPORT=true
         ;;
         r)
         HTML_REPORT=true
         ;;
-        \?) #unrecognized option - show help
+        c)
+        CLOUD_VETTING=true
+        ;;
+        h)
+        print_usage
+        exit 0
+        ;;
+        \?)
         print_usage
         exit 1
         ;;
