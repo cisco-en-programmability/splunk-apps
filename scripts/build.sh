@@ -32,16 +32,16 @@ print_usage () {
     echo ""
 }
 
-APP='Splunk-TA-cisco-dnacenter'
+APP='Splunk-TA-cisco-catalyst-center'
 
 while getopts a:o:v:r:lh FLAG; do
   case $FLAG in
     a)
       WHICHAPP=$OPTARG
       if [ "$OPTARG" == "app" ]; then
-        APP=Splunk_CiscoDNACenter
+        APP=Splunk-cisco-catalyst-center
       elif [ "$OPTARG" == "addon" ]; then
-        APP=Splunk-TA-cisco-dnacenter
+        APP=Splunk-TA-cisco-catalyst-center
       else
         log_error "Unknown argument: $OPTARG"
         exit 1
@@ -151,7 +151,7 @@ else
     FILENAME="$OUTPUT_FILE"
 fi
 
-if [ "$APP" == "Splunk_CiscoDNACenter" ]; then
+if [ "$APP" == "Splunk-cisco-catalyst-center" ]; then
   log_debug "Merging local.meta and removing file"
   if [ -e "${APP}/metadata/local.meta" ]; then
     # cat "${APP}/metadata/default.meta" "${APP}/metadata/local.meta" > "${APP}/metadata/merged.meta"

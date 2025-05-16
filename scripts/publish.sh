@@ -113,13 +113,13 @@ while getopts a:fv:h FLAG; do
     case $FLAG in
         a)
         if [ "$OPTARG" == "app" ]; then
-            APP=Splunk_CiscoDNACenter
+            APP=Splunk-cisco-catalyst-center
             APP_ID="491"
         elif [ "$OPTARG" == "addon" ]; then
-            APP=Splunk-TA-cisco-dnacenter
+            APP=Splunk-TA-cisco-catalyst-center
             APP_ID="2757"
         elif [ "$OPTARG" == "test" ]; then
-            APP=Splunk-TA-cisco-dnacenter
+            APP=Splunk-TA-cisco-catalyst-center
             APP_ID="5179"
         else
             log_error "Unknown argument: $OPTARG"

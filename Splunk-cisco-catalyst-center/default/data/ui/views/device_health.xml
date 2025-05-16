@@ -1,0 +1,911 @@
+<form version="1.1">
+  <label>Device Health</label>
+  <description>This dashboard provides an overview of the health status of devices in the Cisco Catalyst network.</description>
+  <fieldset submitButton="true" autoRun="true">
+    <input type="time" token="timeRangePicker3">
+      <label>Time Range</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="ciscocatalysthostDropdown" searchWhenChanged="true">
+      <label>Cisco Catalyst Center Host</label>
+      <fieldForLabel>cisco_catalyst_host</fieldForLabel>
+      <fieldForValue>cisco_catalyst_host</fieldForValue>
+      <search>
+        <query>sourcetype="cisco:catalyst:devicehealth" | stats values(cisco_catalyst_host) AS cisco_catalyst_host | mvexpand cisco_catalyst_host</query>
+        <earliest>$timeRangePicker3.earliest$</earliest>
+        <latest>now</latest>
+      </search>
+      <selectFirstChoice>true</selectFirstChoice>
+    </input>
+    <input type="text" token="siteFilter" searchWhenChanged="true">
+      <label>Site</label>
+      <default>Global</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Device Manageability Type Percentages</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | stats dc(IpAddress) as amount by Manageability
+
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval Manageability=Manageability." (".perc."%)"
+          | table Manageability amount</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Device Reachability Type Percentages</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | stats dc(IpAddress) as amount by Reachability
+
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval Reachability=Reachability." (".perc."%)"
+          | table Reachability amount</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Device Family Percentages</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | stats dc(IpAddress) as amount by DeviceFamily
+
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval DeviceFamily=DeviceFamily." (".perc."%)"
+          | table DeviceFamily amount</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Device Role Percentages</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | stats dc(IpAddress) as amount by DeviceRole
+
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval DeviceRole=DeviceRole." (".perc."%)"
+          | table DeviceRole amount</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Device Series Percentages</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | chart dc(IpAddress) as amount by DeviceSeries
+
+          | eventstats sum(amount) as Total
+          | eval perc=round((amount/Total)*100, 2)
+          | eval DeviceSeries=DeviceSeries." (".perc."%)"
+          | table DeviceSeries amount</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Number of Managed Devices</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where Manageability="Managed"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Unmanaged Devices</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where Manageability="Unmanaged"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">inverse</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Managed With Errors Devices</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where Manageability="Managed (With Errors)"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">inverse</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Number of Switches and Hubs</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where DeviceFamily="Switches and Hubs"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Wireless Controllers</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where DeviceFamily="Wireless Controller"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Routers</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where DeviceFamily="Routers"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of APs</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where (DeviceFamily LIKE "%AP%")
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Number of Access Devices</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where DeviceRole="ACCESS"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Core Devices</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where DeviceRole="CORE"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Distribution Devices</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where DeviceRole="DISTRIBUTION"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Border Router Devices</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where DeviceRole="BORDER ROUTER"
+          | chart dc(IpAddress) as amount by _time
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Number of Reachable Devices</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where Reachability="Reachable"
+          | chart dc(IpAddress) as amount by _time</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Number of Unreachable Devices</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | where Reachability="Unreachable"
+          | chart dc(IpAddress) as amount by _time</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Device Health Table</title>
+      <input type="dropdown" token="deviceHostNameDropdown" searchWhenChanged="true">
+        <label>Device Name</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>DeviceName</fieldForLabel>
+        <fieldForValue>DeviceName</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup DeviceName keepevents=false | table DeviceName</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="reachabilityDropdown" searchWhenChanged="true">
+        <label>Reachability</label>
+        <choice value="*">All</choice>
+        <choice value="Reachable">Reachable</choice>
+        <choice value="Unreachable">Unreachable</choice>
+        <default>*</default>
+        <initialValue>*</initialValue>
+      </input>
+      <input type="dropdown" token="manageabilityDropdown" searchWhenChanged="true">
+        <label>Manageability</label>
+        <choice value="*">All</choice>
+        <choice value="Managed">Managed</choice>
+        <choice value="Managed (With Errors)">Managed (With Errors)</choice>
+        <choice value="Unmanaged">Unmanaged</choice>
+        <default>*</default>
+        <initialValue>*</initialValue>
+      </input>
+      <table id="tableURL">
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup IpAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | search Reachability="$reachabilityDropdown$"
+          | search Manageability="$manageabilityDropdown$"
+          | search DeviceName="$deviceHostNameDropdown$"
+          | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
+          | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
+          | rename DeviceName as "Device Name", IpAddress as "IP Address", DeviceFamily as "Device Family", Reachability as Reachability, ReachabilityFailureReason as "Reachability Failure Reason", ManageErrors as "Manage Errors", Manageability as Manageability, MACAddress as "MAC Address", DeviceRole as "Device Role", ImageVersion as "Image Version", Uptime as Uptime, UptimeSeconds as "Uptime Seconds", LastUpdated as "Last Updated", LastUpdateTime as "Last Update Time", SerialNumber as "Serial Number", DeviceSeries as "Device Series", Platform as Platform, SupportType as "Support Type", AssociatedWLCIP as "Associated WLC IP", HealthScore as "Health Score", IssueCount as "Issue Count", Site as Site, CPUUtilization as "CPU Utilization", CPUHealth as "CPU Health", MemoryUtilization as "Memory Utilization", MemoryUtilizationHealth as "Memory Utilization Health", InterfaceLinkErrHealth as "Interface Link Error Health", InterDeviceLinkAvailHealth as "Inter-Device Link Availability Health"
+          | table "Device Name", "IP Address", "Device Family", Reachability, "Reachability Failure Reason", "Manage Errors", Manageability, "MAC Address", "Device Role", "Image Version", Uptime, "Last Updated", "Serial Number", "Device Series", Platform, "Support Type", "Associated WLC IP", "Health Score", "Issue Count", Site, "CPU Utilization", "CPU Health", "Memory Utilization", "Memory Utilization Health", "Interface Link Error Health", "Inter-Device Link Availability Health", DeviceID, ciscocatalysthostip, URL, URL2</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <fields>"Device Name", "IP Address", "Device Family", Reachability, "Reachability Failure Reason", "Manage Errors", Manageability, "MAC Address", "Device Role", "Image Version", Uptime, "Last Updated", "Serial Number", "Device Series", Platform, "Support Type", "Associated WLC IP", "Health Score", "Issue Count", Site, "CPU Utilization", "CPU Health", "Memory Utilization", "Memory Utilization Health", "Interface Link Error Health", "Inter-Device Link Availability Health"</fields>
+        <drilldown>
+          <condition field="Device Name">
+            <link target="_blank">$row.URL|n$</link>
+          </condition>
+          <condition field="*"></condition>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Top Ten Interface Utilization</title>
+      <input type="dropdown" token="deviceHostNameDropdown2" searchWhenChanged="true">
+        <label>Device Name</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>DeviceName</fieldForLabel>
+        <fieldForValue>DeviceName</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" HasInterfaceStats="True" | dedup DeviceName keepevents=false | table DeviceName</query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+            <default>*</default>
+        </input>
+      <table id="tableURL2">
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" HasInterfaceStats="True"
+            | dedup ID keepevents=false
+            | search DeviceName="$deviceHostNameDropdown2$"
+            | join type=left DeviceID [search sourcetype="cisco:catalyst:devicehealth" cisco_catalyst_host="$ciscocatalysthostDropdown$" HasInterfaceStats="False" | dedup DeviceID | table DeviceID Site]
+            | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+            | eval TotalUtilization = RxRate + TxRate
+            | where TotalUtilization > 0
+            | sort -TotalUtilization
+            | head 10
+            | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
+            | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
+            | rename DeviceName as "Device Name", Name as "Interface" RxRate as "Rx Rate (bps)", TxRate as "Tx Rate (bps)", Speed as "Speed (kbps)", RxUtilization as "Rx Utilization (%)", TxUtilization as "Tx Utilization (%)"
+            | table "Device Name", "Interface", "Rx Rate (bps)", "Tx Rate (bps)", "Speed (kbps)", "Rx Utilization (%)", "Tx Utilization (%)", DeviceID, Site, URL
+          </query>
+          <earliest>$timeRangePicker3.earliest$</earliest>
+          <latest>$timeRangePicker3.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <fields>"Device Name", "Interface", "Rx Rate (bps)", "Tx Rate (bps)", "Speed (kbps)", "Rx Utilization (%)", "Tx Utilization (%)"</fields>
+        <drilldown>
+          <condition field="Device Name">
+            <link target="_blank">$row.URL|n$</link>
+          </condition>
+          <condition field="*"></condition>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row depends="$alwaysHideCSSPanel$">
+    <panel>
+      <html>
+        <style>
+          #tableURL td[data-cell-index="0"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #tableURL td:not([data-cell-index="0"]) {
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+          #tableURL2 td[data-cell-index="0"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #tableURL2 td:not([data-cell-index="0"]){
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+        </style>
+      </html>
+    </panel>
+  </row>
+</form>

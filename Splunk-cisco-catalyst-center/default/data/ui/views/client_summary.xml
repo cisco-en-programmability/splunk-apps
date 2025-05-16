@@ -1,0 +1,561 @@
+<form version="1.1">
+  <label>Client Summary</label>
+  <description>This dashboard provides a summary of client activity and statistics in the Cisco Catalyst network.</description>
+  <fieldset submitButton="true" autoRun="true">
+    <input type="time" token="timeRangePickerClient" searchWhenChanged="true">
+      <label>Time Range</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="ciscocatalysthostDropdown" searchWhenChanged="true">
+      <label>Cisco Catalyst Center Host</label>
+      <fieldForLabel>cisco_catalyst_host</fieldForLabel>
+      <fieldForValue>cisco_catalyst_host</fieldForValue>
+      <search>
+        <query>sourcetype="cisco:catalyst:client" | stats values(cisco_catalyst_host) AS cisco_catalyst_host | mvexpand cisco_catalyst_host</query>
+        <earliest>$timeRangePickerClient.earliest$</earliest>
+        <latest>now</latest>
+      </search>
+      <selectFirstChoice>true</selectFirstChoice>
+    </input>
+    <input type="text" token="siteFilter" searchWhenChanged="true">
+      <label>Site</label>
+      <default>Global</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Client Count</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup ClientMACAddress keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | stats count as total_clients</query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Session Count</title>
+      <single>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | dedup ClientMACAddress ClientLastUpdatedTime keepevents=false
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | stats count as total_sessionss</query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Client Count by OS Type</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+            | dedup ClientMACAddress keepevents=false
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | stats count by ClientOSType
+            | rename ClientOSType as "OS Type"
+            | eval "OS Type" = 'OS Type' . " (" . count . ")"
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Client Count by Device Type</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+            | dedup ClientMACAddress keepevents=false
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | stats count by ClientDeviceType
+            | rename ClientDeviceType as "Device Type"
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Client Count by Band</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+            | dedup ClientMACAddress keepevents=false
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | stats count by ClientConnectionBand
+            | rename ClientConnectionBand as "Band"
+            | eval "Band" = 'Band' . " (" . count . ")"
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Distributed Client Traffic by Band</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+            | dedup ClientMACAddress keepevents=false
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | stats sum(ClientTrafficUsage) as usage by ClientConnectionBand
+            | eventstats sum(usage) as TotalUsage
+            | eval percentage = round((usage/TotalUsage)*100, 2)
+            | eval ConnectionBand = ClientConnectionBand." (".percentage."%)"
+            | table ConnectionBand, usage
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Distributed Client Sessions by Band</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+            | dedup ClientMACAddress keepevents=false
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | stats sum(ClientConnectionSessionDuration) as total_session_duration by ClientConnectionBand
+            | eventstats sum(total_session_duration) as TotalSessionDuration
+            | eval hours = round(total_session_duration / 3600, 2)
+            | eval total_hours = round(TotalSessionDuration / 3600, 2)
+            | eval ConnectionBand = ClientConnectionBand." (".hours." hrs)"
+            | table ConnectionBand, hours, total_hours
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Client Count by Protocols</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+            | dedup ClientMACAddress keepevents=false
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | stats count by ClientConnectionProtocol
+            | rename ClientConnectionProtocol as "Protocol"
+            | eval "Protocol" = 'Protocol' . " (" . count . ")"
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Distributed Client Traffic by Protocol</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+            | dedup ClientMACAddress keepevents=false
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | stats sum(ClientTrafficUsage) as usage by ClientConnectionProtocol
+            | eventstats sum(usage) as TotalUsage
+            | eval percentage = round((usage/TotalUsage)*100, 2)
+            | eval Protocol = ClientConnectionProtocol." (".percentage."%)"
+            | table Protocol, usage
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Distributed Client Sessions by Protocol</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+            | dedup ClientMACAddress keepevents=false
+            | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+            | stats sum(ClientConnectionSessionDuration) as total_session_duration by ClientConnectionProtocol
+            | eventstats sum(total_session_duration) as TotalSessionDuration
+            | eval hours = round(total_session_duration / 3600, 2)
+            | eval total_hours = round(TotalSessionDuration / 3600, 2)
+            | eval Protocol = ClientConnectionProtocol." (".hours." hrs)"
+            | table Protocol, hours, total_hours
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Top 10 Clients by Received Transmission Usage</title>
+      <input type="dropdown" token="clientUsernameDropdown" searchWhenChanged="true">
+        <label>Username</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>ClientUsername</fieldForLabel>
+        <fieldForValue>ClientUsername</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientUsername keepevents=false | table ClientUsername</query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="clientMACAddressDropdown" searchWhenChanged="true">
+        <label>MAC Address</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>ClientMACAddress</fieldForLabel>
+        <fieldForValue>ClientMACAddress</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientMACAddress keepevents=false | table ClientMACAddress</query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="clientIpAddressDropdown" searchWhenChanged="true">
+        <label>IP Address</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>ClientIPv4Address</fieldForLabel>
+        <fieldForValue>ClientIPv4Address</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" | dedup ClientIPv4Address keepevents=false | table ClientIPv4Address</query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="clientTypeDropdown" searchWhenChanged="true">
+        <label>Type</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <choice value="Wired">Wired</choice>
+        <choice value="Wireless">Wireless</choice>
+        <default>*</default>
+      </input>
+      <table id="macAddressTable1">
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" ClientIPv4Address="$clientIpAddressDropdown$" ClientUsername="$clientUsernameDropdown$" ClientMACAddress="$clientMACAddressDropdown$" ClientType="$clientTypeDropdown$"
+          | stats latest(*) as * by ClientID
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | where ClientTrafficUsage > 0
+          | sort -ClientTrafficUsage
+          | head 10
+          | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
+          | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+ClientMACAddress
+          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXBytes as "Bytes Received (RX)", ClientTrafficTXBytes as "Bytes Transmitted (TX)", ClientTrafficUsage as "Total Usage (Bytes)", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Host Name", ClientUsername as "Username"
+          | table "Client ID", "Username", "Host Name", "IP Address", "MAC Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">cell</option>
+        <option name="count">10</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="wrap">true</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <fields>"Client ID", "Username", "Host Name", "MAC Address", "IP Address", "Type", "Bytes Received (RX)", "Bytes Transmitted (TX)", "Total Usage (Bytes)", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
+        <drilldown>
+          <condition field="MAC Address">
+            <link target="_blank">$row.URL|n$</link>
+          </condition>
+          <condition field="*"/>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Top 10 Clients with Transmission Errors and Retries</title>
+      <input type="dropdown" token="clientUsernameDropdown2" searchWhenChanged="true" depends="$ciscocatalysthostDropdown$">
+        <label>Username</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>ClientUsername</fieldForLabel>
+        <fieldForValue>ClientUsername</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(ClientUsername) AS ClientUsername
+          | mvexpand ClientUsername
+          | table ClientUsername
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="clientMACAddressDropdown2" searchWhenChanged="true" depends="$ciscocatalysthostDropdown$">
+        <label>MAC Address</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>ClientMACAddress</fieldForLabel>
+        <fieldForValue>ClientMACAddress</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(ClientMACAddress) AS ClientMACAddress
+          | mvexpand ClientMACAddress
+          | table ClientMACAddress
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="clientIpAddressDropdown2" searchWhenChanged="true" depends="$ciscocatalysthostDropdown$">
+        <label>IP Address</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>ClientIPv4Address</fieldForLabel>
+        <fieldForValue>ClientIPv4Address</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(ClientIPv4Address) AS ClientIPv4Address
+          | mvexpand ClientIPv4Address
+          | table ClientIPv4Address
+          </query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <table id="macAddressTable2">
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ClientIPv4Address="$clientIpAddressDropdown2$" ClientUsername="$clientUsernameDropdown2$" ClientMACAddress="$clientMACAddressDropdown2$"
+          | stats latest(*) as * by ClientID
+          | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
+          | eval total_errors = ClientTrafficRXLinkErrorPercentage + ClientTrafficTXLinkErrorPercentage + ClientTrafficRXRetries
+          | where total_errors > 0
+          | sort -ClientTrafficRXLinkErrorPercentage
+          | head 10
+          | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
+          | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+ClientMACAddress
+          | rename ClientID as "Client ID", ClientMACAddress as "MAC Address", ClientType as "Type", ClientTrafficRXLinkErrorPercentage as "% Errors Received (RX)", ClientTrafficTXLinkErrorPercentage as "% Errors Transmitted (TX)", ClientTrafficRXRetries as "Retries Received (RX)", ClientTrafficRXRetryPercentage as "% Retries (RX)", ClientTrafficTXDrops as "TX Packets Lost", ClientSiteHierarchy as "Site", ClientConnectionStatus as "Connection Status", ClientConnectionBand as "Connection Band", ClientConnectedNetworkDeviceType as "Connected Network Device Type", ClientIPv4Address as "IP Address", ClientName as "Host Name", ClientUsername as "Username"
+          | table "Client ID", "Username", "Host Name", "IP Address", "MAC Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type", URL</query>
+          <earliest>$timeRangePickerClient.earliest$</earliest>
+          <latest>$timeRangePickerClient.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">cell</option>
+        <option name="count">10</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="wrap">true</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <fields>"Client ID", "Username", "Host Name", "MAC Address", "IP Address", "Type", "% Errors Received (RX)", "% Errors Transmitted (TX)", "Retries Received (RX)", "% Retries (RX)", "TX Packets Lost", "Site", "Connection Status", "Connection Band", "Connected Network Device Type"</fields>
+        <drilldown>
+          <condition field="MAC Address">
+            <link target="_blank">$row.URL|n$</link>
+          </condition>
+          <condition field="*"/>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row depends="$alwaysHideCSSPanel$">
+    <panel>
+      <html>
+        <style>
+          #macAddressTable1 td[data-cell-index="3"] a,
+          #macAddressTable2 td[data-cell-index="3"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #macAddressTable1 td:not([data-cell-index="3"]),
+          #macAddressTable2 td:not([data-cell-index="3"]) {
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+        </style>
+      </html>
+    </panel>
+  </row>
+</form>

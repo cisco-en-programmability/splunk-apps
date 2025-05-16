@@ -1,0 +1,513 @@
+<form version="1.1">
+  <label>Compliance</label>
+  <description>This dashboard provides an overview of compliance status and details for devices in the Cisco Catalyst network.</description>
+  <fieldset submitButton="true" autoRun="true">
+    <input type="time" token="timeRangePicker6" searchWhenChanged="true">
+      <label>Time Range</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="ciscocatalysthostDropdown" searchWhenChanged="true">
+      <label>Cisco Catalyst Center Host</label>
+      <fieldForLabel>cisco_catalyst_host</fieldForLabel>
+      <fieldForValue>cisco_catalyst_host</fieldForValue>
+      <search>
+        <query>sourcetype="cisco:catalyst:compliance" | stats values(cisco_catalyst_host) AS cisco_catalyst_host | mvexpand cisco_catalyst_host</query>
+        <earliest>$timeRangePicker6.earliest$</earliest>
+        <latest>now</latest>
+      </search>
+      <selectFirstChoice>true</selectFirstChoice>
+    </input>
+    <input type="text" token="siteFilter" searchWhenChanged="true">
+      <label>Site</label>
+      <default>Global</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Number of Compliant Devices</title>
+      <single>
+        <title>Site: Global</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="True" ComplianceDetail="False" 
+          | chart values(CompliantDeviceCount) as t by _time
+          | timechart avg(t) as amount
+          | appendpipe [stats count | where count=0 | rename count as "amount"]</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">296</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Device Compliance Status Percentages</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | dedup ComplianceDeviceID keepevents=false 
+          | eventstats dc(ComplianceDeviceID) as total 
+          | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
+          | dedup ComplianceStatus keepevents=false 
+          | eval percentage=round((subtotal/total)*100, 2)
+          | eval ComplianceStatus=replace(ComplianceStatus, "_", " ")
+          | table ComplianceStatus, percentage
+          | eval ComplianceStatus=ComplianceStatus." (".percentage."%)"
+          | table ComplianceStatus, percentage</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">minimal</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="height">329</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Percentage of Compliant Devices with the Specified Status</title>
+      <input type="dropdown" token="complianceStatusDropdown4" searchWhenChanged="true">
+        <label>Compliance Status</label>
+        <default>COMPLIANT</default>
+        <initialValue>COMPLIANT</initialValue>
+        <choice value="COMPLIANT">COMPLIANT</choice>
+        <choice value="COMPLIANT_WARNING">COMPLIANT WARNING</choice>
+        <choice value="IN_PROGRESS">IN PROGRESS</choice>
+        <choice value="REMEDIATION_IN_PROGRESS">REMEDIATION IN PROGRESS</choice>
+        <choice value="NON_COMPLIANT">NON COMPLIANT</choice>
+        <choice value="NOT_APPLICABLE">NOT APPLICABLE</choice>
+        <choice value="NOT_AVAILABLE">NOT AVAILABLE</choice>
+        <choice value="ERROR">ERROR</choice>
+        <choice value="ABORTED">ABORTED</choice>
+      </input>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="False" 
+          | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+          | dedup ComplianceDeviceID keepevents=false 
+          | eventstats dc(ComplianceDeviceID) as total 
+          | eventstats dc(ComplianceDeviceID) as subtotal by ComplianceStatus 
+          | dedup ComplianceStatus keepevents=false 
+          | eval percentage=round((subtotal/total)*100, 2)
+          | where ComplianceStatus="$complianceStatusDropdown4$" 
+          | appendpipe [stats count | where count=0 | rename count as "percentage"] 
+          | table percentage</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">radialGauge</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.rangeValues">[0,30,70,100]</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">minimal</option>
+        <option name="charting.gaugeColors">["0xdc4e41","0xf8be34", "0x53a051"]</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="height">195</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Percentage of Compliant Devices</title>
+      <chart>
+        <title>Site: Global</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$"  ComplianceCount="True" ComplianceDetail="False" 
+            | eval percentage=round((CompliantDeviceCount/ComplianceDeviceCount)*100, 2)
+            | table _time, percentage
+            | timechart avg(percentage) as percentage</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.text">Compliance Status</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Percentage of Compliant Devices by Type</title>
+      <input type="dropdown" token="complianceTypeDropdown3" searchWhenChanged="true">
+        <label>Compliance Type</label>
+        <choice value="*">All</choice>
+        <choice value="APPLICATION_VISIBILITY">APPLICATION VISIBILITY</choice>
+        <choice value="EOX">EOX</choice>
+        <choice value="FABRIC">FABRIC</choice>
+        <choice value="IMAGE">IMAGE</choice>
+        <choice value="NETWORK_PROFILE">NETWORK PROFILE</choice>
+        <choice value="NETWORK_SETTINGS">NETWORK SETTINGS</choice>
+        <choice value="PSIRT">PSIRT</choice>
+        <choice value="RUNNING_CONFIG">RUNNING CONFIG</choice>
+        <choice value="WORKFLOW">WORKFLOW</choice>
+        <default>*</default>
+        <initialValue>*</initialValue>
+      </input>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+            sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True" ComplianceComplianceType="$complianceTypeDropdown3$" 
+            | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+            | eventstats dc(ComplianceDeviceID) as total by ComplianceComplianceType
+            | eventstats dc(eval(if(ComplianceStatus="COMPLIANT", ComplianceDeviceID, null))) as subtotal by ComplianceComplianceType
+            | eval percentage=round((subtotal/total)*100, 2)
+            | timechart avg(percentage) by ComplianceComplianceType</query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.text">Compliance Type</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisEnd</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="height">251</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Percentage of Compliant Devices by Type</title>
+      <chart>
+        <title>Site: $siteFilter$</title>
+        <search>
+            <query>
+                sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True"
+                | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+                | eventstats dc(ComplianceDeviceID) as total
+                | eventstats dc(eval(if(ComplianceStatus="COMPLIANT", ComplianceDeviceID, null))) as subtotal by ComplianceComplianceType
+                | dedup ComplianceComplianceType keepevents=false
+                | eval ComplianceComplianceType=replace(ComplianceComplianceType, "_", " ")
+                | eval percentage=round((subtotal/total)*100, 2)
+                | fillnull value=0 percentage
+                | sort order ComplianceComplianceType
+                | table ComplianceComplianceType, percentage
+                | rename ComplianceComplianceType as "Compliance Type"
+            </query>
+            <earliest>$timeRangePicker6.earliest$</earliest>
+            <latest>$timeRangePicker6.latest$</latest>
+            <sampleRatio>1</sampleRatio>
+            <refresh>10m</refresh>
+            <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">minimal</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="height">334</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Device Compliance Table</title>
+      <input type="dropdown" token="deviceHostNameDropdown" searchWhenChanged="true">
+        <label>Device Name</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>DeviceName</fieldForLabel>
+        <fieldForValue>DeviceName</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(DeviceName) AS DeviceName
+          | mvexpand DeviceName
+          | table DeviceName
+          </query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="deviceIpAddressDropdown" searchWhenChanged="true">
+        <label>IP Address</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <fieldForLabel>IpAddress</fieldForLabel>
+        <fieldForValue>IpAddress</fieldForValue>
+        <search>
+          <query>sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$"
+          | stats values(IpAddress) AS IpAddress
+          | mvexpand IpAddress
+          | table IpAddress
+          </query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>now</latest>
+        </search>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="complianceTypeDropdown" searchWhenChanged="true">
+        <label>Compliance Type</label>
+        <choice value="*">All</choice>
+        <choice value="APPLICATION_VISIBILITY">APPLICATION VISIBILITY</choice>
+        <choice value="EOX">EOX</choice>
+        <choice value="FABRIC">FABRIC</choice>
+        <choice value="IMAGE">IMAGE</choice>
+        <choice value="NETWORK_PROFILE">NETWORK PROFILE</choice>
+        <choice value="NETWORK_SETTINGS">NETWORK SETTINGS</choice>
+        <choice value="PSIRT">PSIRT</choice>
+        <choice value="RUNNING_CONFIG">RUNNING CONFIG</choice>
+        <choice value="WORKFLOW">WORKFLOW</choice>
+        <initialValue>*</initialValue>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="complianceTypeStatusDropdown" searchWhenChanged="true">
+        <label>Compliance Type Status</label>
+        <choice value="*">All</choice>
+        <choice value="COMPLIANT">COMPLIANT</choice>
+        <choice value="COMPLIANT_WARNING">COMPLIANT WARNING</choice>
+        <choice value="IN_PROGRESS">IN PROGRESS</choice>
+        <choice value="REMEDIATION_IN_PROGRESS">REMEDIATION IN PROGRESS</choice>
+        <choice value="NON_COMPLIANT">NON COMPLIANT</choice>
+        <choice value="NOT_APPLICABLE">NOT APPLICABLE</choice>
+        <choice value="NOT_AVAILABLE">NOT AVAILABLE</choice>
+        <choice value="ERROR">ERROR</choice>
+        <choice value="ABORTED">ABORTED</choice>
+        <default>*</default>
+        <initialValue>*</initialValue>
+      </input>
+      <table id="tableURL">
+        <title>Site: $siteFilter$</title>
+        <search>
+          <query>
+              sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="True" ComplianceComplianceType="$complianceTypeDropdown$" ComplianceStatus="$complianceTypeStatusDropdown$" IpAddress="$deviceIpAddressDropdown$" DeviceName="$deviceHostNameDropdown$"
+              | dedup ComplianceDeviceID, ComplianceComplianceType keepevents=false
+              | where "$siteFilter$"=="Global" OR lower(Site) LIKE lower("%$siteFilter$%")
+              | table ComplianceDeviceID, DeviceName, DeviceRole, IpAddress, MACAddress, Manageability, Reachability, ComplianceComplianceType, ComplianceState, ComplianceStatus, ComplianceLastSyncTime, ComplianceLastUpdateTime, Site
+              | join left=L right=R where L.ComplianceDeviceID=R.ComplianceDeviceID type=inner [
+                  search
+                  sourcetype="cisco:catalyst:compliance" cisco_catalyst_host="$ciscocatalysthostDropdown$" ComplianceCount="False" ComplianceDetail="False" IpAddress="$deviceIpAddressDropdown$" DeviceName="$deviceHostNameDropdown$"
+                  | dedup ComplianceDeviceID keepevents=false
+                  | table ComplianceDeviceID, IpAddress, ComplianceStatus
+                ]
+              | rename L.DeviceName as "Device Name", L.DeviceRole as "Device Role", L.IpAddress as "IP Address", L.MACAddress as "MAC Address", L.Manageability as Manageability, L.Reachability as Reachability, R.ComplianceStatus as "Compliance Device Status", L.ComplianceComplianceType as "Compliance Type", L.ComplianceStatus as "Compliance Type Status", L.ComplianceState as "Compliance State", L.ComplianceLastSyncTime as "Compliance Last Sync Time", L.ComplianceLastUpdateTime as "Compliance Last Update Time", L.ComplianceDeviceID as ComplianceDevice, L.Site as Site
+              | eval "Compliance Last Sync"=strftime('Compliance Last Sync Time'/1000, "%Y-%m-%d %H:%M:%S")
+              | eval "Compliance Last Update"=strftime('Compliance Last Update Time'/1000, "%Y-%m-%d %H:%M:%S")
+              | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
+              | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+ComplianceDevice
+              | table "Device Name", "Device Role", "IP Address", "MAC Address", Manageability, Reachability, "Compliance Device Status", "Compliance Type", "Compliance Type Status", "Compliance State", "Compliance Last Sync", "Compliance Last Update", ComplianceDevice, URL, URL2, Site
+          </query>
+          <earliest>$timeRangePicker6.earliest$</earliest>
+          <latest>$timeRangePicker6.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>10m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <fields>"Device Name", "Device Role", "IP Address", "MAC Address", Manageability, Reachability, "Compliance Device Status", "Compliance Type", "Compliance Type Status", "Compliance State", "Compliance Last Sync", "Compliance Last Update", Site</fields>
+        <drilldown>
+          <condition field="Device Name">
+            <link target="_blank">$row.URL|n$</link>
+          </condition>
+          <condition field="*"/>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+    <row depends="$alwaysHideCSSPanel$">
+    <panel>
+      <html>
+        <style>
+          #tableURL td[data-cell-index="0"] a {
+            color: #1a73e8 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          #tableURL td:not([data-cell-index="0"]) {
+            color: inherit !important;
+            ext-decoration: none;
+            cursor: default;
+          }
+        </style>
+      </html>
+    </panel>
+  </row>
+</form>
