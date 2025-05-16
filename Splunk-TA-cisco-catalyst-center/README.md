@@ -29,7 +29,7 @@ Security, or with the Cisco Catalyst Center App for Splunk.
 verify_ssl = True
 ```
 2. In order to make unverified calls, change the SSL verification to False. To do that, navigate to `$SPLUNK_HOME/etc/apps/Splunk-TA-cisco-catalyst-center/local/splunk_ta_cisco_catalyst_center_settings.conf` file and change the verify_ssl parameter value to `False` under additional_parameters stanza. Create a stanza if its not present already.
-3. To add a custom SSL certificate to the certificate chain, use the option available in the user interface while configuring a Catalsyt Center or Cyber Vision account.
+3. To add a custom SSL certificate to the certificate chain, use the option available in the user interface while configuring a Catalyst Center or Cyber Vision account.
 4. Restart the Splunk in order for the changes to take effect.
 
 ### Documentation ###

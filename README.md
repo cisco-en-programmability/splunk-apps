@@ -1,24 +1,24 @@
 <p align="center" style="color: #343a40">
   <h1 align="center">Splunk App and Add-on</h1>
 </p>
-<h3 align="center" style="font-size: 1.2rem;">The official Cisco Catalsyt Center Splunk App and Add-on</h3>
+<h3 align="center" style="font-size: 1.2rem;">The official Cisco Catalyst Center Splunk App and Add-on</h3>
 
 >This monorepo contains both the App and Add-on for Splunk
 
 ## Cisco Products & Services:
 
-- Cisco Catalsyt Center (>= 2.3.7.6)
+- Cisco Catalyst Center (>= 2.3.7.6)
 
 ### ⬇️ Download
 
-- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalsyt-center-app_100.tar.gz)
-- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalsyt-center-add-on_100.tar.gz)
+- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalyst-center-app_100.tar.gz)
+- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalyst-center-add-on_100.tar.gz)
 
 The add-on and app are on SplunkBase!
 
-- **Cisco Catalsyt Center App** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6669/) or [New SplunkBase](https://splunkbase.splunk.com/app/6669)
+- **Cisco Catalyst Center App** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6669/) or [New SplunkBase](https://splunkbase.splunk.com/app/6669)
 
-- **Cisco Catalsyt Center Add-on** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6668/) or [New SplunkBase](https://splunkbase.splunk.com/app/6668)
+- **Cisco Catalyst Center Add-on** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6668/) or [New SplunkBase](https://splunkbase.splunk.com/app/6668)
 
 
 ### 💬 Support
