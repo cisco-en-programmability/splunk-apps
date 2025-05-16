@@ -397,7 +397,7 @@ def collect_events(helper, ew):
     account_username = opt_cisco_catalyst_center_account.get("username", None)
     account_password = opt_cisco_catalyst_center_account.get("password", None)
     account_name = opt_cisco_catalyst_center_account.get("name", None)
-    current_version = "v2.2.3.3"
+    current_version = "v2.3.7.6"
     session_key = helper.context_meta['session_key']
     current_verify = utils.get_sslconfig(session_key, helper)
     current_debug = False
