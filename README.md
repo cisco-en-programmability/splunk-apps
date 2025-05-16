@@ -1,24 +1,24 @@
 <p align="center" style="color: #343a40">
   <h1 align="center">Splunk App and Add-on</h1>
 </p>
-<h3 align="center" style="font-size: 1.2rem;">The official Cisco DNA Center Splunk App and Add-on</h3>
+<h3 align="center" style="font-size: 1.2rem;">The official Cisco Catalsyt Center Splunk App and Add-on</h3>
 
 >This monorepo contains both the App and Add-on for Splunk
 
 ## Cisco Products & Services:
 
-- Cisco DNA Center (>= 2.2.3.3)
+- Cisco Catalsyt Center (>= 2.3.7.6)
 
 ### ⬇️ Download
 
-- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.7/cisco-dna-center-app_102.tgz)
-- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.7/cisco-dna-center-add-on_106.tgz)
+- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalsyt-center-app_100.tgz)
+- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalsyt-center-add-on_100.tgz)
 
 The add-on and app are on SplunkBase!
 
-- **Cisco DNA Center App** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6669/) or [New SplunkBase](https://splunkbase.splunk.com/app/6669)
+- **Cisco Catalsyt Center App** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6669/) or [New SplunkBase](https://splunkbase.splunk.com/app/6669)
 
-- **Cisco DNA Center Add-on** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6668/) or [New SplunkBase](https://splunkbase.splunk.com/app/6668)
+- **Cisco Catalsyt Center Add-on** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6668/) or [New SplunkBase](https://splunkbase.splunk.com/app/6668)
 
 
 ### 💬 Support
