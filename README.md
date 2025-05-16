@@ -11,8 +11,8 @@
 
 ### ⬇️ Download
 
-- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalsyt-center-app_100.tgz)
-- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalsyt-center-add-on_100.tgz)
+- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalsyt-center-app_100.tar.gz)
+- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalsyt-center-add-on_100.tar.gz)
 
 The add-on and app are on SplunkBase!
 
