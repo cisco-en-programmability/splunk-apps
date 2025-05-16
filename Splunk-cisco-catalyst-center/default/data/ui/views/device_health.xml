@@ -796,7 +796,6 @@
           | search DeviceName="$deviceHostNameDropdown$"
           | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
           | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
-          | eval URL2="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+MACAddress
           | rename DeviceName as "Device Name", IpAddress as "IP Address", DeviceFamily as "Device Family", Reachability as Reachability, ReachabilityFailureReason as "Reachability Failure Reason", ManageErrors as "Manage Errors", Manageability as Manageability, MACAddress as "MAC Address", DeviceRole as "Device Role", ImageVersion as "Image Version", Uptime as Uptime, UptimeSeconds as "Uptime Seconds", LastUpdated as "Last Updated", LastUpdateTime as "Last Update Time", SerialNumber as "Serial Number", DeviceSeries as "Device Series", Platform as Platform, SupportType as "Support Type", AssociatedWLCIP as "Associated WLC IP", HealthScore as "Health Score", IssueCount as "Issue Count", Site as Site, CPUUtilization as "CPU Utilization", CPUHealth as "CPU Health", MemoryUtilization as "Memory Utilization", MemoryUtilizationHealth as "Memory Utilization Health", InterfaceLinkErrHealth as "Interface Link Error Health", InterDeviceLinkAvailHealth as "Inter-Device Link Availability Health"
           | table "Device Name", "IP Address", "Device Family", Reachability, "Reachability Failure Reason", "Manage Errors", Manageability, "MAC Address", "Device Role", "Image Version", Uptime, "Last Updated", "Serial Number", "Device Series", Platform, "Support Type", "Associated WLC IP", "Health Score", "Issue Count", Site, "CPU Utilization", "CPU Health", "Memory Utilization", "Memory Utilization Health", "Interface Link Error Health", "Inter-Device Link Availability Health", DeviceID, ciscocatalysthostip, URL, URL2</query>
           <earliest>$timeRangePicker3.earliest$</earliest>
@@ -817,9 +816,6 @@
         <drilldown>
           <condition field="Device Name">
             <link target="_blank">$row.URL|n$</link>
-          </condition>
-          <condition field="MAC Address">
-            <link target="_blank">$row.URL2|n$</link>
           </condition>
           <condition field="*"></condition>
         </drilldown>
@@ -888,13 +884,12 @@
     <panel>
       <html>
         <style>
-          #tableURL td[data-cell-index="0"] a,
-          #tableURL td[data-cell-index="7"] a {
+          #tableURL td[data-cell-index="0"] a {
             color: #1a73e8 !important;
             text-decoration: underline !important;
             cursor: pointer !important;
           }
-          #tableURL td:not([data-cell-index="0"]):not([data-cell-index="7"]){
+          #tableURL td:not([data-cell-index="0"]) {
             color: inherit !important;
             ext-decoration: none;
             cursor: default;
