@@ -403,7 +403,6 @@
           | eval DeviceUptime = tostring(DeviceUptimeSeconds, "duration")
           | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
           | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
-          | eval URL2="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+DeviceMACAddress
           | rename AdvisoryID as "Advisory ID", AdvisoryCvesStr as "Advisory CVEs", AdvisoryDefaultDetectionType as "Advisory Default Detection Type", AdvisoryDetectionType as "Advisory Detection Type", AdvisoryPublicationUrl as "Advisory Publication URL", AdvisorySir as "Advisory SIR", DeviceIpAddress as "IP Address", DeviceName as "Device Name", DeviceMACAddress as "Device MAC Address", DeviceSerialNumber as "Device Serial Number", DeviceFamily as "Device Family", DevicePlatform as "Device Platform", DeviceSeries as "Device Series", DeviceUptime as "Device Uptime"
           | table DeviceID, "Device Name", "IP Address", "Advisory ID", "Advisory CVEs", "Advisory Default Detection Type", "Advisory Detection Type", "Advisory Publication URL", "Advisory SIR", "Device MAC Address", "Device Serial Number", "Device Family", "Device Platform", "Device Series", "Device Uptime", URL, URL2, Site</query>
           <earliest>$timeRangePicker7.earliest$</earliest>
@@ -428,9 +427,6 @@
           <condition field="Advisory Publication URL">
             <link target="_blank">$click.value2|n$</link>
           </condition>
-          <condition field="Device MAC Address">
-            <link target="_blank">$row.URL2|n$</link>
-          </condition>
           <condition field="*"/>
         </drilldown>
       </table>
@@ -441,13 +437,12 @@
       <html>
         <style>
           #tableURL td[data-cell-index="0"] a,
-          #tableURL td[data-cell-index="6"] a,
-          #tableURL td[data-cell-index="8"] a {
+          #tableURL td[data-cell-index="6"] a {
             color: #1a73e8 !important;
             text-decoration: underline !important;
             cursor: pointer !important;
           }
-          #tableURL td:not([data-cell-index="0"]):not([data-cell-index="6"]):not([data-cell-index="8"]) {
+          #tableURL td:not([data-cell-index="0"]):not([data-cell-index="6"]) {
             color: inherit !important;
             ext-decoration: none;
             cursor: default;
