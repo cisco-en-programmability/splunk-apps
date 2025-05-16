@@ -461,13 +461,11 @@
                   | dedup ComplianceDeviceID keepevents=false
                   | table ComplianceDeviceID, IpAddress, ComplianceStatus
                 ]
-              | rename L.DeviceName as "Device Name", L.DeviceRole as "Device Role", L.IpAddress as "IP Address", L.MACAddress as "MACAddress", L.Manageability as Manageability, L.Reachability as Reachability, R.ComplianceStatus as "Compliance Device Status", L.ComplianceComplianceType as "Compliance Type", L.ComplianceStatus as "Compliance Type Status", L.ComplianceState as "Compliance State", L.ComplianceLastSyncTime as "Compliance Last Sync Time", L.ComplianceLastUpdateTime as "Compliance Last Update Time", L.ComplianceDeviceID as ComplianceDevice, L.Site as Site
+              | rename L.DeviceName as "Device Name", L.DeviceRole as "Device Role", L.IpAddress as "IP Address", L.MACAddress as "MAC Address", L.Manageability as Manageability, L.Reachability as Reachability, R.ComplianceStatus as "Compliance Device Status", L.ComplianceComplianceType as "Compliance Type", L.ComplianceStatus as "Compliance Type Status", L.ComplianceState as "Compliance State", L.ComplianceLastSyncTime as "Compliance Last Sync Time", L.ComplianceLastUpdateTime as "Compliance Last Update Time", L.ComplianceDeviceID as ComplianceDevice, L.Site as Site
               | eval "Compliance Last Sync"=strftime('Compliance Last Sync Time'/1000, "%Y-%m-%d %H:%M:%S")
               | eval "Compliance Last Update"=strftime('Compliance Last Update Time'/1000, "%Y-%m-%d %H:%M:%S")
               | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
               | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+ComplianceDevice
-              | eval URL2="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+MACAddress
-              | rename MACAddress as "MAC Address"
               | table "Device Name", "Device Role", "IP Address", "MAC Address", Manageability, Reachability, "Compliance Device Status", "Compliance Type", "Compliance Type Status", "Compliance State", "Compliance Last Sync", "Compliance Last Update", ComplianceDevice, URL, URL2, Site
           </query>
           <earliest>$timeRangePicker6.earliest$</earliest>
@@ -489,9 +487,6 @@
           <condition field="Device Name">
             <link target="_blank">$row.URL|n$</link>
           </condition>
-          <condition field="MAC Address">
-            <link target="_blank">$row.URL2|n$</link>
-          </condition>
           <condition field="*"/>
         </drilldown>
       </table>
@@ -501,13 +496,12 @@
     <panel>
       <html>
         <style>
-          #tableURL td[data-cell-index="0"] a,
-          #tableURL td[data-cell-index="3"] a {
+          #tableURL td[data-cell-index="0"] a {
             color: #1a73e8 !important;
             text-decoration: underline !important;
             cursor: pointer !important;
           }
-          #tableURL td:not([data-cell-index="0"]):not([data-cell-index="3"]){
+          #tableURL td:not([data-cell-index="0"]) {
             color: inherit !important;
             ext-decoration: none;
             cursor: default;
