@@ -245,7 +245,7 @@
                         {
                             "field": "cisco_catalyst_center_host",
                             "label": "Cisco Catalyst Center Host",
-                            "help": "Valid examples: https://192.0.2.0 or 192.0.2.0",
+                            "help": "Valid examples: https://192.0.2.x or 192.0.2.x",
                             "required": true,
                             "type": "text",
                             "validators": [
@@ -335,7 +335,7 @@
                         {
                             "field": "cisco_catalyst_center_host",
                             "label": "Cisco Catalyst Center Host",
-                            "help": "Valid examples: https://192.0.2.0 or 192.0.2.0",
+                            "help": "Valid examples: https://192.0.2.x or 192.0.2.x",
                             "required": true,
                             "type": "text",
                             "validators": [
@@ -425,7 +425,7 @@
                         {
                             "field": "cisco_catalyst_center_host",
                             "label": "Cisco Catalyst Center Host",
-                            "help": "Valid examples: https://192.0.2.0 or 192.0.2.0",
+                            "help": "Valid examples: https://192.0.2.x or 192.0.2.x",
                             "required": true,
                             "type": "text",
                             "validators": [
@@ -515,7 +515,7 @@
                         {
                             "field": "cisco_catalyst_center_host",
                             "label": "Cisco Catalyst Center Host",
-                            "help": "Valid examples: https://192.0.2.0 or 192.0.2.0",
+                            "help": "Valid examples: https://192.0.2.x or 192.0.2.x",
                             "required": true,
                             "type": "text",
                             "validators": [
@@ -605,7 +605,7 @@
                         {
                             "field": "cisco_catalyst_center_host",
                             "label": "Cisco Catalyst Center Host",
-                            "help": "Valid examples: https://192.0.2.0 or 192.0.2.0",
+                            "help": "Valid examples: https://192.0.2.x or 192.0.2.x",
                             "required": true,
                             "type": "text",
                             "validators": [
@@ -695,7 +695,7 @@
                         {
                             "field": "cisco_catalyst_center_host",
                             "label": "Cisco Catalyst Center Host",
-                            "help": "Valid examples: https://192.0.2.0 or 192.0.2.0",
+                            "help": "Valid examples: https://192.0.2.x or 192.0.2.x",
                             "required": true,
                             "type": "text",
                             "validators": [
@@ -785,7 +785,7 @@
                         {
                             "field": "cisco_catalyst_center_host",
                             "label": "Cisco Catalyst Center Host",
-                            "help": "Valid examples: https://192.0.2.0 or 192.0.2.0",
+                            "help": "Valid examples: https://192.0.2.x or 192.0.2.x",
                             "required": true,
                             "type": "text",
                             "validators": [
