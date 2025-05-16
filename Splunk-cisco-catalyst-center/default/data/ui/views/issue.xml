@@ -528,7 +528,6 @@
             | sort limit=10 +str(IssueSpecificPriority), -num(IssueCountDevice), +str(DeviceName)
             | eval ciscocatalysthostip=replace("$ciscocatalysthostDropdown$", "https://", "")
             | eval URL="https://"+ciscocatalysthostip+"/dna/assurance/device/details?emptyDevice=false&amp;id="+DeviceID
-            | eval URL2="https://"+ciscocatalysthostip+"/dna/assurance/client/details?macAddress="+DeviceMACAddress
             | rename DeviceName as "Device Name", IssueCountDevice as "Count", DeviceIpAddress as "IP Address", DeviceMACAddress as "MAC Address", DeviceFamily as "Family", DeviceRole as "Role", IssueIDAmount as "Issue Count", IssueSpecificNames as "Issue Name", IssueSpecificPriorities as "Priority", IssueSpecificSeverities as "Severity", SiteNameHierarchy as "Site"
             | table "Device Name", "Count", "IP Address", "MAC Address", "Family", "Role", "Issue Count", "Issue Name", "Priority", "Severity", DeviceID, ciscocatalysthostip, URL, Site, URL2</query>
           <earliest>$timeRangePicker9.earliest$</earliest>
@@ -550,9 +549,6 @@
           <condition field="Device Name">
             <link target="_blank">$row.URL|n$</link>
           </condition>
-          <condition field="MAC Address">
-            <link target="_blank">$row.URL2|n$</link>
-          </condition>
           <condition field="*"></condition>
         </drilldown>
       </table>
@@ -572,13 +568,12 @@
             ext-decoration: none;
             cursor: default;
           }
-          #tableURL2 td[data-cell-index="0"] a,
-          #tableURL2 td[data-cell-index="3"] a,{
+          #tableURL2 td[data-cell-index="0"] a {
             color: #1a73e8 !important;
             text-decoration: underline !important;
             cursor: pointer !important;
           }
-          #tableURL2 td:not([data-cell-index="0"]):not([data-cell-index="3"]){
+          #tableURL2 td:not([data-cell-index="0"]) {
             color: inherit !important;
             ext-decoration: none;
             cursor: default;
