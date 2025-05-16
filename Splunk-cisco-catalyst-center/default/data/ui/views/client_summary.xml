@@ -401,10 +401,18 @@
         </search>
         <default>*</default>
       </input>
+      <input type="dropdown" token="clientTypeDropdown" searchWhenChanged="true">
+        <label>Type</label>
+        <choice value="*">All</choice>
+        <initialValue>*</initialValue>
+        <choice value="Wired">Wired</choice>
+        <choice value="Wireless">Wireless</choice>
+        <default>*</default>
+      </input>
       <table id="macAddressTable1">
         <title>Site: $siteFilter$</title>
         <search>
-          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" ClientIPv4Address="$clientIpAddressDropdown$" ClientUsername="$clientUsernameDropdown$" ClientMACAddress="$clientMACAddressDropdown$"
+          <query>sourcetype="cisco:catalyst:client" cisco_catalyst_host="$ciscocatalysthostDropdown$" ClientIPv4Address="$clientIpAddressDropdown$" ClientUsername="$clientUsernameDropdown$" ClientMACAddress="$clientMACAddressDropdown$" ClientType="$clientTypeDropdown$"
           | stats latest(*) as * by ClientID
           | where "$siteFilter$"=="Global" OR lower(ClientSiteHierarchy) LIKE lower("%$siteFilter$%")
           | where ClientTrafficUsage > 0
