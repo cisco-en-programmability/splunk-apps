@@ -11,14 +11,14 @@
 
 ### ⬇️ Download
 
-- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalyst-center-app_100.tar.gz)
-- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.0-catalyst/cisco-catalyst-center-add-on_100.tar.gz)
+- [Splunk App on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.1-catalyst/cisco-catalyst-center-app_100.tar.gz)
+- [Splunk Add-on on GitHub](https://github.com/cisco-en-programmability/splunk-apps/releases/download/v1.0.1-catalyst/cisco-catalyst-center-add-on_101.tar.gz)
 
 The add-on and app are on SplunkBase!
 
-- **Cisco Catalyst Center App** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6669/) or [New SplunkBase](https://splunkbase.splunk.com/app/6669)
+- **Cisco Catalyst Center App** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/7859/) or [New SplunkBase](https://splunkbase.splunk.com/app/7859)
 
-- **Cisco Catalyst Center Add-on** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/6668/) or [New SplunkBase](https://splunkbase.splunk.com/app/6668)
+- **Cisco Catalyst Center Add-on** on: [SplunkBase Classic](https://classic.splunkbase.splunk.com/app/7858/) or [New SplunkBase](https://splunkbase.splunk.com/app/7858)
 
 
 ### 💬 Support
