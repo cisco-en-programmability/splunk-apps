@@ -4,8 +4,8 @@
         "displayName": "Cisco Catalyst Center Add-on",
         "version": "1.0.0",
         "restRoot": "Splunk_TA_cisco_catalyst_center",
-        "_uccVersion": "5.39.0",
-        "schemaVersion": "0.0.3"
+        "schemaVersion": "0.0.8",
+        "_uccVersion": "5.48.0"
     },
     "pages": {
         "configuration": {

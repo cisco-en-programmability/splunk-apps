@@ -81,6 +81,77 @@
                     }
                 }
             },
+            "cisco_catalyst_issue": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "interval": {
+                        "type": "string"
+                    },
+                    "index": {
+                        "type": "string"
+                    },
+                    "cisco_catalyst_center_host": {
+                        "type": "string"
+                    },
+                    "cisco_catalyst_center_account": {
+                        "type": "string"
+                    },
+                    "disabled": {
+                        "type": "string",
+                        "enum": [
+                            "False",
+                            "True"
+                        ]
+                    }
+                }
+            },
+            "cisco_catalyst_issue_without_name": {
+                "type": "object",
+                "properties": {
+                    "interval": {
+                        "type": "string"
+                    },
+                    "index": {
+                        "type": "string"
+                    },
+                    "cisco_catalyst_center_host": {
+                        "type": "string"
+                    },
+                    "cisco_catalyst_center_account": {
+                        "type": "string"
+                    },
+                    "disabled": {
+                        "type": "string",
+                        "enum": [
+                            "False",
+                            "True"
+                        ]
+                    }
+                }
+            },
+            "cisco_catalyst_issue_without_disabled": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "interval": {
+                        "type": "string"
+                    },
+                    "index": {
+                        "type": "string"
+                    },
+                    "cisco_catalyst_center_host": {
+                        "type": "string"
+                    },
+                    "cisco_catalyst_center_account": {
+                        "type": "string"
+                    }
+                }
+            },
             "cisco_catalyst_clienthealth": {
                 "type": "object",
                 "properties": {
@@ -506,77 +577,6 @@
                         "type": "string"
                     }
                 }
-            },
-            "cisco_catalyst_issue": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "interval": {
-                        "type": "string"
-                    },
-                    "index": {
-                        "type": "string"
-                    },
-                    "cisco_catalyst_center_host": {
-                        "type": "string"
-                    },
-                    "cisco_catalyst_center_account": {
-                        "type": "string"
-                    },
-                    "disabled": {
-                        "type": "string",
-                        "enum": [
-                            "False",
-                            "True"
-                        ]
-                    }
-                }
-            },
-            "cisco_catalyst_issue_without_name": {
-                "type": "object",
-                "properties": {
-                    "interval": {
-                        "type": "string"
-                    },
-                    "index": {
-                        "type": "string"
-                    },
-                    "cisco_catalyst_center_host": {
-                        "type": "string"
-                    },
-                    "cisco_catalyst_center_account": {
-                        "type": "string"
-                    },
-                    "disabled": {
-                        "type": "string",
-                        "enum": [
-                            "False",
-                            "True"
-                        ]
-                    }
-                }
-            },
-            "cisco_catalyst_issue_without_disabled": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "interval": {
-                        "type": "string"
-                    },
-                    "index": {
-                        "type": "string"
-                    },
-                    "cisco_catalyst_center_host": {
-                        "type": "string"
-                    },
-                    "cisco_catalyst_center_account": {
-                        "type": "string"
-                    }
-                }
             }
         },
         "securitySchemes": {
@@ -886,6 +886,229 @@
                 "deprecated": false
             },
             "parameters": [
+                {
+                    "name": "output_mode",
+                    "in": "query",
+                    "required": true,
+                    "description": "Output mode",
+                    "schema": {
+                        "type": "string",
+                        "enum": [
+                            "json"
+                        ],
+                        "default": "json"
+                    }
+                }
+            ]
+        },
+        "/Splunk_TA_cisco_catalyst_center_cisco_catalyst_issue": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Get list of items for cisco_catalyst_issue",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "entry": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "content": {
+                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Get list of items for cisco_catalyst_issue",
+                "deprecated": false
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Create item in cisco_catalyst_issue",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "entry": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "content": {
+                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Create item in cisco_catalyst_issue",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/cisco_catalyst_issue_without_disabled"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            },
+            "parameters": [
+                {
+                    "name": "output_mode",
+                    "in": "query",
+                    "required": true,
+                    "description": "Output mode",
+                    "schema": {
+                        "type": "string",
+                        "enum": [
+                            "json"
+                        ],
+                        "default": "json"
+                    }
+                }
+            ]
+        },
+        "/Splunk_TA_cisco_catalyst_center_cisco_catalyst_issue/{name}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Get cisco_catalyst_issue item details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "entry": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "content": {
+                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Get cisco_catalyst_issue item details",
+                "deprecated": false
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Update cisco_catalyst_issue item",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "entry": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "content": {
+                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Update cisco_catalyst_issue item",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Delete cisco_catalyst_issue item",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "entry": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "content": {
+                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Delete cisco_catalyst_issue item",
+                "deprecated": false
+            },
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "required": true,
+                    "description": "The name of the item to operate on",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
                 {
                     "name": "output_mode",
                     "in": "query",
@@ -2212,229 +2435,6 @@
                     }
                 },
                 "description": "Delete cisco_catalyst_client item",
-                "deprecated": false
-            },
-            "parameters": [
-                {
-                    "name": "name",
-                    "in": "path",
-                    "required": true,
-                    "description": "The name of the item to operate on",
-                    "schema": {
-                        "type": "string"
-                    }
-                },
-                {
-                    "name": "output_mode",
-                    "in": "query",
-                    "required": true,
-                    "description": "Output mode",
-                    "schema": {
-                        "type": "string",
-                        "enum": [
-                            "json"
-                        ],
-                        "default": "json"
-                    }
-                }
-            ]
-        },
-        "/Splunk_TA_cisco_catalyst_center_cisco_catalyst_issue": {
-            "get": {
-                "responses": {
-                    "200": {
-                        "description": "Get list of items for cisco_catalyst_issue",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "entry": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "name": {
-                                                        "type": "string"
-                                                    },
-                                                    "content": {
-                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "description": "Get list of items for cisco_catalyst_issue",
-                "deprecated": false
-            },
-            "post": {
-                "responses": {
-                    "200": {
-                        "description": "Create item in cisco_catalyst_issue",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "entry": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "name": {
-                                                        "type": "string"
-                                                    },
-                                                    "content": {
-                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "description": "Create item in cisco_catalyst_issue",
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/cisco_catalyst_issue_without_disabled"
-                            }
-                        }
-                    },
-                    "required": false
-                },
-                "deprecated": false
-            },
-            "parameters": [
-                {
-                    "name": "output_mode",
-                    "in": "query",
-                    "required": true,
-                    "description": "Output mode",
-                    "schema": {
-                        "type": "string",
-                        "enum": [
-                            "json"
-                        ],
-                        "default": "json"
-                    }
-                }
-            ]
-        },
-        "/Splunk_TA_cisco_catalyst_center_cisco_catalyst_issue/{name}": {
-            "get": {
-                "responses": {
-                    "200": {
-                        "description": "Get cisco_catalyst_issue item details",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "entry": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "name": {
-                                                        "type": "string"
-                                                    },
-                                                    "content": {
-                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "description": "Get cisco_catalyst_issue item details",
-                "deprecated": false
-            },
-            "post": {
-                "responses": {
-                    "200": {
-                        "description": "Update cisco_catalyst_issue item",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "entry": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "name": {
-                                                        "type": "string"
-                                                    },
-                                                    "content": {
-                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "description": "Update cisco_catalyst_issue item",
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
-                            }
-                        }
-                    },
-                    "required": false
-                },
-                "deprecated": false
-            },
-            "delete": {
-                "responses": {
-                    "200": {
-                        "description": "Delete cisco_catalyst_issue item",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "entry": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "name": {
-                                                        "type": "string"
-                                                    },
-                                                    "content": {
-                                                        "$ref": "#/components/schemas/cisco_catalyst_issue_without_name"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "description": "Delete cisco_catalyst_issue item",
                 "deprecated": false
             },
             "parameters": [
